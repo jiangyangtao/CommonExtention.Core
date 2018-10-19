@@ -15,10 +15,7 @@ namespace CommonExtention.Core.Extention
         /// </summary>
         /// <param name="date"> <see cref="DateTime"/> 对象</param>
         /// <returns>Unix时间</returns>
-        public static long UnixTime(this DateTime date)
-        {
-            return (date.ToUniversalTime().Ticks - 621355968000000000L) / 10000000L;
-        }
+        public static long UnixTime(this DateTime date) => (date.ToUniversalTime().Ticks - 621355968000000000L) / 10000000L;
         #endregion
 
         #region 返回此实例的格式化后的日期字符串
@@ -27,10 +24,7 @@ namespace CommonExtention.Core.Extention
         /// </summary>
         /// <param name="d"><see cref="DateTime"/></param>
         /// <returns>返回格式为 yyyy-MM-dd 字符串</returns>
-        public static string ToFormatDate(this DateTime d)
-        {
-            return d.ToString("yyyy-MM-dd");
-        }
+        public static string ToFormatDate(this DateTime d) => d.ToString("yyyy-MM-dd");
         #endregion
 
         #region 返回此实例的格式化后的日期时间字符串
@@ -39,10 +33,7 @@ namespace CommonExtention.Core.Extention
         /// </summary>
         /// <param name="d"><see cref="DateTime"/></param>
         /// <returns>返回格式为 yyyy-MM-dd HH:mm:ss</returns>
-        public static string ToFormatDateTime(this DateTime d)
-        {
-            return d.ToString("yyyy-MM-dd HH:mm:ss");
-        }
+        public static string ToFormatDateTime(this DateTime d) => d.ToString("yyyy-MM-dd HH:mm:ss");
         #endregion
 
         #region 从此实例中计算出与当前时间的时间差
@@ -218,10 +209,10 @@ namespace CommonExtention.Core.Extention
         /// <summary>  
         /// 从此实例中取得当前周以星期天开始的第一天
         /// </summary>
-        /// <param name="value">要取得当前周第一天的  <see cref="DateTime"/> 对象</param>
-        /// <param name="mode">当前周的第一天时间模式</param>
+        /// <param name="value">要取得当前周第一天的  <see cref="DateTime"/> 实例</param>
+        /// <param name="mode">时间模式，默认为当前时间的时分秒</param>
         /// <returns>当前周的第一天</returns>  
-        public static DateTime WeekFirstOfSunStart(this DateTime value, TimeMode mode = TimeMode.now)
+        public static DateTime FirstDayOfWeekFromSunday(this DateTime value, TimeMode mode = TimeMode.now)
         {
             var weekNow = Convert.ToInt32(value.DayOfWeek);
             var daydiff = (-1) * weekNow;
@@ -236,10 +227,10 @@ namespace CommonExtention.Core.Extention
         /// <summary>
         /// 从此实例中取得当前周以星期一开始的第一天
         /// </summary>
-        /// <param name="value">要取得当前周第一天的  <see cref="DateTime"/> 对象</param>
-        /// <param name="mode">当前周的第一天时间模式</param>
+        /// <param name="value">要取得当前周第一天的  <see cref="DateTime"/> 实例</param>
+        /// <param name="mode">时间模式，默认为当前时间的时分秒</param>
         /// <returns>当前周的第一天</returns>
-        public static DateTime WeekFirstOfMonStart(this DateTime value, TimeMode mode = TimeMode.now)
+        public static DateTime FirstDayOfWeekFromMonday(this DateTime value, TimeMode mode = TimeMode.now)
         {
             var weekNow = Convert.ToInt32(value.DayOfWeek);
             weekNow = (weekNow == 0 ? (7 - 1) : (weekNow - 1));
@@ -251,14 +242,14 @@ namespace CommonExtention.Core.Extention
         }
         #endregion
 
-        #region 从此实例中取得当前周以星期六开始的最后一天
+        #region 从此实例中取得当前周以星期天开始的最后一天
         /// <summary>
-        /// 从此实例中取得当前周以星期六开始的最后一天
+        /// 从此实例中取得当前周以星期天开始的最后一天
         /// </summary>  
-        /// <param name="value">要取得当前周最后一天的  <see cref="DateTime"/> 对象</param>
-        /// <param name="mode">当前周的最后一天时间模式</param>
+        /// <param name="value">要取得当前周最后一天的  <see cref="DateTime"/> 实例</param>
+        /// <param name="mode">时间模式，默认为当前时间的时分秒</param>
         /// <returns>当前周的最后一天</returns>  
-        public static DateTime WeekLastOfSatEnd(this DateTime value, TimeMode mode = TimeMode.now)
+        public static DateTime LastDayOfWeekFromSunday(this DateTime value, TimeMode mode = TimeMode.now)
         {
             int weeknow = Convert.ToInt32(value.DayOfWeek);
             int daydiff = (7 - weeknow) - 1;
@@ -269,14 +260,14 @@ namespace CommonExtention.Core.Extention
         }
         #endregion
 
-        #region 从此实例中取得当前周以星期天开始的最后一天
+        #region 从此实例中取得当前周以星期一开始的最后一天
         /// <summary>  
-        /// 从此实例中取得当前周以星期天开始的最后一天
+        /// 从此实例中取得当前周以星期一开始的最后一天
         /// </summary>  
-        /// <param name="value">要取得当前周最后一天的  <see cref="DateTime"/> 对象</param>
-        /// <param name="mode">当前周的最后一天时间模式</param>
+        /// <param name="value">要取得当前周最后一天的  <see cref="DateTime"/> 实例</param>
+        /// <param name="mode">时间模式，默认为当前时间的时分秒</param>
         /// <returns>当前周的最后一天</returns>  
-        public static DateTime WeekLastOfSunEnd(this DateTime value, TimeMode mode = TimeMode.now)
+        public static DateTime LastDayOfWeekFromMonday(this DateTime value, TimeMode mode = TimeMode.now)
         {
             int weeknow = Convert.ToInt32(value.DayOfWeek);
             weeknow = (weeknow == 0 ? 7 : weeknow);

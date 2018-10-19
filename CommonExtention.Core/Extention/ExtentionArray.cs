@@ -62,7 +62,7 @@ namespace CommonExtention.Core.Extention
         /// <param name="value">要转换的字符串</param>
         /// <param name="symbol">分隔符，默认为英文逗号</param>
         /// <returns>
-        /// 如果 value 参数为 null 或者空字符串 ("")，则返回string[]的空数组；
+        /// 如果字符串为 null 或者空字符串 ("")，则返回 string[] 的空数组；
         /// 否则返回转换后的string[]的数组。
         /// </returns>
         public static string[] ToSplitArray(this string value, char symbol = ',')
@@ -79,7 +79,7 @@ namespace CommonExtention.Core.Extention
         /// <param name="strArr">string[]数组</param>
         /// <param name="symbol">分隔符号</param>
         /// <returns>
-        /// 如果 value 参数为 null 或者空字符串 ("")，则返回string[]的空数组；
+        /// 如果字符串为 null 或者空字符串 ("")，则返回 string[] 的空数组；
         /// 否则返回转换后的英文逗号分隔的字符串。
         /// </returns>
         public static string ToStringValue(this string[] strArr, string symbol = ",")

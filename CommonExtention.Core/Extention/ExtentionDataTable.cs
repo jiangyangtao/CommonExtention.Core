@@ -188,7 +188,7 @@ namespace CommonExtention.Core.Extention
         /// 将当前DataTable对象转换为 ArrayList 对象
         /// </summary>
         /// <param name="dt">要转换的DataTable</param>
-        /// <returns>返回Dictionary键值对的 ArrayList 对象</returns>
+        /// <returns>返回 Dictionary 键值对的 ArrayList 对象</returns>
         public static ArrayList ToArrayList(this DataTable dt)
         {
             var arrayList = new ArrayList();
@@ -205,13 +205,13 @@ namespace CommonExtention.Core.Extention
         }
         #endregion
 
-        #region 清除当前DataTable对象的空行
+        #region 清除当前 DataTable 对象的空行
         /// <summary>
         /// 清除当前DataTable对象的空行
         /// </summary>
-        /// <param name="dt">要清除空行的DataTable</param>
-        /// <returns>返回清除空行后的DataTable。</returns>
-        public static DataTable ToClearEmptyRow(this DataTable dt)
+        /// <param name="dt">要清除空行的 DataTable </param>
+        /// <returns>返回清除空行后的 DataTable 。</returns>
+        public static DataTable ClearEmptyRow(this DataTable dt)
         {
             for (int i = dt.Rows.Count - 1; i >= 0; i--)
             {

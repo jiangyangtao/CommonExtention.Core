@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CommonExtention.Core.Extention
 {
@@ -9,39 +7,30 @@ namespace CommonExtention.Core.Extention
     /// </summary>
     public static class ExtentionException
     {
-        #region 返回当前Exception中InnerException的Message
+        #region 返回 Exception 对象中的 InnerException
+        /// <summary>
+        /// 返回 <see cref="Exception" /> 中的 <see cref="Exception.InnerException" />
+        /// </summary>
+        /// <param name="exception"><see cref="Exception" />对象</param>
+        /// <returns>返回 <see cref="Exception" /> 中的 <see cref="Exception.InnerException" /></returns>
+        public static Exception GetInnerException(this Exception exception)
+        {
+            if (exception == null) return null;
+            if (exception.InnerException != null) return GetInnerException(exception.InnerException);
+            return exception;
+        }
+        #endregion
+
+        #region 返回 Exception 对象中 InnerException 的 Message
         /// <summary>
         /// 返回当前 <see cref="Exception.InnerException" /> 中的Message
         /// </summary>
-        /// <param name="exception">Exception</param>
-        /// <returns>返回 <see cref="Exception.InnerException" /> 中的 Message(6层)</returns>
+        /// <param name="exception"><see cref="Exception" />对象</param>
+        /// <returns>返回 <see cref="Exception.InnerException" /> 中的 Message</returns>
         public static string ExceptionMessage(this Exception exception)
         {
             if (exception == null) return string.Empty;
-            if (exception.InnerException != null)
-            {
-                if (exception.InnerException.InnerException != null)
-                {
-                    if (exception.InnerException.InnerException.InnerException != null)
-                    {
-                        if (exception.InnerException.InnerException.InnerException.InnerException != null)
-                        {
-                            if (exception.InnerException.InnerException.InnerException.InnerException.InnerException != null)
-                            {
-                                if (exception.InnerException.InnerException.InnerException.InnerException.InnerException.InnerException != null)
-                                {
-                                    return exception.InnerException.InnerException.InnerException.InnerException.InnerException.InnerException.Message;
-                                }
-                                return exception.InnerException.InnerException.InnerException.InnerException.InnerException.Message;
-                            }
-                            return exception.InnerException.InnerException.InnerException.InnerException.Message;
-                        }
-                        return exception.InnerException.InnerException.InnerException.Message;
-                    }
-                    return exception.InnerException.InnerException.Message;
-                }
-                return exception.InnerException.Message;
-            }
+            if (exception.InnerException != null) return ExceptionMessage(exception.InnerException);
             return exception.Message;
         }
         #endregion

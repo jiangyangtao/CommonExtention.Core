@@ -51,10 +51,7 @@ namespace CommonExtention.Core.Extention
         /// </summary>
         /// <param name="value">要转换的<see cref="long"/></param>
         /// <returns>此实例的值的千分位字符串表示形式</returns>
-        public static string ToThousand(this long value)
-        {
-            return string.Format("{0:N}", value);
-        }
+        public static string ToThousand(this long value) => string.Format("{0:N}", value);
         #endregion
     }
 }
