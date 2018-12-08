@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommonExtention.Core.Extention
+namespace CommonExtention.Core.Extensions
 {
     /// <summary>
     /// <see cref="long"/> 扩展
     /// </summary>
-    public static class ExtentionInt64
+    public static class Int64Extensions
     {
         #region 将此实例的Unix时间格式的数值转换为DateTime对象
         /// <summary>

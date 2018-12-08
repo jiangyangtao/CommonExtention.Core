@@ -1,4 +1,4 @@
-﻿using CommonExtention.Core.Extention;
+﻿using CommonExtention.Core.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Data;
@@ -12,6 +12,13 @@ namespace CommonExtention.Core.Common
     /// </summary>
     public abstract class BasicsController : Controller
     {
+        #region init
+        /// <summary>
+        /// Basics Controller Constructor
+        /// </summary>
+        public BasicsController() { }
+        #endregion
+
         #region Json通用返回格式
         /// <summary>
         /// Json通用返回格式：返回成功

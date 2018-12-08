@@ -1,15 +1,14 @@
 ﻿using CommonExtention.Core.EncryptDecryption;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
-namespace CommonExtention.Core.Extention
+namespace CommonExtention.Core.Extensions
 {
     /// <summary>
     /// <see cref="string"/> 扩展
     /// </summary>
-    public static class ExtentionString
+    public static class StringExtensions
     {
         #region 初始化一个字符串形式的 GUID 对象
         /// <summary>

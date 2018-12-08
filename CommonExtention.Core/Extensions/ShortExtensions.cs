@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommonExtention.Core.Extention
+namespace CommonExtention.Core.Extensions
 {
     /// <summary>
     /// <see cref="short"/> 扩展
     /// </summary>
-    public static class ExtentionShort
+    public static class ShortExtensions
     {
         #region 将此实例的数值转换为其千分位的字符串表示形式
         /// <summary>

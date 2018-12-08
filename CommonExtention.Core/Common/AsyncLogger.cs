@@ -1,8 +1,12 @@
-﻿using CommonExtention.Core.Models;
+﻿using CommonExtention.Core.Extensions;
+using CommonExtention.Core.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CommonExtention.Core.Common
 {
@@ -11,206 +15,185 @@ namespace CommonExtention.Core.Common
     /// </summary>
     public sealed class AsyncLogger
     {
-        //#region 静态方法
-        ///// <summary>
-        ///// 记录异常
-        ///// </summary>
-        ///// <param name="exception"><see cref="Exception"/> 对象</param>
-        ///// <param name="context"><see cref="Microsoft.AspNetCore.Http.HttpContext"/> 对象</param>
-        //public static void LogException(Exception exception, Microsoft.AspNetCore.Http.HttpContext context = null)
-        //{
-        //    //异步线程无法访问到主线程的HttpContext，所以要直接将主线程的HttpContext做为参数传给异步
-        //    new AsyncLogException(BeginLogException).BeginInvoke(exception, context, null, null);
-        //}
+        #region 记录异常
+        /// <summary>
+        /// 记录异常
+        /// </summary>
+        /// <param name="exception"><see cref="Exception"/> 对象</param>
+        /// <param name="request"><see cref="HttpRequest"/> 对象</param>
+        /// <param name="hostingEnvironment"><see cref="IHostingEnvironment"/> 接口</param>
+        public static void LogException(Exception exception, HttpRequest request, IHostingEnvironment hostingEnvironment)
+        {
+            if (exception == null) return;
+            if (request == null) return;
+            if (hostingEnvironment == null) return;
 
-        ///// <summary>
-        ///// 记录关键信息
-        ///// </summary>
-        ///// <param name="information">关键信息</param>
-        ///// <param name="context"><see cref="Microsoft.AspNetCore.Http.HttpContext"/> 对象</param>
-        //public static void LogInformation(string information, Microsoft.AspNetCore.Http.HttpContext context = null)
-        //{
-        //    //异步线程无法访问到主线程的HttpContext，所以要直接将主线程的HttpContext做为参数传给异步
-        //    new AsyncLogInformation(BeginLogInformation).BeginInvoke(information, context, null, null);
-        //}
+            // 异步执行
+            Task.Factory.StartNew(() =>
+            {
+                var _path = GetPath("error.txt", hostingEnvironment);
 
-        ///// <summary>
-        ///// 记录Mvc请求信息
-        ///// </summary>
-        ///// <param name="model"><see cref="MvcRequestModel"/> 对象</param>
-        ///// <param name="context"><see cref="Microsoft.AspNetCore.Http.HttpContext"/> 对象</param>
-        //public static void LogMvcRequest(MvcRequestModel model, Microsoft.AspNetCore.Http.HttpContext context = null)
-        //{
-        //    //异步线程无法访问到主线程的HttpContext，所以要直接将主线程的HttpContext做为参数传给异步
-        //    new AsyncLogMvcRequest(BeginLogMvcRequest).BeginInvoke(model, context, null, null);
-        //}
-        //#endregion
+                //允许多个进程同时写入
+                using (var _fileStream = new FileStream(_path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
+                {
+                    var _streamWrite = new StreamWriter(_fileStream, Encoding.Default);
 
-        //#region 异步方法
-        ///// <summary>
-        ///// 委托方式的异步写入异常
-        ///// </summary>
-        ///// <param name="exception"><see cref="Exception"/> 对象</param>
-        ///// <param name="context"><see cref="Microsoft.AspNetCore.Http.HttpContext"/> 对象</param>
-        //private delegate void AsyncLogException(Exception exception, Microsoft.AspNetCore.Http.HttpContext context);
+                    try
+                    {
+                        _streamWrite.BaseStream.Seek(0, SeekOrigin.End);
+                        _streamWrite.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        _streamWrite.WriteLine("\r\n");
+                        _streamWrite.WriteLine("\r\n  异常信息：");
+                        _streamWrite.WriteLine("\r\n\t请求地址：" + request.Url());
+                        _streamWrite.WriteLine("\r\n\t错误信息：" + exception.ExceptionMessage());
+                        _streamWrite.WriteLine("\r\n\t错 误 源：" + exception.Source);
+                        _streamWrite.WriteLine("\r\n\t异常方法：" + exception.TargetSite);
+                        _streamWrite.WriteLine("\r\n\t堆栈信息：" + exception.StackTrace);
+                        _streamWrite.WriteLine("\r\n\t浏览器标识：" + request.UserAgent());
+                        _streamWrite.WriteLine("\r\n");
 
-        ///// <summary>
-        ///// 委托方式的异步写入关键信息
-        ///// </summary>
-        ///// <param name="information">关键信息</param>
-        ///// <param name="context"><see cref="Microsoft.AspNetCore.Http.HttpContext"/> 对象</param>
-        //private delegate void AsyncLogInformation(string information, Microsoft.AspNetCore.Http.HttpContext context);
+                        //日志的分隔线
+                        _streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
+                        _streamWrite.WriteLine("\r\n");
+                        _streamWrite.WriteLine("\r\n");
+                    }
+                    finally
+                    {
+                        _streamWrite.Flush();
+                        _streamWrite.Close();
+                    }
+                }
+            });
+        }
+        #endregion
 
-        ///// <summary>
-        ///// 委托方式的异步写入Mvc请求信息
-        ///// </summary>
-        ///// <param name="model"><see cref="MvcRequestModel"/> 对象</param>
-        ///// <param name="context"><see cref="Microsoft.AspNetCore.Http.HttpContext"/> 对象</param>
-        //private delegate void AsyncLogMvcRequest(MvcRequestModel model, Microsoft.AspNetCore.Http.HttpContext context);
-        //#endregion
+        #region 记录关键信息
+        /// <summary>
+        /// 记录关键信息
+        /// </summary>
+        /// <param name="information">关键信息</param>
+        /// <param name="request"><see cref="HttpRequest"/> 对象</param>
+        /// <param name="hostingEnvironment"><see cref="IHostingEnvironment"/> 接口</param>
+        public static void LogInformation(string information, HttpRequest request, IHostingEnvironment hostingEnvironment)
+        {
+            if (information.IsNullOrEmpty()) return;
+            if (request == null) return;
+            if (hostingEnvironment == null) return;
 
-        //#region 异步记录        
-        ///// <summary>
-        ///// 当前应用的相对路径
-        ///// </summary>
-        //private static readonly string _map = HttpRuntime.AppDomainAppPath + "log/" + DateTime.Now.ToString("yyyy-MM-dd") + " ";
+            // 异步执行
+            Task.Factory.StartNew(() =>
+            {
+                var _path = GetPath("key.txt", hostingEnvironment);
 
-        ///// <summary>
-        ///// 异步写入异常
-        ///// </summary>
-        ///// <param name="exception"><see cref="Exception"/> 对象</param>
-        ///// <param name="context"><see cref="Microsoft.AspNetCore.Http.HttpContext"/> 对象</param>
-        //private static void BeginLogException(Exception exception, Microsoft.AspNetCore.Http.HttpContext context)
-        //{
-        //    if (exception != null)
-        //    {
-        //        var _path = _map + "error.txt";
-        //        var _fileInfo = new FileInfo(_path);
-        //        var _dir = _fileInfo.Directory;
-        //        if (!_dir.Exists) _dir.Create();    //如果文件夹不存在，则创建
+                //允许多个进程同时写入
+                using (var _fileStream = new FileStream(_path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
+                {
+                    var _streamWrite = new StreamWriter(_fileStream, Encoding.Default);
+                    try
+                    {
+                        _streamWrite.BaseStream.Seek(0, SeekOrigin.End);
+                        _streamWrite.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        _streamWrite.WriteLine("\r\n");
+                        _streamWrite.WriteLine("\r\n");
+                        _streamWrite.WriteLine("\r\n\t请求地址：" + request.Url());
+                        _streamWrite.WriteLine("\r\n\t记录信息：" + information);
+                        _streamWrite.WriteLine("\r\n");
+                        _streamWrite.WriteLine("\r\n\t浏览器标识：" + request.UserAgent());
 
-        //        //允许多个进程同时写入
-        //        using (var _fileStream = new FileStream(_path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
-        //        {
-        //            var _streamWrite = new StreamWriter(_fileStream, Encoding.Default);
+                        //日志的分隔线
+                        _streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
+                        _streamWrite.WriteLine("\r\n");
+                        _streamWrite.WriteLine("\r\n");
+                        _streamWrite.WriteLine("\r\n");
+                    }
+                    finally
+                    {
+                        _streamWrite.Flush();
+                        _streamWrite.Close();
+                    }
+                }
+            });
+        }
+        #endregion
 
-        //            try
-        //            {
-        //                _streamWrite.BaseStream.Seek(0, SeekOrigin.End);
-        //                _streamWrite.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-        //                _streamWrite.WriteLine("\r\n");
-        //                _streamWrite.WriteLine("\r\n  异常信息：");
-        //                _streamWrite.WriteLine("\r\n\t请求地址：" + context.Request.Url.ToString());
-        //                _streamWrite.WriteLine("\r\n\t错误信息：" + exception.ExceptionMessage());
-        //                _streamWrite.WriteLine("\r\n\t错 误 源：" + exception.Source);
-        //                _streamWrite.WriteLine("\r\n\t异常方法：" + exception.TargetSite);
-        //                _streamWrite.WriteLine("\r\n\t堆栈信息：" + exception.StackTrace);
-        //                _streamWrite.WriteLine("\r\n\t浏览器标识：" + context.Request.UserAgent);
-        //                _streamWrite.WriteLine("\r\n");
+        #region 记录Mvc请求信息
+        /// <summary>
+        /// 记录Mvc请求信息
+        /// </summary>
+        /// <param name="model"><see cref="MvcRequestModel"/> 对象</param>
+        /// <param name="request"><see cref="HttpRequest"/> 对象</param>
+        /// <param name="hostingEnvironment"><see cref="IHostingEnvironment"/> 接口</param>
+        public static void LogMvcRequest(MvcRequestModel model, HttpRequest request, IHostingEnvironment hostingEnvironment)
+        {
+            if (model == null) return;
+            if (request == null) return;
+            if (hostingEnvironment == null) return;
 
-        //                //日志的分隔线
-        //                _streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
-        //                _streamWrite.WriteLine("\r\n");
-        //                _streamWrite.WriteLine("\r\n");
-        //            }
-        //            finally
-        //            {
-        //                _streamWrite.Flush();
-        //                _streamWrite.Close();
-        //            }
-        //        }
-        //    }
-        //}
+            // 异步执行
+            Task.Factory.StartNew(() =>
+            {
+                var _path = GetPath("request.txt", hostingEnvironment);
 
-        ///// <summary>
-        ///// 异步写入关键信息
-        ///// </summary>
-        ///// <param name="information">关键信息</param>
-        ///// <param name="context"><see cref="Microsoft.AspNetCore.Http.HttpContext"/> 对象</param>
-        //private static void BeginLogInformation(string information, Microsoft.AspNetCore.Http.HttpContext context)
-        //{
-        //    var _path = _map + "key.txt";
-        //    var _fileInfo = new FileInfo(_path);
-        //    var _dir = _fileInfo.Directory;
-        //    if (!_dir.Exists) _dir.Create();    //如果文件夹不存在，则创建
+                //允许多个进程同时写入
+                using (var _fileStream = new FileStream(_path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
+                {
+                    var _streamWrite = new StreamWriter(_fileStream, Encoding.Default);
+                    try
+                    {
+                        _streamWrite.BaseStream.Seek(0, SeekOrigin.End);
+                        _streamWrite.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        _streamWrite.WriteLine("\r\n");
+                        _streamWrite.WriteLine("\r\n  请求信息：");
+                        _streamWrite.WriteLine("\r\n\t浏览器标识：" + (model.UserAgent.IsNullOrEmpty() ? request.UserAgent() : model.UserAgent));
+                        _streamWrite.WriteLine("\r\n\t请求地址：" + (model.Url.IsNullOrEmpty() ? request.Url() : model.Url));
+                        _streamWrite.WriteLine("\r\n\t请求类型：" + model.RequestType);
+                        _streamWrite.WriteLine("\r\n\t控制器名：" + model.ControllerName);
+                        _streamWrite.WriteLine("\r\n\tAction名：" + model.ActionName);
+                        if (model.IpAddress.NotNullAndEmpty()) _streamWrite.WriteLine("\r\n\tIp  地址：" + model.IpAddress);
+                        if (model.RunTime.NotNullAndEmpty()) _streamWrite.WriteLine("\r\n\t消耗时间：" + model.RunTime + "s");
+                        _streamWrite.WriteLine("\r\n\t参数信息：");
+                        foreach (var item in model.Params)
+                        {
+                            _streamWrite.WriteLine("\r\n\t" + item.Key + "：" + item.Value);
+                        }
 
-        //    //允许多个进程同时写入
-        //    using (var _fileStream = new FileStream(_path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
-        //    {
-        //        var _streamWrite = new StreamWriter(_fileStream, Encoding.Default);
-        //        try
-        //        {
-        //            _streamWrite.BaseStream.Seek(0, SeekOrigin.End);
-        //            _streamWrite.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-        //            _streamWrite.WriteLine("\r\n");
-        //            _streamWrite.WriteLine("\r\n");
-        //            _streamWrite.WriteLine("\r\n\t请求地址：" + context.Request.Url.ToString());
-        //            _streamWrite.WriteLine("\r\n\t记录信息：" + information);
-        //            _streamWrite.WriteLine("\r\n");
-        //            _streamWrite.WriteLine("\r\n\t浏览器标识：" + context.Request.UserAgent);
+                        //日志的分隔线
+                        _streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
+                        _streamWrite.WriteLine("\r\n");
+                        _streamWrite.WriteLine("\r\n");
+                        _streamWrite.WriteLine("\r\n");
+                    }
+                    finally
+                    {
+                        _streamWrite.Flush();
+                        _streamWrite.Close();
+                    }
+                }
+            });
+        }
+        #endregion
 
-        //            //日志的分隔线
-        //            _streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
-        //            _streamWrite.WriteLine("\r\n");
-        //            _streamWrite.WriteLine("\r\n");
-        //            _streamWrite.WriteLine("\r\n");
-        //        }
-        //        finally
-        //        {
-        //            _streamWrite.Flush();
-        //            _streamWrite.Close();
-        //        }
-        //    }
-        //}
+        #region 获取当前日志路径
+        /// <summary>
+        /// 获取当前日志路径
+        /// </summary>
+        /// <param name="fileName">文件名</param>
+        /// <param name = "hostingEnvironment" ><see cref="IHostingEnvironment"/> 接口</param>
+        /// <returns>当前日志路径</returns>
+        private static string GetPath(string fileName, IHostingEnvironment hostingEnvironment)
+        {
+            var strBuilder = new StringBuilder(hostingEnvironment.ContentRootPath);
+            strBuilder.Append("/log/");
+            strBuilder.Append(DateTime.Now.ToFormatDate());
+            strBuilder.Append(" ");
+            strBuilder.Append(fileName);
 
-        ///// <summary>
-        ///// 异步写入请求信息
-        ///// </summary>
-        ///// <param name="model"><see cref="MvcRequestModel"/> 对象</param>
-        ///// <param name="context"><see cref="Microsoft.AspNetCore.Http.HttpContext"/> 对象</param>
-        //private static void BeginLogMvcRequest(MvcRequestModel model, Microsoft.AspNetCore.Http.HttpContext context)
-        //{
-        //    var _path = _map + "request.txt";
-        //    var _fileInfo = new FileInfo(_path);
-        //    var _dir = _fileInfo.Directory;
-        //    if (!_dir.Exists) _dir.Create();    //如果文件夹不存在，则创建
-
-        //    //允许多个进程同时写入
-        //    using (var _fileStream = new FileStream(_path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
-        //    {
-        //        var _streamWrite = new StreamWriter(_fileStream, Encoding.Default);
-        //        try
-        //        {
-        //            _streamWrite.BaseStream.Seek(0, SeekOrigin.End);
-        //            _streamWrite.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-        //            _streamWrite.WriteLine("\r\n");
-        //            _streamWrite.WriteLine("\r\n  请求信息：");
-        //            _streamWrite.WriteLine("\r\n\t浏览器标识：" + (model.UserAgent.IsNullOrEmpty() ? context.Request.UserAgent : model.UserAgent));
-        //            _streamWrite.WriteLine("\r\n\t请求地址：" + (model.Url.IsNullOrEmpty() ? context.Request.Url.ToString() : model.Url));
-        //            _streamWrite.WriteLine("\r\n\t请求类型：" + model.RequestType);
-        //            _streamWrite.WriteLine("\r\n\t控制器名：" + model.ControllerName);
-        //            _streamWrite.WriteLine("\r\n\tAction名：" + model.ActionName);
-        //            if (model.IpAddress.NotNullAndEmpty()) _streamWrite.WriteLine("\r\n\tIp  地址：" + model.IpAddress);
-        //            if (model.RunTime.NotNullAndEmpty()) _streamWrite.WriteLine("\r\n\t消耗时间：" + model.RunTime + "s");
-        //            _streamWrite.WriteLine("\r\n\t参数信息：");
-        //            foreach (var item in model.Params)
-        //            {
-        //                _streamWrite.WriteLine("\r\n\t" + item.Key + "：" + item.Value);
-        //            }
-
-        //            //日志的分隔线
-        //            _streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
-        //            _streamWrite.WriteLine("\r\n");
-        //            _streamWrite.WriteLine("\r\n");
-        //            _streamWrite.WriteLine("\r\n");
-        //        }
-        //        finally
-        //        {
-        //            _streamWrite.Flush();
-        //            _streamWrite.Close();
-        //        }
-        //    }
-        //}
-        //#endregion
+            var path = strBuilder.ToString();
+            var _fileInfo = new FileInfo(path);
+            var _dir = _fileInfo.Directory;
+            if (!_dir.Exists) _dir.Create();    //如果文件夹不存在，则创建
+            return path;
+        }
+        #endregion
     }
 }

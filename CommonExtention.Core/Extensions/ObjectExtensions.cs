@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommonExtention.Core.Extention
+namespace CommonExtention.Core.Extensions
 {
     /// <summary>
     /// <see cref="object"/> 扩展
     /// </summary>
-    public static class ExtentionObject
+    public static class ObjectExtensions
     {
         #region 指示指定的 object 对象是否不为 null
         /// <summary>

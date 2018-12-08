@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace CommonExtention.Core.Extention
+namespace CommonExtention.Core.Extensions
 {
     /// <summary>
     /// <see cref="DataTable"/> 扩展
     /// </summary>
-    public static class ExtentionDataTable
+    public static class DataTableExtensions
     {
         #region 将当前DataTable对象转换为Json字符串
         /// <summary>

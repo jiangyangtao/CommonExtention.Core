@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace CommonExtention.Core.Extention
+namespace CommonExtention.Core.Extensions
 {
     /// <summary>
     /// <see cref="Nullable"/> 扩展
     /// </summary>
-    public static class ExtentionNullable
+    public static class NullableExtensions
     {
         #region 将当前 short? 对象转换为其等效的安全值
         /// <summary>

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommonExtention.Core.Extention
+namespace CommonExtention.Core.Extensions
 {
     /// <summary>
     /// <see cref="double"/> 扩展
     /// </summary>
-    public static class ExtentionDouble
+    public static class DoubleExtensions
     {
         #region 返回 length 对应的 Size
         /// <summary>

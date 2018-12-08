@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace CommonExtention.Core.Extention
+namespace CommonExtention.Core.Extensions
 {
     /// <summary>
     /// <see cref="Array"/> 扩展
     /// </summary>
-    public static class ExtentionArray
+    public static class ArrayExtensions
     {
         #region 将 int[] 数组的转换为 string[] 数组
         /// <summary>

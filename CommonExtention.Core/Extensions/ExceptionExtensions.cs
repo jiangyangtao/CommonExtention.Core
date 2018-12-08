@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace CommonExtention.Core.Extention
+namespace CommonExtention.Core.Extensions
 {
     /// <summary>
     /// <see cref="Exception"/> 扩展
     /// </summary>
-    public static class ExtentionException
+    public static class ExtentionExtensions
     {
         #region 返回 Exception 对象中的 InnerException
         /// <summary>

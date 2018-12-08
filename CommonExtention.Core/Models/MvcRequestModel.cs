@@ -20,7 +20,7 @@ namespace CommonExtention.Core.Models
         public string ActionName { set; get; }
 
         /// <summary>
-        /// 请求的方式(get/post)
+        /// 请求的方式(get/post/delete/put/patch)
         /// </summary>
         public string RequestType { set; get; }
 

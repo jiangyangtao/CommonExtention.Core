@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommonExtention.Core.Extention
+namespace CommonExtention.Core.Extensions
 {
     /// <summary>
     /// <see cref="DateTime"/> 扩展
     /// </summary>
-    public static class ExtentionDateTime
+    public static class DateTimeExtensions
     {
         #region 返回此实例的Unix时间
         /// <summary>

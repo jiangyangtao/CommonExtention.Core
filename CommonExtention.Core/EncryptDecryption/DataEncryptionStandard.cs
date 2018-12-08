@@ -1,4 +1,4 @@
-﻿using CommonExtention.Core.Extention;
+﻿using CommonExtention.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;
