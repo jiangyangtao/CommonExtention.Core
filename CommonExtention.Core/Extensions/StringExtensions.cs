@@ -1,6 +1,9 @@
-﻿using CommonExtention.Core.EncryptDecryption;
+﻿using CommonExtention.Core.Common;
+using CommonExtention.Core.EncryptDecryption;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text.RegularExpressions;
 
 namespace CommonExtention.Core.Extensions
@@ -83,6 +86,25 @@ namespace CommonExtention.Core.Extensions
         /// <param name="value">要检测的字符串</param>
         /// <returns>如果字符串不为 null 和空字符串 ("")，则为 true；否则为 false。</returns>
         public static bool NotNullAndEmpty(this string value) => !string.IsNullOrEmpty(value);
+        #endregion
+
+        #region 指示指定的字符串是否为邮箱
+        /// <summary>
+        /// 指示指定的字符串是否为邮箱
+        /// </summary>
+        /// <param name="value">要验证的字符串</param>
+        /// <returns>
+        /// 如果字符串为 null 或者空字符串("")，则返回 false;
+        /// 否则返回验证的结果。
+        /// </returns>
+        public static bool IsEmail(this string value)
+        {
+            if (value.IsNullOrEmpty()) return false;
+
+            var emailStr = @"([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,5})+";
+            var emailReg = new Regex(emailStr);
+            return emailReg.IsMatch(value.Trim());
+        }
         #endregion
 
         #region 指示指定的字符串是否为中华人民共和国第二代身份证号码
@@ -813,6 +835,32 @@ namespace CommonExtention.Core.Extensions
             var isParsed = bool.TryParse(value, out bool _b);
             if (!isParsed) return null;
             return _b;
+        }
+        #endregion
+
+        #region 将当前 System.String 用异步方式写入到日志
+        /// <summary>
+        /// 将当前 <see cref="string"/> 用异步方式写入到日志
+        /// </summary>
+        /// <param name="value">当前 <see cref="string"/></param>
+        /// <param name="request"><see cref="HttpRequest"/>对象</param>
+        public static void WriteLogAsync(this string value,HttpRequest request)
+        {
+            AsyncLogger.LogInformation(value, request);
+        }
+        #endregion
+
+        #region 将当前路径的Excel文件读取到 DataTable
+        /// <summary>
+        /// 将当前路径的Excel文件读取到 <see cref="DataTable"/> 
+        /// </summary>
+        /// <param name="filePath">当前Excel文件的路径</param>
+        /// <param name="sheetName">指定工作薄 sheet 的名称</param>
+        /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
+        /// <returns></returns>
+        public static DataTable ReadExcelToDataTable(this string filePath, string sheetName = null, bool firstRowIsColumnName = true)
+        {
+            return ReadExcel.ReadExcelToDataTable(filePath, sheetName, firstRowIsColumnName);
         }
         #endregion
 

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Reflection;
 using System.Text;
 
 namespace CommonExtention.Core.Extensions
@@ -12,14 +13,16 @@ namespace CommonExtention.Core.Extensions
     /// </summary>
     public static class DataTableExtensions
     {
-        #region 将当前DataTable对象转换为Json字符串
+        #region 将当前 DataTable 对象转换为 System.String 形式的 Json 字符串
         /// <summary>
-        /// 将当前 <see cref="DataTable"/> 对象转换为 Json 字符串
+        /// 将当前 <see cref="DataTable"/> 对象转换为 <see cref="string"/>形式的 Json 字符串
         /// </summary>
         /// <param name="dt">要转换的 <see cref="DataTable"/> </param>
         /// <returns>返回Json字符串，包含 TableName</returns>
         public static string ToJsonString(this DataTable dt)
         {
+            if (dt == null || dt.Rows.Count <= 0) return string.Empty;
+
             var _jsonBuilder = new StringBuilder();
             _jsonBuilder.Append("{\"" + dt.TableName + "\":[");
             for (int i = 0; i < dt.Rows.Count; i++)
@@ -41,7 +44,7 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region 将当前DataTable对象转换为Json数组字符串
+        #region 将当前 DataTable 对象转换为 System.String 形式的 Json数组字符串
         /// <summary>
         /// 将当前 <see cref="DataTable"/> 对象转换为 Json 数组字符串
         /// </summary>
@@ -49,6 +52,8 @@ namespace CommonExtention.Core.Extensions
         /// <returns>返回Json数组字符串，不包含 TableName</returns>
         public static string ToJsonArrayString(this DataTable dt)
         {
+            if (dt == null || dt.Rows.Count <= 0) return string.Empty;
+
             var _jsonBuilder = new StringBuilder();
             _jsonBuilder.Append("[");
             for (int i = 0; i < dt.Rows.Count; i++)
@@ -91,12 +96,13 @@ namespace CommonExtention.Core.Extensions
                 case "Single": return Convert.ToSingle(value);
                 case "Double": return Convert.ToDouble(value);
                 case "Boolean": return "\"" + value.ToString() + "\"";
+                case "DBNull": return string.Empty;
             }
             return value.ToString();
         }
         #endregion
 
-        #region 将当前DataTable对象转换为 Newtonsoft.Json.Linq.JObject 对象
+        #region 将当前 DataTable 对象转换为 Newtonsoft.Json.Linq.JObject 对象
         /// <summary>
         /// 将当前 <see cref="DataTable"/> 对象转换为 <see cref="JObject"/> 对象
         /// </summary>
@@ -104,11 +110,13 @@ namespace CommonExtention.Core.Extensions
         /// <returns>返回 <see cref="JObject"/> 对象，包含 TableName</returns>
         public static JObject ToJObject(this DataTable dt)
         {
+            if (dt == null || dt.Rows.Count <= 0) return null;
+
             return JObject.Parse(dt.ToJsonString());
         }
         #endregion
 
-        #region 将当前DataTable对象转换为 Newtonsoft.Json.Linq.JArray 对象
+        #region 将当前 DataTable 对象转换为 Newtonsoft.Json.Linq.JArray 对象
         /// <summary>
         /// 将当前 <see cref="DataTable"/> 对象转换为 <see cref="JArray"/> 对象
         /// </summary>
@@ -116,22 +124,24 @@ namespace CommonExtention.Core.Extensions
         /// <returns>返回 <see cref="JArray"/> 对象，不包含 TableName</returns>
         public static JArray ToJArray(this DataTable dt)
         {
+            if (dt == null || dt.Rows.Count <= 0) return null;
+
             return JArray.Parse(dt.ToJsonArrayString());
         }
         #endregion
 
-        #region 将当前DataTable对象转换为 List 对象
+        #region 将当前 DataTable 对象转换为 List<T>
         /// <summary>
-        /// 将当前 <see cref="DataTable"/> 对象转换为 <see cref="List{T}"/> 对象
+        /// 将当前 <see cref="DataTable"/> 对象转换为 <see cref="List{T}"/>
         /// </summary>
         /// <typeparam name="T">要转换的元素的类型</typeparam>
-        /// <param name="dt">要转换的 <see cref="DataTable"/> </param>
+        /// <param name="dt">当前 <see cref="DataTable"/> 对象</param>
         /// <returns>转换过后的 <see cref="List{T}"/> 对象</returns>
         public static List<T> ToList<T>(this DataTable dt) where T : class, new()
         {
-            List<T> list = new List<T>();
-            if (dt == null || dt.Rows.Count <= 0) return list;
+            if (dt == null || dt.Rows.Count <= 0) return null;
 
+            List<T> list = new List<T>();
             var type = typeof(T);
             var properties = type.GetProperties();
             for (int i = 0; i < dt.Rows.Count; i++)
@@ -139,10 +149,8 @@ namespace CommonExtention.Core.Extensions
                 T model = new T();
                 foreach (var item in properties)
                 {
-                    string itemStr = item.Name;
-                    var itemType = item.PropertyType;
-                    object value = GetDataRowValue(itemStr, itemType, dt.Rows[i]);
-                    item.SetValue(model, value, null);
+                    object value = GetDataRowValue(item.Name, item.PropertyType, dt.Rows[i]);
+                    item.SetValue(model, value);
                 }
                 list.Add(model);
             }
@@ -183,14 +191,16 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region 将当前DataTable对象转换为 ArrayList 对象
+        #region 将当前 DataTable 对象转换为 ArrayList
         /// <summary>
-        /// 将当前DataTable对象转换为 ArrayList 对象
+        /// 将当前 <see cref="DataTable"/> 对象转换为 <see cref="ArrayList"/>
         /// </summary>
         /// <param name="dt">要转换的DataTable</param>
         /// <returns>返回 Dictionary 键值对的 ArrayList 对象</returns>
         public static ArrayList ToArrayList(this DataTable dt)
         {
+            if (dt == null || dt.Rows.Count <= 0) return null;
+
             var arrayList = new ArrayList();
             foreach (DataRow dataRow in dt.Rows)
             {
@@ -205,14 +215,45 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
+        #region 将当前 DataTable 对象转换为 IEnumerable<T>
+        /// <summary>
+        /// 将当前 <see cref="DataTable"/> 对象转换为 <see cref="IEnumerable{T}"/>
+        /// </summary>
+        /// <typeparam name="T">要转换的元素的类型</typeparam>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public static IEnumerable<T> ToEnumerable<T>(this DataTable dt) where T : class, new()
+        {
+            if (dt == null || dt.Rows.Count <= 0) return null;
+
+            PropertyInfo[] propertyInfos = typeof(T).GetProperties();
+            T[] ts = new T[dt.Rows.Count];
+            int i = 0;
+            foreach (DataRow row in dt.Rows)
+            {
+                T t = new T();
+                foreach (PropertyInfo p in propertyInfos)
+                {
+                    if (dt.Columns.IndexOf(p.Name) != -1 && row[p.Name] != DBNull.Value)
+                        p.SetValue(t, row[p.Name], null);
+                }
+                ts[i] = t;
+                i++;
+            }
+            return ts;
+        }
+        #endregion
+
         #region 清除当前 DataTable 对象的空行
         /// <summary>
-        /// 清除当前DataTable对象的空行
+        /// 清除当前 <see cref="DataTable"/> 对象的空行
         /// </summary>
-        /// <param name="dt">要清除空行的 DataTable </param>
-        /// <returns>返回清除空行后的 DataTable 。</returns>
+        /// <param name="dt">要清除空行的 <see cref="DataTable"/> </param>
+        /// <returns>返回清除空行后的 <see cref="DataTable"/> 对象。</returns>
         public static DataTable ClearEmptyRow(this DataTable dt)
         {
+            if (dt == null || dt.Rows.Count <= 0) return null;
+
             for (int i = dt.Rows.Count - 1; i >= 0; i--)
             {
                 var emptyColumnCount = 0;

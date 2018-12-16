@@ -26,7 +26,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:0,data:"",count:0,message:Success}
         /// </returns>
-        protected virtual ActionResult ResponseSuccess()
+        protected virtual IActionResult ResponseSuccess()
         {
             var json = new Dictionary<string, object>()
             {
@@ -47,7 +47,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:0,data:data,count:1,message:Success}
         /// </returns>
-        protected virtual ActionResult ResponseSuccess<T>(T data, int count = 1)
+        protected virtual IActionResult ResponseSuccess<T>(T data, int count = 1)
         {
             if (data == null) count = 0;
             var json = new Dictionary<string, object>()
@@ -68,7 +68,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:0,data:List,count:List.Count(),message:Success}
         /// </returns>
-        protected virtual ActionResult ResponseSuccess<T>(List<T> list, int count = 0)
+        protected virtual IActionResult ResponseSuccess<T>(List<T> list, int count = 0)
         {
             if (count == 0) count = list.Count();
             var json = new Dictionary<string, object>()
@@ -89,7 +89,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:0,data:DataTable,count:DataTable.Rows.Count,message:Success}
         /// </returns>
-        protected virtual ActionResult ResponseSuccess(DataTable dt, int count = 0)
+        protected virtual IActionResult ResponseSuccess(DataTable dt, int count = 0)
         {
             if (count == 0) count = dt.Rows.Count;
             var jsonBuilder = new StringBuilder("{\"code\":0,\"count\":" + count + ",\"message\":\"Success\",\"data\":");
@@ -106,7 +106,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:-1,data:"",count:-1,message:Unknown error}
         /// </returns>
-        protected virtual ActionResult ResponseFail(int code = -1, string message = "Unknown error")
+        protected virtual IActionResult ResponseFail(int code = -1, string message = "Unknown error")
         {
             var json = new Dictionary<string, object>()
             {
@@ -128,7 +128,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:0,rows:data,total:1,message:Success}
         /// </returns>
-        protected virtual ActionResult ResponseGridResult<T>(T data, int count = 1)
+        protected virtual IActionResult ResponseGridResult<T>(T data, int count = 1)
         {
             if (data != null) count = 1;
             var result = new Dictionary<string, object>()
@@ -149,7 +149,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:0,rows:List,total:List.Count(),message:Success}
         /// </returns>
-        protected virtual ActionResult ResponseGridResult<T>(List<T> list, int count = 0)
+        protected virtual IActionResult ResponseGridResult<T>(List<T> list, int count = 0)
         {
             if (count == 0) count = list.Count();
             var result = new Dictionary<string, object>()
@@ -170,7 +170,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:0,rows:DataTable,total:DataTable.Rows.Count,message:Success}
         /// </returns>
-        protected virtual ActionResult ResponseGridResult(DataTable dt, int count = 0)
+        protected virtual IActionResult ResponseGridResult(DataTable dt, int count = 0)
         {
             if (count == 0) count = dt.Rows.Count;
             var jsonBuilder = new StringBuilder("{\"code\":0,\"total\":" + count + ",\"message\":\"Success\",\"rows\":");
@@ -188,7 +188,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:-1,rows:[],total:0,message:Unknown error}
         /// </returns>
-        protected virtual ActionResult ResponseGridResult(int code = -1, string message = "Unknown error")
+        protected virtual IActionResult ResponseGridResult(int code = -1, string message = "Unknown error")
         {
             var result = new Dictionary<string, object>()
             {

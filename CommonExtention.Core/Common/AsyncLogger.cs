@@ -21,17 +21,15 @@ namespace CommonExtention.Core.Common
         /// </summary>
         /// <param name="exception"><see cref="Exception"/> 对象</param>
         /// <param name="request"><see cref="HttpRequest"/> 对象</param>
-        /// <param name="hostingEnvironment"><see cref="IHostingEnvironment"/> 接口</param>
-        public static void LogException(Exception exception, HttpRequest request, IHostingEnvironment hostingEnvironment)
+        public static void LogException(Exception exception, HttpRequest request)
         {
             if (exception == null) return;
             if (request == null) return;
-            if (hostingEnvironment == null) return;
 
             // 异步执行
             Task.Factory.StartNew(() =>
             {
-                var _path = GetPath("error.txt", hostingEnvironment);
+                var _path = GetPath("error.txt");
 
                 //允许多个进程同时写入
                 using (var _fileStream = new FileStream(_path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
@@ -73,17 +71,15 @@ namespace CommonExtention.Core.Common
         /// </summary>
         /// <param name="information">关键信息</param>
         /// <param name="request"><see cref="HttpRequest"/> 对象</param>
-        /// <param name="hostingEnvironment"><see cref="IHostingEnvironment"/> 接口</param>
-        public static void LogInformation(string information, HttpRequest request, IHostingEnvironment hostingEnvironment)
+        public static void LogInformation(string information, HttpRequest request)
         {
             if (information.IsNullOrEmpty()) return;
             if (request == null) return;
-            if (hostingEnvironment == null) return;
 
             // 异步执行
             Task.Factory.StartNew(() =>
             {
-                var _path = GetPath("key.txt", hostingEnvironment);
+                var _path = GetPath("key.txt");
 
                 //允许多个进程同时写入
                 using (var _fileStream = new FileStream(_path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
@@ -122,17 +118,15 @@ namespace CommonExtention.Core.Common
         /// </summary>
         /// <param name="model"><see cref="MvcRequestModel"/> 对象</param>
         /// <param name="request"><see cref="HttpRequest"/> 对象</param>
-        /// <param name="hostingEnvironment"><see cref="IHostingEnvironment"/> 接口</param>
-        public static void LogMvcRequest(MvcRequestModel model, HttpRequest request, IHostingEnvironment hostingEnvironment)
+        public static void LogMvcRequest(MvcRequestModel model, HttpRequest request)
         {
             if (model == null) return;
             if (request == null) return;
-            if (hostingEnvironment == null) return;
 
             // 异步执行
             Task.Factory.StartNew(() =>
             {
-                var _path = GetPath("request.txt", hostingEnvironment);
+                var _path = GetPath("request.txt");
 
                 //允许多个进程同时写入
                 using (var _fileStream = new FileStream(_path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
@@ -180,10 +174,10 @@ namespace CommonExtention.Core.Common
         /// <param name="fileName">文件名</param>
         /// <param name = "hostingEnvironment" ><see cref="IHostingEnvironment"/> 接口</param>
         /// <returns>当前日志路径</returns>
-        private static string GetPath(string fileName, IHostingEnvironment hostingEnvironment)
+        private static string GetPath(string fileName)
         {
-            var strBuilder = new StringBuilder(hostingEnvironment.ContentRootPath);
-            strBuilder.Append("/log/");
+            var strBuilder = new StringBuilder(Path.Combine(Directory.GetCurrentDirectory()));
+            strBuilder.Append(@"\log\");
             strBuilder.Append(DateTime.Now.ToFormatDate());
             strBuilder.Append(" ");
             strBuilder.Append(fileName);

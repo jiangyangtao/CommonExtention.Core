@@ -9,6 +9,150 @@ namespace CommonExtention.Core.Extensions
     /// </summary>
     public static class ObjectExtensions
     {
+        #region 指示指定的 object 是否为等效的 String 类型
+        /// <summary>
+        /// 指示指定的 <see cref="object"/> 是否为等效的 <see cref="string"/> 类型
+        /// </summary>
+        /// <param name="value">要检测的 <see cref="object"/> </param>
+        /// <returns>
+        /// 如果 value 值为 null，则返回 false；
+        /// 如果 value 值为等效的 <see cref="string"/> 类型，则返回true；否则返回false。
+        /// </returns>
+        public static bool IsString(this object value)
+        {
+            if (value == null) return false;
+            return value.GetType().Name == "String";
+        }
+        #endregion
+
+        #region 指示指定的 object 是否为等效的 Int16 类型
+        /// <summary>
+        /// 指示指定的 <see cref="object"/> 是否为等效的 <see cref="short"/> 类型
+        /// </summary>
+        /// <param name="value">要检测的 <see cref="object"/> </param>
+        /// <returns>
+        /// 如果 value 值为 null，则返回 false；
+        /// 如果 value 值为等效的 <see cref="short"/> 类型，则返回true；否则返回false。
+        /// </returns>
+        public static bool IsInt16(this object value)
+        {
+            if (value == null) return false;
+            return value.GetType().Name == "Int16";
+        }
+        #endregion
+
+        #region 指示指定的 object 是否为等效的 Int32 类型
+        /// <summary>
+        /// 指示指定的 <see cref="object"/> 是否为等效的 <see cref="int"/> 类型
+        /// </summary>
+        /// <param name="value">要检测的 <see cref="object"/> </param>
+        /// <returns>
+        /// 如果 value 值为 null，则返回 false；
+        /// 如果 value 值为等效的 <see cref="int"/> 类型，则返回true；否则返回false。
+        /// </returns>
+        public static bool IsInt(this object value)
+        {
+            if (value == null) return false;
+            return value.GetType().Name == "Int32";
+        }
+        #endregion
+
+        #region 指示指定的 object 是否为等效的 Int64 类型
+        /// <summary>
+        /// 指示指定的 <see cref="object"/> 是否为等效的 <see cref="long"/> 类型
+        /// </summary>
+        /// <param name="value">要检测的 <see cref="object"/> </param>
+        /// <returns>
+        /// 如果 value 值为 null，则返回 false；
+        /// 如果 value 值为等效的 <see cref="long"/> 类型，则返回true；否则返回false。
+        /// </returns>
+        public static bool IsInt64(this object value)
+        {
+            if (value == null) return false;
+            return value.GetType().Name == "Int64";
+        }
+        #endregion
+
+        #region 指示指定的 object 是否为等效的 Decimal 类型
+        /// <summary>
+        /// 指示指定的 <see cref="object"/> 是否为等效的 <see cref="decimal"/> 类型
+        /// </summary>
+        /// <param name="value">要检测的 <see cref="object"/> </param>
+        /// <returns>
+        /// 如果 value 值为 null，则返回 false；
+        /// 如果 value 值为等效的 <see cref="decimal"/> 类型，则返回true；否则返回false。
+        /// </returns>
+        public static bool IsDecimal(this object value)
+        {
+            if (value == null) return false;
+            return value.GetType().Name == "Decimal";
+        }
+        #endregion
+
+        #region 指示指定的 object 是否为等效的 Single 类型
+        /// <summary>
+        /// 指示指定的 <see cref="object"/> 是否为等效的 <see cref="float"/> 类型
+        /// </summary>
+        /// <param name="value">要检测的 <see cref="object"/> </param>
+        /// <returns>
+        /// 如果 value 值为 null，则返回 false；
+        /// 如果 value 值为等效的 <see cref="float"/> 类型，则返回true；否则返回false。
+        /// </returns>
+        public static bool IsSingle(this object value)
+        {
+            if (value == null) return false;
+            return value.GetType().Name == "Single";
+        }
+        #endregion
+
+        #region 指示指定的 object 是否为等效的 Double 类型
+        /// <summary>
+        /// 指示指定的 <see cref="object"/> 是否为等效的 <see cref="double"/> 类型
+        /// </summary>
+        /// <param name="value">要检测的 <see cref="object"/> </param>
+        /// <returns>
+        /// 如果 value 值为 null，则返回 false；
+        /// 如果 value 值为等效的 <see cref="double"/> 类型，则返回true；否则返回false。
+        /// </returns>
+        public static bool IsDouble(this object value)
+        {
+            if (value == null) return false;
+            return value.GetType().Name == "Double";
+        }
+        #endregion
+
+        #region 指示指定的 object 是否为等效的 DadeTime 对象
+        /// <summary>
+        /// 指示指定的 <see cref="object"/> 是否为等效的 <see cref="DateTime"/> 对象
+        /// </summary>
+        /// <param name="value">要检测的 <see cref="object"/> </param>
+        /// <returns>
+        /// 如果 value 值为 null，则返回 false；
+        /// 如果 value 值为等效的 <see cref="DateTime"/> 对象，则返回true；否则返回false。
+        /// </returns>
+        public static bool IsDateTime(this object value)
+        {
+            if (value == null) return false;
+            return value.GetType().Name == "DateTime";
+        }
+        #endregion
+
+        #region 指示指定的 object 是否为等效的 Boolean 类型
+        /// <summary>
+        /// 指示指定的 <see cref="object"/> 是否为等效的 <see cref="bool"/> 类型
+        /// </summary>
+        /// <param name="value">要检测的 <see cref="object"/> </param>
+        /// <returns>
+        /// 如果 value 值为 null，则返回 false；
+        /// 如果 value 为等效的 <see cref="bool"/> 类型，则返回true；否则返回false。
+        /// </returns>
+        public static bool IsBoolean(this object value)
+        {
+            if (value == null) return false;
+            return value.GetType().Name == "Boolean";
+        }
+        #endregion
+
         #region 指示指定的 object 对象是否不为 null
         /// <summary>
         /// 指示指定的 <see cref="object"/> 对象是否不为 null

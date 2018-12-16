@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CommonExtention.Core.Common;
+using Microsoft.AspNetCore.Http;
+using System;
 
 namespace CommonExtention.Core.Extensions
 {
@@ -32,6 +34,18 @@ namespace CommonExtention.Core.Extensions
             if (exception == null) return string.Empty;
             if (exception.InnerException != null) return ExceptionMessage(exception.InnerException);
             return exception.Message;
+        }
+        #endregion
+
+        #region 将当前 Exception 对象用异步方式写入日志
+        /// <summary>
+        /// 将当前 <see cref="Exception"/> 对象用异步方式写入日志
+        /// </summary>
+        /// <param name="exception">当前 Exception 对象</param>
+        /// <param name="request"><see cref="HttpRequest"/>对象</param>
+        public static void WriteLogAsync(this Exception exception, HttpRequest request)
+        {
+            AsyncLogger.LogException(exception, request);
         }
         #endregion
     }
