@@ -37,8 +37,20 @@ namespace CommonExtention.Core.Extensions
                 typeName == "DateTime" ||
                 typeName == "Boolean")
             {
-                dataTable.Columns.Add(typeName, type);
-                return BuildDataRow(dataTable, list, typeName);
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var dataRow = dataTable.NewRow();
+                    var item = list[i];
+                    if (item == null)
+                    {
+                        if (addEmptyRow) dataTable.Rows.Add(dataRow);
+                        continue;
+                    }
+
+                    dataRow[typeName] = item;
+                    dataTable.Rows.Add(dataRow);
+                }
+                return dataTable;
             }
 
             var keys = type.GetProperties();
@@ -61,33 +73,6 @@ namespace CommonExtention.Core.Extensions
                 {
                     dataRow[item.Name] = item.GetValue(entity);
                 }
-                dataTable.Rows.Add(dataRow);
-            }
-            return dataTable;
-        }
-
-        /// <summary>
-        /// 构建 DataRow
-        /// </summary>
-        /// <typeparam name="T">T</typeparam>
-        /// <param name="dataTable"><see cref="DataTable"/></param>
-        /// <param name="list"><see cref="List{T}"/></param>
-        /// <param name="columnName">列名</param>
-        /// <param name="addEmptyRow">是否添加空行</param>
-        /// <returns>转化后的 <see cref="DataTable"/></returns>
-        private static DataTable BuildDataRow<T>(DataTable dataTable, List<T> list, string columnName, bool addEmptyRow = false)
-        {
-            for (int i = 0; i < list.Count; i++)
-            {
-                var dataRow = dataTable.NewRow();
-                var item = list[i];
-                if (item == null)
-                {
-                    if (addEmptyRow) dataTable.Rows.Add(dataRow);
-                    continue;
-                }
-
-                dataRow[columnName] = item;
                 dataTable.Rows.Add(dataRow);
             }
             return dataTable;

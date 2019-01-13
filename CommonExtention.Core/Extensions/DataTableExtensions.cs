@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -50,25 +51,25 @@ namespace CommonExtention.Core.Extensions
         /// </summary>
         /// <param name="dt">要转换的 <see cref="DataTable"/> </param>
         /// <returns>返回Json数组字符串，不包含 TableName</returns>
-        public static string ToJsonArrayString(this DataTable dt)
+        public static string ToJsonArrayString(this DataTable dataTable)
         {
-            if (dt == null || dt.Rows.Count <= 0) return string.Empty;
+            if (dataTable == null || dataTable.Rows.Count <= 0) return string.Empty;
 
             var _jsonBuilder = new StringBuilder();
             _jsonBuilder.Append("[");
-            for (int i = 0; i < dt.Rows.Count; i++)
+            for (int i = 0; i < dataTable.Rows.Count; i++)
             {
                 _jsonBuilder.Append("{");
-                for (int j = 0; j < dt.Columns.Count; j++)
+                for (int j = 0; j < dataTable.Columns.Count; j++)
                 {
                     _jsonBuilder.Append("\"");
-                    _jsonBuilder.Append(dt.Columns[j].ColumnName);
+                    _jsonBuilder.Append(dataTable.Columns[j].ColumnName);
                     _jsonBuilder.Append("\":");
-                    _jsonBuilder.Append(GetValueByType(dt.Rows[i][j]));
-                    if (j != dt.Columns.Count - 1) _jsonBuilder.Append(",");
+                    _jsonBuilder.Append(GetValueByType(dataTable.Rows[i][j]));
+                    if (j != dataTable.Columns.Count - 1) _jsonBuilder.Append(",");
                 }
                 _jsonBuilder.Append("}");
-                if (i != dt.Rows.Count - 1) _jsonBuilder.Append(",");
+                if (i != dataTable.Rows.Count - 1) _jsonBuilder.Append(",");
             }
             _jsonBuilder.Append("]");
             var _json = _jsonBuilder.ToString();
@@ -162,30 +163,31 @@ namespace CommonExtention.Core.Extensions
         /// </summary>
         /// <param name="columnName">列名称</param>
         /// <param name="columnType">列的类型</param>
-        /// <param name="dr">DataRow 集合</param>
+        /// <param name="dataRow">DataRow 集合</param>
         /// <returns>列值</returns>
-        private static object GetDataRowValue(string columnName, Type columnType, DataRow dr)
+        private static object GetDataRowValue(string columnName, Type columnType, DataRow dataRow)
         {
-            if (dr.Table.Columns.Contains(columnName))
+            if (dataRow.Table.Columns.Contains(columnName))
             {
-                if (typeof(string) == columnType) return dr[columnName].ToString();
-                if (typeof(short) == columnType) return dr[columnName].ToString().ToInt16();
-                if (typeof(short?) == columnType) return dr[columnName].ToString().ToNullableInt16();
-                if (typeof(int) == columnType) return dr[columnName].ToString().ToInt();
-                if (typeof(int?) == columnType) return dr[columnName].ToString().ToNullableInt();
-                if (typeof(long) == columnType) return dr[columnName].ToString().ToInt64();
-                if (typeof(long?) == columnType) return dr[columnName].ToString().ToNullableInt64();
-                if (typeof(float) == columnType) return dr[columnName].ToString().ToSingle();
-                if (typeof(float?) == columnType) return dr[columnName].ToString().ToNullableSingle();
-                if (typeof(double) == columnType) return dr[columnName].ToString().ToDouble();
-                if (typeof(double?) == columnType) return dr[columnName].ToString().ToNullableDouble();
-                if (typeof(decimal) == columnType) return dr[columnName].ToString().ToDecimal();
-                if (typeof(decimal?) == columnType) return dr[columnName].ToString().ToNullableDecimal();
-                if (typeof(DateTime) == columnType) return dr[columnName].IsNullOrEmpty() ? DateTime.Parse("1900/01/01") : DateTime.Parse(dr[columnName].ToString());
-                if (typeof(DateTime?) == columnType) return dr[columnName].ToString().ToNullableDateTime();
-                if (typeof(bool) == columnType) return dr[columnName].ToString().ToBoolean();
-                if (typeof(bool?) == columnType) return dr[columnName].ToString().ToNullableBoolean();
-                if (dr[columnName] != null) return dr[columnName].ToString();
+                if (typeof(string) == columnType) return dataRow[columnName].ToString();
+                if (typeof(short) == columnType) return dataRow[columnName].ToString().ToInt16();
+                if (typeof(short?) == columnType) return dataRow[columnName].ToString().ToNullableInt16();
+                if (typeof(int) == columnType) return dataRow[columnName].ToString().ToInt();
+                if (typeof(int?) == columnType) return dataRow[columnName].ToString().ToNullableInt();
+                if (typeof(long) == columnType) return dataRow[columnName].ToString().ToInt64();
+                if (typeof(long?) == columnType) return dataRow[columnName].ToString().ToNullableInt64();
+                if (typeof(float) == columnType) return dataRow[columnName].ToString().ToSingle();
+                if (typeof(float?) == columnType) return dataRow[columnName].ToString().ToNullableSingle();
+                if (typeof(double) == columnType) return dataRow[columnName].ToString().ToDouble();
+                if (typeof(double?) == columnType) return dataRow[columnName].ToString().ToNullableDouble();
+                if (typeof(decimal) == columnType) return dataRow[columnName].ToString().ToDecimal();
+                if (typeof(decimal?) == columnType) return dataRow[columnName].ToString().ToNullableDecimal();
+                if (typeof(DateTime) == columnType) return dataRow[columnName].IsNullOrEmpty() ? DateTimeExtensions.DatabaseDateTimeInitial : DateTime.Parse(dataRow[columnName].ToString());
+                if (typeof(DateTime?) == columnType) return dataRow[columnName].ToString().ToNullableDateTime();
+                if (typeof(bool) == columnType) return dataRow[columnName].ToString().ToBoolean();
+                if (typeof(bool?) == columnType) return dataRow[columnName].ToString().ToNullableBoolean();
+                if (typeof(Guid) == columnType) return dataRow[columnName].ToString().ToNullableBoolean();
+                if (dataRow[columnName] != null) return dataRow[columnName].ToString();
             }
             return string.Empty;
         }

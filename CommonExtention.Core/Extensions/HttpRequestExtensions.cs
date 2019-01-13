@@ -63,7 +63,23 @@ namespace CommonExtention.Core.Extensions
         public static string UserAgent(this HttpRequest request)
         {
             if (request == null) return string.Empty;
-            return request.Headers["User-Agent"];
+            return request.Headers.UserAgent();
+        }
+        #endregion
+
+        #region 获取当前请求的 Content-Type        
+        /// <summary>
+        /// 获取当前请求的 Content-Type
+        /// </summary>
+        /// <param name="request">HttpRequest</param>
+        /// <returns>
+        /// 如果当前 HttpRequest 对象为 null，则返回 <see cref="string.Empty"/>;
+        /// 当前请求的 Content-Type 
+        /// </returns>
+        public static string ContentType(this HttpRequest request)
+        {
+            if (request == null) return string.Empty;
+            return request.Headers.ContentType();
         }
         #endregion
 

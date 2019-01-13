@@ -252,7 +252,7 @@ namespace CommonExtention.Core.Common
             }
             finally
             {
-                fileStream.Close(); // 关闭流
+                stream.Close(); // 关闭流
             }
         }
         #endregion

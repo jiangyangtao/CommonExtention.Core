@@ -1,12 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CommonExtention.Core.Extensions
@@ -14,28 +11,8 @@ namespace CommonExtention.Core.Extensions
     /// <summary>
     /// <see cref="DatabaseFacade"/> 扩展
     /// </summary>
-    public static class DatabaseExtensions
+    public static class DatabaseFacadeExtensions
     {
-        #region 参数化处理
-        /// <summary>
-        /// 参数化处理
-        /// </summary>
-        /// <param name="command"><see cref="DbCommand"/> 对象</param>
-        /// <param name="parameters">参数集</param>
-        private static void ParameterizedObject (ref DbCommand command, params object[] parameters)
-        {
-            if (parameters != null)
-            {
-                foreach (SqlParameter parameter in parameters)
-                {
-                    if (!parameter.ParameterName.Contains("@"))
-                        parameter.ParameterName = $"@{parameter.ParameterName}";
-                    command.Parameters.Add(parameter);
-                }
-            }
-        }
-        #endregion
-
         #region 创建 DbCommand 对象
         /// <summary>
         /// 创建 <see cref="DbCommand"/> 对象
@@ -50,19 +27,27 @@ namespace CommonExtention.Core.Extensions
             var conn = facade.GetDbConnection();
             dbConn = conn;
             conn.Open();
-            var cmd = conn.CreateCommand();
+            var dbCommand = conn.CreateCommand();
             if (facade.IsSqlServer())
             {
-                cmd.CommandText = sql;
-                ParameterizedObject(ref cmd, parameters);
+                dbCommand.CommandText = sql;
+                if (parameters != null)
+                {
+                    foreach (SqlParameter parameter in parameters)
+                    {
+                        if (!parameter.ParameterName.Contains("@"))
+                            parameter.ParameterName = $"@{parameter.ParameterName}";
+                        dbCommand.Parameters.Add(parameter);
+                    }
+                }
             }
-            return cmd;
+            return dbCommand;
         }
         #endregion
 
-        #region Sql查询
+        #region 创建一个原始 Sql 查询，将该查询的结果返回给 DataTable
         /// <summary>
-        /// Sql查询
+        /// 创建一个原始 Sql 查询，将该查询的结果返回给 <see cref="DataTable"/>
         /// </summary>
         /// <param name="facade">当前<see cref="DatabaseFacade"/> 对象</param>
         /// <param name="sql">要执行查询的 Sql 语句</param>
@@ -80,9 +65,9 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region Sql异步查询
+        #region 创建一个原始 Sql 查询，将该查询的结果返回给 DataTable
         /// <summary>
-        /// Sql异步查询
+        /// 创建一个原始 Sql 查询，将该查询的结果返回给 <see cref="DataTable"/>
         /// </summary>
         /// <param name="facade">当前<see cref="DatabaseFacade"/> 对象</param>
         /// <param name="sql">要执行查询的 Sql 语句</param>
@@ -100,11 +85,11 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region Sql查询
+        #region 创建一个原始 Sql 查询，将该查询的结果返回给 IEnumerable<T>
         /// <summary>
-        /// Sql查询
+        /// 创建一个原始 Sql 查询，将该查询的结果返回给 <see cref="IEnumerable{T}"/>
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">T</typeparam>
         /// <param name="facade">当前<see cref="DatabaseFacade"/> 对象</param>
         /// <param name="sql">要执行查询的 Sql 语句</param>
         /// <param name="parameters">参数集</param>
@@ -116,9 +101,9 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region Sql异步查询
+        #region 创建一个原始 Sql 查询，将该查询的结果返回给 IEnumerable<T>
         /// <summary>
-        /// Sql异步查询
+        /// 创建一个原始 Sql 查询，将该查询的结果返回给 <see cref="IEnumerable{T}"/>
         /// </summary>
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="facade">当前<see cref="DatabaseFacade"/> 对象</param>
@@ -129,6 +114,40 @@ namespace CommonExtention.Core.Extensions
         {
             var dt = await SqlQueryAsync(facade, sql, parameters);
             return dt.ToEnumerable<T>();
+        }
+        #endregion
+
+        #region 创建一个原始 Sql 查询，将该查询的结果返回给 DataSet
+        /// <summary>
+        /// 创建一个原始 Sql 查询，将该查询的结果返回给 <see cref="DataSet"/>
+        /// </summary>
+        /// <param name="facade">当前 <see cref="DatabaseFacade"/> 对象</param>
+        /// <param name="sql">要执行查询的 Sql 语句</param>
+        /// <param name="parameters">参数集</param>
+        /// <returns><see cref="DataSet"/></returns>
+        public static DataSet SqlQueryToDataSet(this DatabaseFacade facade, string sql, params object[] parameters)
+        {
+            using (var conn = (SqlConnection)facade.GetDbConnection())
+            {
+                conn.Open();
+                using (var sqlCommand = conn.CreateCommand())
+                {
+                    sqlCommand.CommandText = sql;
+                    if (parameters != null)
+                    {
+                        foreach (SqlParameter parameter in parameters)
+                        {
+                            if (!parameter.ParameterName.Contains("@"))
+                                parameter.ParameterName = $"@{parameter.ParameterName}";
+                            sqlCommand.Parameters.Add(parameter);
+                        }
+                    }
+                    var adapter = new SqlDataAdapter(sqlCommand);
+                    var dataSet = new DataSet();
+                    adapter.Fill(dataSet);
+                    return dataSet;
+                }
+            }
         }
         #endregion
     }
