@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -18,6 +19,25 @@ namespace CommonExtention.Core.Extensions
         /// <param name="request">HttpRequest</param>
         /// <returns>当前请求的 Url</returns>
         public static string Url(this HttpRequest request)
+        {
+            if (request == null) return string.Empty;
+            return new StringBuilder()
+                .Append(request.Scheme)
+                .Append("://")
+                .Append(request.Host)
+                .Append(request.PathBase)
+                .Append(request.Path)
+                .ToString();
+        }
+        #endregion
+
+        #region 获取当前绝对 Url
+        /// <summary>
+        /// 获取当前绝对 Url
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static string AbsoluteUrl(this HttpRequest request)
         {
             if (request == null) return string.Empty;
             return new StringBuilder()
@@ -104,5 +124,35 @@ namespace CommonExtention.Core.Extensions
             return false;
         }
         #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public static string GetParamsString(this HttpRequest request)
+        {
+            try
+            {
+                var method = request.Method.ToLower();
+                if (method == "get") return request.QueryString.Value;
+                if (method == "post")
+                {
+                    var contentType = request.ContentType();
+                    if (contentType.Contains("multipart")) return request.Form.ToJson();
+                    else
+                    {
+                        // request.Body.Position = 0;
+                        var reader = new StreamReader(request.Body);
+                        return reader.ReadToEnd();
+                    }
+                }
+                return string.Empty;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
     }
 }

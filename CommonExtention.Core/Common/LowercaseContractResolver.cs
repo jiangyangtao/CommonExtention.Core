@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CommonExtention.Core.Serialization
+namespace CommonExtention.Core.Common
 {
     /// <summary>
     /// Json 全小写约定

@@ -9,18 +9,46 @@ namespace CommonExtention.Core.Extensions
     /// </summary>
     public static class DateTimeExtensions
     {
-        #region DateTime 初始值
+        #region Sql Server 数据库 DateTime 初始值 
         /// <summary>
-        /// <see cref="DateTime"/> 的初始值，公元 0001 年 1 月 1 号 00 点 00 分 00 秒 000 毫秒
+        /// Sql Server 数据库 <see cref="DateTime"/> 初始值 : 公元 1900 年 1 月 1 号 00 点 00 分 00 秒 000 毫秒
         /// </summary>
-        public static DateTime DateTimeInitial { get => new DateTime(1, 1, 1, 0, 0, 0, 0); }
+        public static DateTime MsSQLDateTimeInitial { get => new DateTime(1900, 1, 1, 0, 0, 0, 0); }
         #endregion
 
-        #region 数据库 DateTime 初始值 
+        #region Sql Server 数据库 DateTime 最小值 
         /// <summary>
-        /// 数据库 <see cref="DateTime"/> 的初始值，公元 1900 年 1 月 1 号 00 点 00 分 00 秒 000 毫秒
+        /// Sql Server 数据库 <see cref="DateTime"/> 最小值 : 公元 1900 年 1 月 1 号 00 点 00 分 00 秒 000 毫秒
         /// </summary>
-        public static DateTime DatabaseDateTimeInitial { get => new DateTime(1900, 1, 1, 0, 0, 0, 0); }
+        public static DateTime MsSQLDateTimeMinValue { get => MsSQLDateTimeInitial; }
+        #endregion
+
+        #region Sql Server 数据库 DateTime 最大值 
+        /// <summary>
+        /// Sql Server 数据库 <see cref="DateTime"/> 最大值 : 公元 9999 年 12 月 31 号 11 点 59 分 59 秒 999 毫秒
+        /// </summary>
+        public static DateTime MsSQLDateTimeMaxValue { get => DateTime.MaxValue; }
+        #endregion
+
+        #region MySql 数据库 DateTime 初始值 
+        /// <summary>
+        /// MySql 数据库 <see cref="DateTime"/> 初始值 : 公元 1900 年 1 月 1 号 00 点 00 分 00 秒 000 毫秒
+        /// </summary>
+        public static DateTime MySqlDateTimeInitial { get => new DateTime(1753, 1, 1, 0, 0, 0, 0); }
+        #endregion
+
+        #region MySql 数据库 DateTime 最小值
+        /// <summary>
+        /// MySql 数据库 <see cref="DateTime"/> 最小值 : 公元 1753 年 1 月 1 号 00 点 00 分 00 秒 000 毫秒
+        /// </summary>
+        public static DateTime MySqlDateTimeMinValue { get => MySqlDateTimeInitial; }
+        #endregion
+
+        #region MySql 数据库 DateTime 初始值
+        /// <summary>
+        /// MySql 数据库 <see cref="DateTime"/> 最大值 : 公元 9999 年 12 月 31 号 11 点 59 分 59 秒 999 毫秒
+        /// </summary>
+        public static DateTime MySqlDateTimeMaxValue { get => DateTime.MaxValue; }
         #endregion
 
         #region 返回此实例的Unix时间

@@ -93,7 +93,7 @@ namespace CommonExtention.Core.Common
         {
             if (count == 0) count = dt.Rows.Count;
             var jsonBuilder = new StringBuilder("{\"code\":0,\"count\":" + count + ",\"message\":\"Success\",\"data\":");
-            jsonBuilder.Append(dt.ToJsonArrayString());
+            jsonBuilder.Append(dt.ToJsonArray());
             jsonBuilder.Append("}");
             return Content(jsonBuilder.ToString(), "application/json");
         }
@@ -174,7 +174,7 @@ namespace CommonExtention.Core.Common
         {
             if (count == 0) count = dt.Rows.Count;
             var jsonBuilder = new StringBuilder("{\"code\":0,\"total\":" + count + ",\"message\":\"Success\",\"rows\":");
-            jsonBuilder.Append(dt.ToJsonArrayString());
+            jsonBuilder.Append(dt.ToJsonArray());
             jsonBuilder.Append("}");
             return Content(jsonBuilder.ToString(), "application/json");
         }
