@@ -188,6 +188,22 @@ namespace CommonExtention.Core.Extensions
 
         #endregion
 
+        #region 对当前 System.Array 的每个元素执行指定操作
+        /// <summary>
+        /// 对当前 <see cref="Array"/> 的每个元素执行指定操作
+        /// </summary>
+        /// <typeparam name="T">源数组元素的类型</typeparam>
+        /// <param name="Tarray">源数组</param>
+        /// <param name="action">要对 <see cref="Array"/> 的每个元素执行的 <see cref="Action"/> 委托</param>
+        public static void ForEach<T>(this T[] Tarray, Action<T, int> action)
+        {
+            for (int i = 0; i < Tarray.Length; i++)
+            {
+                action(Tarray[i], i);
+            }
+        }
+        #endregion
+
         #region 确定指定数组包含的元素是否与指定谓词定义的条件匹配
         /// <summary>
         /// 确定指定数组包含的元素是否与指定谓词定义的条件匹配

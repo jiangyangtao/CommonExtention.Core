@@ -30,27 +30,27 @@ namespace CommonExtention.Core.Common
 
         #region Public Property
         /// <summary>
-        /// 是否为中华人民共和国第二代身份证号码。如果身份证验证通过，则返回 true; 否则返回 false。
+        /// 是否为中华人民共和国第二代身份证号码。如果身份证验证通过，则为 true; 否则为 false。
         /// </summary>
         public bool IsIdentityNumber { get; private set; } = false;
 
         /// <summary>
-        /// 出生日期。如果身份证验证通过，则返回 身份证号码上的出生日期; 否则返回 null。
+        /// 出生日期。如果身份证验证通过，则为 身份证号码上的出生日期; 否则为 null。
         /// </summary>
         public DateTime? BirthDate { get; private set; } = null;
 
         /// <summary>
-        /// 年龄。如果身份证验证通过，则返回 身份证号码公民的当前周岁; 否则返回 -1。
+        /// 年龄。如果身份证验证通过，则为 身份证号码公民的当前周岁; 否则为 -1。
         /// </summary>
         public int Age { get; private set; } = -1;
 
         /// <summary>
-        /// 性别。如果身份证验证通过，则返回 男 / 女; 否则返回 <see cref="string.Empty"/>。
+        /// 性别。如果身份证验证通过，则为 男 / 女; 否则为 <see cref="string.Empty"/>。
         /// </summary>
         public string GenderText { get; private set; } = string.Empty;
 
         /// <summary>
-        /// 性别代码。如果身份证验证通过，则返回 0：女 / 1：男; 否则返回 -1。
+        /// 性别代码。如果身份证验证通过，则为 0：女 / 1：男; 否则为 -1。
         /// </summary>
         public int GenderCode { get; private set; } = -1;
         #endregion

@@ -135,14 +135,30 @@ namespace CommonExtention.Core.Extensions
         public static string ToJson<T>(this List<T> list, Formatting formatting, params JsonConverter[] converters) => Serialization.SerializeListToJson(list, formatting, converters);
         #endregion
 
-        #region 清除当前 List<T> 中的空对象
+        #region 对当前 List 集合的每个元素执行指定操作
         /// <summary>
-        /// 清除当前 <see cref="List{T}"/> 中的空对象
+        /// 对当前 <see cref="List{T}"/> 的每个元素执行指定操作
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        public static List<T> ClearNull<T>(this List<T> list)
+        /// <typeparam name="T">源 <see cref="List{T}"/> 集合元素的类型</typeparam>
+        /// <param name="list">源 <see cref="List{T}"/> 集合</param>
+        /// <param name="action">要对 <see cref="List{T}"/> 的每个元素执行的 <see cref="Action"/> 委托</param>
+        public static void ForEach<T>(this List<T> list, Action<T, int> action)
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                action(list[i], i);
+            }
+        }
+        #endregion
+
+        #region 清除当前 List<T> 中的空元素
+        /// <summary>
+        /// 清除当前 <see cref="List{T}"/> 中的空元素
+        /// </summary>
+        /// <typeparam name="T">要清除空元素的 <see cref="List{T}"/> 集合元素的类型</typeparam>
+        /// <param name="list">要清除空元素的 <see cref="List{T}"/> 集合</param>
+        /// <returns>返回已经清除了空元素的 <see cref="List{T}"/> 集合</returns>
+        public static List<T> ClearNullItem<T>(this List<T> list)
         {
             for (int i = list.Count - 1; i >= 0; i--)
             {
