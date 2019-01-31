@@ -35,7 +35,7 @@ namespace CommonExtention.Core.Extensions
         /// <summary>
         /// 指示 <see cref="IFilterMetadata"/> 集合中是否存在指定的 Filter
         /// </summary>
-        /// <param name="filterMetadatas"><see cref="IFilterMetadata"/> 集合/param>
+        /// <param name="filterMetadatas"><see cref="IFilterMetadata"/> 集合</param>
         /// <param name="type">指定的 Filter 的 Type</param>
         /// <returns>
         /// 如果集合为 null ，则为 false;
