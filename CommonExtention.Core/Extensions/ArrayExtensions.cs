@@ -1205,6 +1205,19 @@ namespace CommonExtention.Core.Extensions
         public static bool TrueForAll<T>(this T[] array, Predicate<T> match) => Array.TrueForAll(array, match);
         #endregion
 
+        #region 将当前的 Byte[]序列转换为 System.Drawing.Image
+        /// <summary>
+        /// 将当前的Byte[]序列转换为 <see cref="Image"/> 对象
+        /// </summary>
+        /// <param name="value">要转换的Byte[]</param>
+        /// <returns>转换后的  <see cref="Image"/></returns>
+        public static Image ToImage(this byte[] value)
+        {
+            var ms = new MemoryStream(value);
+            return Image.FromStream(ms);
+        }
+        #endregion
+
         #region 将当前的 Byte[] 序列转换为 Base64 编码的字符串
         /// <summary>
         /// 将当前的 Byte[] 序列转换为 Base64 编码的字符串
