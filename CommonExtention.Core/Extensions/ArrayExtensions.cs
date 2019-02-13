@@ -308,9 +308,10 @@ namespace CommonExtention.Core.Extensions
         /// <param name="TArray">要搜索的从零开始的一维 <see cref="Array"/></param>
         /// <param name="startIndex">指定的索引</param>
         /// <returns>移除了指定索引之后元素的新数组</returns>
+        /// <exception cref="IndexOutOfRangeException">startIndex 参数小于 0 或者大于或者等于 TArray 的长度时</exception>
         public static T[] RemoveRange<T>(this T[] TArray, int startIndex)
         {
-            if (startIndex < 0 || startIndex >= TArray.Length) throw new ArgumentException("指定的索引超出了数组界限。");
+            if (startIndex < 0 || startIndex >= TArray.Length) throw new IndexOutOfRangeException("指定的索引超出了数组界限。");
 
             var newArray = new T[TArray.Length - startIndex];
             for (int i = 0; i < startIndex; i++)
@@ -330,10 +331,12 @@ namespace CommonExtention.Core.Extensions
         /// <param name="startIndex">要移除的元素的范围从零开始的起始索引</param>
         /// <param name="length">要移除的元素数</param>
         /// <returns>移除了指定范围元素的新数组</returns>
+        /// <exception cref="IndexOutOfRangeException">startIndex 参数小于 0 或者大于或者等于 TArray 的长度时</exception>
+        /// <exception cref="IndexOutOfRangeException">startIndex 参数加上 length 参数的和大于或者等于 TArray 的长度时</exception>
         public static T[] RemoveRange<T>(this T[] TArray, int startIndex, int length)
         {
-            if (startIndex < 0 || startIndex >= TArray.Length) throw new Exception("指定的索引超出了数组界限。");
-            if ((startIndex + length) >= TArray.Length) throw new Exception("指定索引处的范围超出了数组界限。");
+            if (startIndex < 0 || startIndex >= TArray.Length) throw new IndexOutOfRangeException("指定的索引超出了数组界限。");
+            if ((startIndex + length) >= TArray.Length) throw new IndexOutOfRangeException("指定索引处的范围超出了数组界限。");
             var _arr = new T[TArray.Length - length];
             var j = 0;
             for (int i = 0; i < TArray.Length; i++)

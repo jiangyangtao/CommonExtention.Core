@@ -26,21 +26,21 @@ namespace CommonExtention.Core.EncryptDecryption
         /// 如果 value 参数为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
         /// 否则返回AES算法加密后的密文。
         /// </returns>
-        /// <exception cref="Exception"> key 参数为 null 或者 空字符串("")。</exception>
-        /// <exception cref="Exception"> key 参数长度少于16位。</exception>
-        /// <exception cref="Exception"> key 参数长度大于32位。</exception>
-        /// <exception cref="Exception"> key 参数长度不是16位或者24位或者32位。</exception>
-        /// <exception cref="Exception"> iv 参数不为空且长度小于16位。</exception>
+        /// <exception cref="ArgumentNullException"> key 参数为 null 或者 空字符串("")。</exception>
+        /// <exception cref="ArgumentOutOfRangeException"> key 参数长度少于16位。</exception>
+        /// <exception cref="ArgumentOutOfRangeException"> key 参数长度大于32位。</exception>
+        /// <exception cref="ArgumentOutOfRangeException"> key 参数长度不是16位或者24位或者32位。</exception>
+        /// <exception cref="ArgumentOutOfRangeException"> iv 参数不为空且长度小于16位。</exception>
         public static string Encrypt(string value, string key, string iv = "")
         {
             if (value.IsNullOrEmpty()) return string.Empty;
-            if (key == null) throw new Exception("未将对象引用设置到对象的实例。");
-            if (key.Length < 16) throw new Exception("指定的密钥长度不能少于16位。");
-            if (key.Length > 32) throw new Exception("指定的密钥长度不能多于32位。");
-            if (key.Length != 16 && key.Length != 24 && key.Length != 32) throw new Exception("指定的密钥长度不明确。");
+            if (key == null) throw new ArgumentNullException("未将对象引用设置到对象的实例。");
+            if (key.Length < 16) throw new ArgumentOutOfRangeException("指定的密钥长度不能少于16位。");
+            if (key.Length > 32) throw new ArgumentOutOfRangeException("指定的密钥长度不能多于32位。");
+            if (key.Length != 16 && key.Length != 24 && key.Length != 32) throw new ArgumentOutOfRangeException("指定的密钥长度不明确。");
             if (iv.NotNullAndEmpty())
             {
-                if (iv.Length < 16) throw new Exception("指定的向量长度不能少于16位。");
+                if (iv.Length < 16) throw new ArgumentOutOfRangeException("指定的向量长度不能少于16位。");
             }
 
             var _keyByte = Encoding.UTF8.GetBytes(key);
@@ -74,21 +74,21 @@ namespace CommonExtention.Core.EncryptDecryption
         /// 如果 value 参数为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
         /// 否则返回AES算法解密后的明文。
         /// </returns>
-        /// <exception cref="Exception"> key 参数为 null 或者 空字符串("")。</exception>
-        /// <exception cref="Exception"> key 参数长度少于16位。</exception>
-        /// <exception cref="Exception"> key 参数长度大于32位。</exception>
-        /// <exception cref="Exception"> key 参数长度不是16位或者24位或者32位。</exception>
-        /// <exception cref="Exception"> iv 参数不为空且长度小于16位。</exception>
+        /// <exception cref="ArgumentNullException"> key 参数为 null 或者 空字符串("")。</exception>
+        /// <exception cref="ArgumentOutOfRangeException"> key 参数长度少于16位。</exception>
+        /// <exception cref="ArgumentOutOfRangeException"> key 参数长度大于32位。</exception>
+        /// <exception cref="ArgumentOutOfRangeException"> key 参数长度不是16位或者24位或者32位。</exception>
+        /// <exception cref="ArgumentOutOfRangeException"> iv 参数不为空且长度小于16位。</exception>
         public static string Decrypt(string value, string key, string iv = "")
         {
             if (value.IsNullOrEmpty()) return string.Empty;
-            if (key == null) throw new Exception("未将对象引用设置到对象的实例。");
-            if (key.Length < 16) throw new Exception("指定的密钥长度不能少于16位。");
-            if (key.Length > 32) throw new Exception("指定的密钥长度不能多于32位。");
-            if (key.Length != 16 && key.Length != 24 && key.Length != 32) throw new Exception("指定的密钥长度不明确。");
+            if (key == null) throw new ArgumentNullException("未将对象引用设置到对象的实例。");
+            if (key.Length < 16) throw new ArgumentOutOfRangeException("指定的密钥长度不能少于16位。");
+            if (key.Length > 32) throw new ArgumentOutOfRangeException("指定的密钥长度不能多于32位。");
+            if (key.Length != 16 && key.Length != 24 && key.Length != 32) throw new ArgumentOutOfRangeException("指定的密钥长度不明确。");
             if (iv.NotNullAndEmpty())
             {
-                if (iv.Length < 16) throw new Exception("指定的向量长度不能少于16位。");
+                if (iv.Length < 16) throw new ArgumentOutOfRangeException("指定的向量长度不能少于16位。");
             }
 
             var _keyByte = Encoding.UTF8.GetBytes(key);
