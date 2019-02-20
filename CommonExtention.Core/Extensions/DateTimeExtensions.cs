@@ -219,15 +219,17 @@ namespace CommonExtention.Core.Extensions
         /// <summary>
         /// 从此实例中取得当前月的第一天
         /// </summary>
-        /// <param name="d">要取得月份第一天的  <see cref="DateTime"/> 对象</param>
-        /// <param name="mode">要取得月份第一天时间模式</param>
+        /// <param name="dateTime">要取得月份第一天的 <see cref="DateTime"/> 对象</param>
+        /// <param name="mode">时间模式，默认为当前时间的时分秒</param>
         /// <returns>当前实例月份的第一天</returns>
-        public static DateTime FirstDayOfMonth(this DateTime d, TimeMode mode = TimeMode.now)
+        public static DateTime FirstDayOfMonth(this DateTime dateTime, TimeMode mode = TimeMode.now) => dateTime.AddDays(1 - dateTime.Day).GetDateTime(mode);
+
+
+        private static DateTime GetDateTime(this DateTime dateTime, TimeMode timeMode = TimeMode.now)
         {
-            var _t = d.AddDays(1 - d.Day);
-            if (mode == TimeMode.zero) return DateTime.Parse(string.Format("{0} 00:00:00.000", _t.ToString("yyyy-MM-dd")));
-            if (mode == TimeMode.full) return DateTime.Parse(string.Format("{0} 23:59:59.999", _t.ToString("yyyy-MM-dd")));
-            return _t;
+            if (timeMode == TimeMode.zero) return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 0, 0, 0, 0);
+            if (timeMode == TimeMode.full) return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day, 23, 59, 59, 999);
+            return dateTime;
         }
         #endregion
 
@@ -235,33 +237,24 @@ namespace CommonExtention.Core.Extensions
         /// <summary>
         /// 从此实例中取得当前月的最后一天
         /// </summary>
-        /// <param name="d">要取得月份最后一天的  <see cref="DateTime"/> 对象</param>
-        /// <param name="mode">要取得最后一天的时间模式</param>
+        /// <param name="dateTime">要取得月份最后一天的 <see cref="DateTime"/> 实例</param>
+        /// <param name="mode">时间模式，默认为当前时间的时分秒</param>
         /// <returns>当前实例月份的最后一天</returns>
-        public static DateTime LastDayOfMonth(this DateTime d, TimeMode mode = TimeMode.now)
-        {
-            var _t = d.AddDays(1 - d.Day).AddMonths(1).AddDays(-1);
-            if (mode == TimeMode.zero) return DateTime.Parse(string.Format("{0} 00:00:00.000", _t.ToString("yyyy-MM-dd")));
-            if (mode == TimeMode.full) return DateTime.Parse(string.Format("{0} 23:59:59.999", _t.ToString("yyyy-MM-dd")));
-            return _t;
-        }
+        public static DateTime LastDayOfMonth(this DateTime dateTime, TimeMode mode = TimeMode.now) => dateTime.AddDays(1 - dateTime.Day).AddMonths(1).AddDays(-1).GetDateTime(mode);
         #endregion
 
         #region 从此实例中取得当前周以星期天开始的第一天
         /// <summary>  
         /// 从此实例中取得当前周以星期天开始的第一天
         /// </summary>
-        /// <param name="value">要取得当前周第一天的  <see cref="DateTime"/> 实例</param>
+        /// <param name="dateTime">要取得当前周第一天的  <see cref="DateTime"/> 实例</param>
         /// <param name="mode">时间模式，默认为当前时间的时分秒</param>
-        /// <returns>当前周的第一天</returns>  
-        public static DateTime FirstDayOfWeekFromSunday(this DateTime value, TimeMode mode = TimeMode.now)
+        /// <returns>当前周的第一天</returns>
+        public static DateTime FirstDayOfWeekFromSunday(this DateTime dateTime, TimeMode mode = TimeMode.now)
         {
-            var weekNow = Convert.ToInt32(value.DayOfWeek);
+            var weekNow = Convert.ToInt32(dateTime.DayOfWeek);
             var daydiff = (-1) * weekNow;
-            var _t = value.AddDays(daydiff);
-            if (mode == TimeMode.zero) return DateTime.Parse(string.Format("{0} 00:00:00.000", _t.ToString("yyyy-MM-dd")));
-            if (mode == TimeMode.full) return DateTime.Parse(string.Format("{0} 23:59:59.999", _t.ToString("yyyy-MM-dd")));
-            return _t;
+            return dateTime.AddDays(daydiff).GetDateTime(mode);
         }
         #endregion
 
@@ -269,18 +262,15 @@ namespace CommonExtention.Core.Extensions
         /// <summary>
         /// 从此实例中取得当前周以星期一开始的第一天
         /// </summary>
-        /// <param name="value">要取得当前周第一天的  <see cref="DateTime"/> 实例</param>
+        /// <param name="dateTime">要取得当前周第一天的  <see cref="DateTime"/> 实例</param>
         /// <param name="mode">时间模式，默认为当前时间的时分秒</param>
         /// <returns>当前周的第一天</returns>
-        public static DateTime FirstDayOfWeekFromMonday(this DateTime value, TimeMode mode = TimeMode.now)
+        public static DateTime FirstDayOfWeekFromMonday(this DateTime dateTime, TimeMode mode = TimeMode.now)
         {
-            var weekNow = Convert.ToInt32(value.DayOfWeek);
+            var weekNow = Convert.ToInt32(dateTime.DayOfWeek);
             weekNow = (weekNow == 0 ? (7 - 1) : (weekNow - 1));
             var daydiff = (-1) * weekNow;
-            var _t = value.AddDays(daydiff);
-            if (mode == TimeMode.zero) return DateTime.Parse(string.Format("{0} 00:00:00.000", _t.ToString("yyyy-MM-dd")));
-            if (mode == TimeMode.full) return DateTime.Parse(string.Format("{0} 23:59:59.999", _t.ToString("yyyy-MM-dd")));
-            return _t;
+            return dateTime.AddDays(daydiff).GetDateTime(mode);
         }
         #endregion
 
@@ -288,17 +278,14 @@ namespace CommonExtention.Core.Extensions
         /// <summary>
         /// 从此实例中取得当前周以星期天开始的最后一天
         /// </summary>  
-        /// <param name="value">要取得当前周最后一天的  <see cref="DateTime"/> 实例</param>
+        /// <param name="dateTime">要取得当前周最后一天的  <see cref="DateTime"/> 实例</param>
         /// <param name="mode">时间模式，默认为当前时间的时分秒</param>
         /// <returns>当前周的最后一天</returns>  
-        public static DateTime LastDayOfWeekFromSunday(this DateTime value, TimeMode mode = TimeMode.now)
+        public static DateTime LastDayOfWeekFromSunday(this DateTime dateTime, TimeMode mode = TimeMode.now)
         {
-            int weeknow = Convert.ToInt32(value.DayOfWeek);
+            int weeknow = Convert.ToInt32(dateTime.DayOfWeek);
             int daydiff = (7 - weeknow) - 1;
-            var _t = value.AddDays(daydiff);
-            if (mode == TimeMode.zero) return DateTime.Parse(string.Format("{0} 00:00:00.000", _t.ToString("yyyy-MM-dd")));
-            if (mode == TimeMode.full) return DateTime.Parse(string.Format("{0} 23:59:59.999", _t.ToString("yyyy-MM-dd")));
-            return _t;
+            return dateTime.AddDays(daydiff).GetDateTime(mode);
         }
         #endregion
 
@@ -306,18 +293,15 @@ namespace CommonExtention.Core.Extensions
         /// <summary>  
         /// 从此实例中取得当前周以星期一开始的最后一天
         /// </summary>  
-        /// <param name="value">要取得当前周最后一天的  <see cref="DateTime"/> 实例</param>
+        /// <param name="dateTime">要取得当前周最后一天的  <see cref="DateTime"/> 实例</param>
         /// <param name="mode">时间模式，默认为当前时间的时分秒</param>
         /// <returns>当前周的最后一天</returns>  
-        public static DateTime LastDayOfWeekFromMonday(this DateTime value, TimeMode mode = TimeMode.now)
+        public static DateTime LastDayOfWeekFromMonday(this DateTime dateTime, TimeMode mode = TimeMode.now)
         {
-            int weeknow = Convert.ToInt32(value.DayOfWeek);
+            int weeknow = Convert.ToInt32(dateTime.DayOfWeek);
             weeknow = (weeknow == 0 ? 7 : weeknow);
             int daydiff = (7 - weeknow);
-            var _t = value.AddDays(daydiff);
-            if (mode == TimeMode.zero) return DateTime.Parse(string.Format("{0} 00:00:00.000", _t.ToString("yyyy-MM-dd")));
-            if (mode == TimeMode.full) return DateTime.Parse(string.Format("{0} 23:59:59.999", _t.ToString("yyyy-MM-dd")));
-            return _t;
+            return dateTime.AddDays(daydiff).GetDateTime(mode);
         }
         #endregion
     }

@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -28,6 +26,19 @@ namespace CommonExtention.Core.Extensions
                 .Append(request.PathBase)
                 .Append(request.Path)
                 .ToString();
+        }
+        #endregion
+
+        #region 获取当前请求的站点
+        /// <summary>
+        /// 获取当前请求的站点
+        /// </summary>
+        /// <param name="request">当前请求</param>
+        /// <returns>返回当前站点</returns>
+        public static string Origin(this HttpRequest request)
+        {
+            if (request == null) return string.Empty;
+            return $"{request.Scheme}://{request.Host}";
         }
         #endregion
 
@@ -125,11 +136,12 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
+        #region 获取当前请求的参数
         /// <summary>
-        /// 
+        /// 获取当前请求的参数
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">当前请求</param>
+        /// <returns>字符串表示形式的请求参数</returns>
         public static string GetParamsString(this HttpRequest request)
         {
             try
@@ -154,5 +166,6 @@ namespace CommonExtention.Core.Extensions
                 return string.Empty;
             }
         }
+        #endregion
     }
 }

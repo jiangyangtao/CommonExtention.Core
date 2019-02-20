@@ -1239,10 +1239,8 @@ namespace CommonExtention.Core.Extensions
         /// </summary>
         /// <param name="value">要转换的Byte[]</param>
         /// <returns>转换图片后的字符串表示形式，以 Base64 表示</returns>
-        public static string ToImageBase64String(this byte[] value)
-        {
-            return string.Format("data:image/jpeg;base64,{0}", Convert.ToBase64String(value, 0, value.Length));
-        }
+        public static string ToImageBase64String(this byte[] value) => $"data:image/jpeg;base64,{Convert.ToBase64String(value, 0, value.Length)}";
+
         #endregion
     }
 }
