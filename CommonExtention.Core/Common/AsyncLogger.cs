@@ -39,16 +39,16 @@ namespace CommonExtention.Core.Common
                     try
                     {
                         streamWrite.BaseStream.Seek(0, SeekOrigin.End);
-                        streamWrite.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        streamWrite.WriteLine(DateTime.Now.ToFormatDateTime());
                         streamWrite.WriteLine("\r\n");
                         streamWrite.WriteLine("\r\n  异常信息：");
-                        streamWrite.WriteLine("\r\n\t请求地址：" + request.Url());
-                        streamWrite.WriteLine("\r\n\t错误代码：" + exception.HResult);
-                        streamWrite.WriteLine("\r\n\t错误信息：" + exception.ExceptionMessage());
-                        streamWrite.WriteLine("\r\n\t错 误 源：" + exception.Source);
-                        streamWrite.WriteLine("\r\n\t异常方法：" + exception.TargetSite);
-                        streamWrite.WriteLine("\r\n\t堆栈信息：" + exception.StackTrace);
-                        streamWrite.WriteLine("\r\n\t浏览器标识：" + request.UserAgent());
+                        streamWrite.WriteLine($"\r\n\t请求地址：{request.Url()}");
+                        streamWrite.WriteLine($"\r\n\t错误代码：{exception.HResult}");
+                        streamWrite.WriteLine($"\r\n\t错误信息：{exception.ExceptionMessage()}");
+                        streamWrite.WriteLine($"\r\n\t错 误 源：{exception.Source}");
+                        streamWrite.WriteLine($"\r\n\t异常方法：{exception.TargetSite}");
+                        streamWrite.WriteLine($"\r\n\t堆栈信息：{exception.StackTrace}");
+                        streamWrite.WriteLine($"\r\n\t浏览器标识：{request.UserAgent()}");
                         streamWrite.WriteLine("\r\n");
 
                         //日志的分隔线
@@ -89,13 +89,13 @@ namespace CommonExtention.Core.Common
                     try
                     {
                         streamWrite.BaseStream.Seek(0, SeekOrigin.End);
-                        streamWrite.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        streamWrite.WriteLine(DateTime.Now.ToFormatDateTime());
                         streamWrite.WriteLine("\r\n");
                         streamWrite.WriteLine("\r\n");
-                        streamWrite.WriteLine("\r\n\t请求地址：" + request.Url());
-                        streamWrite.WriteLine("\r\n\t记录信息：" + information);
+                        streamWrite.WriteLine($"\r\n\t请求地址：{request.Url()}");
+                        streamWrite.WriteLine($"\r\n\t记录信息：{information}");
                         streamWrite.WriteLine("\r\n");
-                        streamWrite.WriteLine("\r\n\t浏览器标识：" + request.UserAgent());
+                        streamWrite.WriteLine($"\r\n\t浏览器标识：{request.UserAgent()}");
 
                         //日志的分隔线
                         streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
@@ -136,20 +136,20 @@ namespace CommonExtention.Core.Common
                     try
                     {
                         streamWrite.BaseStream.Seek(0, SeekOrigin.End);
-                        streamWrite.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                        streamWrite.WriteLine(DateTime.Now.ToFormatDateTime());
                         streamWrite.WriteLine("\r\n");
                         streamWrite.WriteLine("\r\n  请求信息：");
-                        streamWrite.WriteLine("\r\n\t浏览器标识：" + (model.UserAgent.IsNullOrEmpty() ? request.UserAgent() : model.UserAgent));
-                        streamWrite.WriteLine("\r\n\t请求地址：" + (model.Url.IsNullOrEmpty() ? request.Url() : model.Url));
-                        streamWrite.WriteLine("\r\n\t请求类型：" + model.RequestType);
-                        streamWrite.WriteLine("\r\n\t控制器名：" + model.ControllerName);
-                        streamWrite.WriteLine("\r\n\tAction名：" + model.ActionName);
-                        if (model.IpAddress.NotNullAndEmpty()) streamWrite.WriteLine("\r\n\tIp  地址：" + model.IpAddress);
-                        if (model.RunTime.NotNullAndEmpty()) streamWrite.WriteLine("\r\n\t消耗时间：" + model.RunTime + "s");
+                        streamWrite.WriteLine($"\r\n\t浏览器标识：{(model.UserAgent.IsNullOrEmpty() ? request.UserAgent() : model.UserAgent)}");
+                        streamWrite.WriteLine($"\r\n\t请求地址：{(model.Url.IsNullOrEmpty() ? request.Url() : model.Url)}");
+                        streamWrite.WriteLine($"\r\n\t请求类型：{model.RequestType}");
+                        streamWrite.WriteLine($"\r\n\t控制器名：{model.ControllerName}");
+                        streamWrite.WriteLine($"\r\n\tAction名：{model.ActionName}");
+                        if (model.IpAddress.NotNullAndEmpty()) streamWrite.WriteLine($"\r\n\tIp  地址：{model.IpAddress}");
+                        if (model.RunTime.NotNullAndEmpty()) streamWrite.WriteLine($"\r\n\t消耗时间：{model.RunTime} s");
                         streamWrite.WriteLine("\r\n\t参数信息：");
                         foreach (var item in model.Params)
                         {
-                            streamWrite.WriteLine("\r\n\t" + item.Key + "：" + item.Value);
+                            streamWrite.WriteLine($"\r\n\t {item.Key}：{item.Value}");
                         }
 
                         //日志的分隔线

@@ -26,7 +26,7 @@ namespace CommonExtention.Core.Extensions
             if (dataTable == null || dataTable.Rows.Count <= 0) return string.Empty;
 
             var jsonBuilder = new StringBuilder("{");
-            if (dataTable.TableName.NotNullAndEmpty()) jsonBuilder.Append("\"" + dataTable.TableName + "\":");
+            if (dataTable.TableName.NotNullAndEmpty()) jsonBuilder.Append($"\"{dataTable.TableName}\":");
 
             jsonBuilder.Append("[");
             for (int i = 0; i < dataTable.Rows.Count; i++)
@@ -91,15 +91,15 @@ namespace CommonExtention.Core.Extensions
             var _type = value.GetType().Name;
             switch (_type)
             {
-                case "String": return "\"" + value.ToString().TrimStart().TrimEnd() + "\"";
-                case "DateTime": return "\"" + Convert.ToDateTime(value).ToString("yyyy-MM-dd HH:mm:ss") + "\"";
+                case "String": return $"\"{value.ToString().TrimStart().TrimEnd()}\"";
+                case "DateTime": return $"\"{Convert.ToDateTime(value).ToString("yyyy-MM-dd HH:mm:ss")}\"";
                 case "Int16": return Convert.ToInt16(value);
                 case "Int32": return Convert.ToInt32(value);
                 case "Int64": return Convert.ToInt64(value);
                 case "Decimal": return Convert.ToDecimal(value);
                 case "Single": return Convert.ToSingle(value);
                 case "Double": return Convert.ToDouble(value);
-                case "Boolean": return "\"" + value.ToString() + "\"";
+                case "Boolean": return $"\"{value.ToString()}\"";
                 case "DBNull": return string.Empty;
             }
             return value.ToString();

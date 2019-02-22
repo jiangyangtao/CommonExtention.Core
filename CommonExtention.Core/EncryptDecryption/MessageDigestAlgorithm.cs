@@ -171,7 +171,7 @@ namespace CommonExtention.Core.EncryptDecryption
             var s1 = SHA1Lower(value);
             var s2 = SHA1Lower(s1.Substring(7, 31));
             var s3 = SHA1Lower(s2.Substring(0, 26));
-            var s4 = SHA1Lower(s3.Substring(15, 24) + s2.Substring(14, 22) + s1.Substring(3, 19));
+            var s4 = SHA1Lower($"{s3.Substring(15, 24)}{s2.Substring(14, 22)}{s1.Substring(3, 19)}");
             var _strBuilder = new StringBuilder(s4.Substring(2, 17));
             _strBuilder.Append(s3.Substring(5, 28));
             _strBuilder.Append(s2.Substring(18, 15));

@@ -1034,7 +1034,7 @@ namespace CommonExtention.Core.Extensions
         {
             if (value.IsNullOrEmpty()) return null;
             if (!value.IsChinaIdentityNumber()) return null;
-            return DateTime.Parse(value.Substring(6, 4) + "-" + value.Substring(10, 2) + "-" + value.Substring(12, 2));
+            return DateTime.Parse($"{value.Substring(6, 4)}-{value.Substring(10, 2)}-{value.Substring(12, 2)}");
         }
         #endregion
 

@@ -136,7 +136,7 @@ namespace CommonExtention.Core.Extensions
                 if (diff.Days >= 365)
                 {
                     var year = diff.Days / 365;
-                    return year + "年前";
+                    return $"{year}年前";
                 }
 
                 if (diff.Days >= 30)
@@ -144,15 +144,15 @@ namespace CommonExtention.Core.Extensions
                     if (diff.Days == 30) return "1个月前";
 
                     var month = diff.Days / 30.4;
-                    return (int)month + "个月前";
+                    return $"{(int)month}个月前";
                 }
 
-                return diff.Days + "天前";
+                return $"{diff.Days}天前";
             }
 
-            if (diff.Hours > 0) return diff.Hours + "小时前";
-            if (diff.Minutes > 0) return diff.Minutes + "分钟前";
-            return diff.Seconds + "秒前";
+            if (diff.Hours > 0) return $"{diff.Hours}小时前";
+            if (diff.Minutes > 0) return $"{diff.Minutes}分钟前";
+            return $"{diff.Seconds}秒前";
         }
         #endregion
 
@@ -195,7 +195,7 @@ namespace CommonExtention.Core.Extensions
                 if (_days >= 365)
                 {
                     var year = _days / 365;
-                    return year + "年后";
+                    return $"{year}年后";
                 }
 
                 if (_days >= 30)
@@ -203,15 +203,15 @@ namespace CommonExtention.Core.Extensions
                     if (_days == 30) return "1个月后";
 
                     var month = _days / 30.4;
-                    return (int)month + "个月后";
+                    return $"{(int)month}个月后";
                 }
 
-                return _days + "天后";
+                return $"{_days}天后";
             }
 
-            if (_hours > 0) return _hours + "小时后";
-            if (_minutes > 0) return _minutes + "分钟后";
-            return _second + "秒后";
+            if (_hours > 0) return $"{_hours}小时后";
+            if (_minutes > 0) return $"{_minutes}分钟后";
+            return $"{_second}秒后";
         }
         #endregion
 
