@@ -71,13 +71,14 @@ namespace CommonExtention.Core.Extensions
         /// <returns>
         /// 如果 request 对象为 null，则返回 <see cref="string.Empty"/>;
         /// 如果 key 参数为 null 或空字符串 ("")，则返回 <see cref="string.Empty"/>;
-        /// 否则返回 Headers 中对应的 value 。
+        /// 如果 <see cref="HttpRequest.Headers"/> 中不包含指定的 key，则返回 <see cref="string.Empty"/>;
+        /// 否则返回 <see cref="HttpRequest.Headers"/> 中指定 key 对应的 value 。
         /// </returns>
         public static string GetHeader(this HttpRequest request, string key)
         {
             if (request == null) return string.Empty;
             if (key.IsNullOrEmpty()) return string.Empty;
-
+            if (!request.Headers.ContainsKey(key)) return string.Empty;
             return request.Headers[key].ToString();
         }
         #endregion

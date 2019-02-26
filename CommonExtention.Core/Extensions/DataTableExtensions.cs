@@ -113,7 +113,7 @@ namespace CommonExtention.Core.Extensions
         /// <param name="dataTable">要转换的 <see cref="DataTable"/> </param>
         /// <param name="formatting">序列化的格式</param>
         /// <returns>如果 <see cref="DataTable"/> 为 null，则返回 <see cref="string.Empty"/>；否则返回序列化后的 json 字符串。</returns>
-        public static string ToJsonArray(this DataTable dataTable, Formatting formatting) => Serialization.SerializeDataTableToJsonArray(dataTable, formatting);
+        public static string ToJsonArray(this DataTable dataTable, Formatting formatting) => new Serialization().SerializeDataTableToJsonArray(dataTable, formatting);
         #endregion
 
         #region 将当前 DataTable 对象转换为 Json 数组字符串
@@ -123,7 +123,7 @@ namespace CommonExtention.Core.Extensions
         /// <param name="dataTable">要转换的 <see cref="DataTable"/> </param>
         /// <param name="settings">序列化的设置</param>
         /// <returns>如果 <see cref="DataTable"/> 为 null，则返回 <see cref="string.Empty"/>；否则返回序列化后的 json 字符串。</returns>
-        public static string ToJsonArray(this DataTable dataTable, JsonSerializerSettings settings) => Serialization.SerializeDataTableToJsonArray(dataTable, settings);
+        public static string ToJsonArray(this DataTable dataTable, JsonSerializerSettings settings) => new Serialization().SerializeDataTableToJsonArray(dataTable, settings);
         #endregion
 
         #region 将当前 DataTable 对象转换为 Json 数组字符串
@@ -133,7 +133,7 @@ namespace CommonExtention.Core.Extensions
         /// <param name="dataTable">要转换的 <see cref="DataTable"/> </param>
         /// <param name="converters">序列化时使用的转换器的集合</param>
         /// <returns>如果 <see cref="DataTable"/> 为 null，则返回 <see cref="string.Empty"/>；否则返回序列化后的 json 字符串。</returns>
-        public static string ToJsonArray(this DataTable dataTable, params JsonConverter[] converters) => Serialization.SerializeDataTableToJsonArray(dataTable, converters);
+        public static string ToJsonArray(this DataTable dataTable, params JsonConverter[] converters) => new Serialization().SerializeDataTableToJsonArray(dataTable, converters);
         #endregion
 
         #region 将当前 DataTable 对象转换为 Json 数组字符串
@@ -144,7 +144,7 @@ namespace CommonExtention.Core.Extensions
         /// <param name="formatting">序列化的格式</param>
         /// <param name="settings">序列化的设置</param>
         /// <returns>如果 <see cref="DataTable"/> 为 null，则返回 <see cref="string.Empty"/>；否则返回序列化后的 json 字符串。</returns>
-        public static string ToJsonArray(this DataTable dataTable, Formatting formatting, JsonSerializerSettings settings) => Serialization.SerializeDataTableToJsonArray(dataTable, settings);
+        public static string ToJsonArray(this DataTable dataTable, Formatting formatting, JsonSerializerSettings settings) => new Serialization().SerializeDataTableToJsonArray(dataTable, settings);
         #endregion
 
         #region 将当前 DataTable 对象转换为 Json 数组字符串
@@ -155,7 +155,7 @@ namespace CommonExtention.Core.Extensions
         /// <param name="formatting">序列化的格式</param>
         /// <param name="converters">序列化时使用的转换器的集合</param>
         /// <returns>如果 <see cref="DataTable"/> 为 null，则返回 <see cref="string.Empty"/>；否则返回序列化后的 json 字符串。</returns>
-        public static string ToJsonArray(this DataTable dataTable, Formatting formatting, params JsonConverter[] converters) => Serialization.SerializeDataTableToJsonArray(dataTable, formatting, converters);
+        public static string ToJsonArray(this DataTable dataTable, Formatting formatting, params JsonConverter[] converters) => new Serialization().SerializeDataTableToJsonArray(dataTable, formatting, converters);
         #endregion
 
         #region 将当前 DataTable 对象转换为 Newtonsoft.Json.Linq.JObject 对象

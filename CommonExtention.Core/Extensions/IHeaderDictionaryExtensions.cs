@@ -22,6 +22,7 @@ namespace CommonExtention.Core.Extensions
         public static string UserAgent(this IHeaderDictionary headerDictionary)
         {
             if (headerDictionary == null) return string.Empty;
+            if (!headerDictionary.ContainsKey("User-Agent")) return string.Empty;
             return headerDictionary["User-Agent"];
         }
         #endregion
@@ -38,6 +39,7 @@ namespace CommonExtention.Core.Extensions
         public static string ContentType(this IHeaderDictionary headerDictionary)
         {
             if (headerDictionary == null) return string.Empty;
+            if (!headerDictionary.ContainsKey("ContentType")) return string.Empty;
             return headerDictionary["ContentType"];
         }
         #endregion

@@ -22,7 +22,7 @@ namespace CommonExtention.Core.Extensions
         /// <returns></returns>
         public static DataTable ReadToDataTable(this Stream stream, string sheetName = null, bool firstRowIsColumnName = true)
         {
-            return ReadExcel.ReadStreamToDataTable(stream, sheetName, firstRowIsColumnName);
+            return new ReadExcel().ReadStreamToDataTable(stream, sheetName, firstRowIsColumnName);
         }
         #endregion
     }

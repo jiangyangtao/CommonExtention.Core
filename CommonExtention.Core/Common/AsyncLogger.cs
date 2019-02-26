@@ -15,13 +15,21 @@ namespace CommonExtention.Core.Common
     /// </summary>
     public sealed class AsyncLogger
     {
+        /// <summary>
+        /// 初始化 异步日志 的新实例
+        /// </summary>
+        public AsyncLogger()
+        {
+
+        }
+
         #region 记录异常
         /// <summary>
         /// 记录异常
         /// </summary>
         /// <param name="exception"><see cref="Exception"/> 对象</param>
         /// <param name="request"><see cref="HttpRequest"/> 对象</param>
-        public static void LogException(Exception exception, HttpRequest request)
+        public void LogException(Exception exception, HttpRequest request)
         {
             if (exception == null) return;
             if (request == null) return;
@@ -72,7 +80,7 @@ namespace CommonExtention.Core.Common
         /// </summary>
         /// <param name="information">关键信息</param>
         /// <param name="request"><see cref="HttpRequest"/> 对象</param>
-        public static void LogInformation(string information, HttpRequest request)
+        public void LogInformation(string information, HttpRequest request)
         {
             if (information.IsNullOrEmpty()) return;
             if (request == null) return;
@@ -119,7 +127,7 @@ namespace CommonExtention.Core.Common
         /// </summary>
         /// <param name="model"><see cref="MvcRequestModel"/> 对象</param>
         /// <param name="request"><see cref="HttpRequest"/> 对象</param>
-        public static void LogMvcRequest(MvcRequestModel model, HttpRequest request)
+        public void LogMvcRequest(MvcRequestModel model, HttpRequest request)
         {
             if (model == null) return;
             if (request == null) return;
@@ -174,7 +182,7 @@ namespace CommonExtention.Core.Common
         /// </summary>
         /// <param name="fileName">文件名</param>
         /// <returns>当前日志路径</returns>
-        private static string GetLogPath(string fileName)
+        private string GetLogPath(string fileName)
         {
             var strBuilder = new StringBuilder(Path.Combine(Directory.GetCurrentDirectory())).
                     Append(@"\log\").

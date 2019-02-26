@@ -90,7 +90,7 @@ namespace CommonExtention.Core.Extensions
         /// <param name="list">要转换的 <see cref="List{T}"/> </param>
         /// <param name="formatting">序列化的格式</param>
         /// <returns>如果 <see cref="List{T}"/> 为 null，则返回 <see cref="string.Empty"/>；否则返回序列化后的 json 字符串。</returns>
-        public static string ToJson<T>(this List<T> list, Formatting formatting) => Serialization.SerializeListToJson(list, formatting);
+        public static string ToJson<T>(this List<T> list, Formatting formatting) => new Serialization().SerializeListToJson(list, formatting);
         #endregion
 
         #region 将当前 List 集合转换为 Json 数组字符串
@@ -100,7 +100,7 @@ namespace CommonExtention.Core.Extensions
         /// <param name="list">要转换的 <see cref="List{T}"/> </param>
         /// <param name="settings">序列化的设置</param>
         /// <returns>如果 <see cref="List{T}"/> 为 null，则返回 <see cref="string.Empty"/>；否则返回序列化后的 json 字符串。</returns>
-        public static string ToJson<T>(this List<T> list, JsonSerializerSettings settings) => Serialization.SerializeListToJson(list, settings);
+        public static string ToJson<T>(this List<T> list, JsonSerializerSettings settings) => new Serialization().SerializeListToJson(list, settings);
         #endregion
 
         #region 将当前 List 集合转换为 Json 数组字符串
@@ -110,7 +110,7 @@ namespace CommonExtention.Core.Extensions
         /// <param name="list">要转换的 <see cref="List{T}"/> </param>
         /// <param name="converters">序列化时使用的转换器的集合</param>
         /// <returns>如果 <see cref="List{T}"/> 为 null，则返回 <see cref="string.Empty"/>；否则返回序列化后的 json 字符串。</returns>
-        public static string ToJson<T>(this List<T> list, params JsonConverter[] converters) => Serialization.SerializeListToJson(list, converters);
+        public static string ToJson<T>(this List<T> list, params JsonConverter[] converters) => new Serialization().SerializeListToJson(list, converters);
         #endregion
 
         #region 将当前 List 集合转换为 Json 数组字符串
@@ -121,7 +121,7 @@ namespace CommonExtention.Core.Extensions
         /// <param name="formatting">序列化的格式</param>
         /// <param name="settings">序列化的设置</param>
         /// <returns>如果 <see cref="List{T}"/> 为 null，则返回 <see cref="string.Empty"/>；否则返回序列化后的 json 字符串。</returns>
-        public static string ToJson<T>(this List<T> list, Formatting formatting, JsonSerializerSettings settings) => Serialization.SerializeListToJson(list, settings);
+        public static string ToJson<T>(this List<T> list, Formatting formatting, JsonSerializerSettings settings) => new Serialization().SerializeListToJson(list, settings);
         #endregion
 
         #region 将当前 List 集合转换为 Json 数组字符串
@@ -132,7 +132,7 @@ namespace CommonExtention.Core.Extensions
         /// <param name="formatting">序列化的格式</param>
         /// <param name="converters">序列化时使用的转换器的集合</param>
         /// <returns>如果 <see cref="List{T}"/> 为 null，则返回 <see cref="string.Empty"/>；否则返回序列化后的 json 字符串。</returns>
-        public static string ToJson<T>(this List<T> list, Formatting formatting, params JsonConverter[] converters) => Serialization.SerializeListToJson(list, formatting, converters);
+        public static string ToJson<T>(this List<T> list, Formatting formatting, params JsonConverter[] converters) => new Serialization().SerializeListToJson(list, formatting, converters);
         #endregion
 
         #region 对当前 List 集合的每个元素执行指定操作

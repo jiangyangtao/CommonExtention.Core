@@ -32,7 +32,7 @@ namespace CommonExtention.Core.Common
         /// <param name="sheetName">指定读取 Excel 工作薄 sheet 的名称</param>
         /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
         /// <returns><see cref="DataTable"/>数据表</returns>
-        public static DataTable ReadExcelToDataTable(string filePath, string sheetName = null, bool firstRowIsColumnName = true)
+        public DataTable ReadExcelToDataTable(string filePath, string sheetName = null, bool firstRowIsColumnName = true)
         {
             if (filePath.IsNullOrEmpty()) return null;
             if (!File.Exists(filePath)) return null;
@@ -131,7 +131,7 @@ namespace CommonExtention.Core.Common
         /// <param name="sheetName">指定读取 Excel 工作薄 sheet 的名称</param>
         /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
         /// <returns></returns>
-        public static DataTable ReadFormFileToDataTable(IFormFile formFile, string sheetName = null, bool firstRowIsColumnName = true)
+        public DataTable ReadFormFileToDataTable(IFormFile formFile, string sheetName = null, bool firstRowIsColumnName = true)
         {
             var stream = formFile.OpenReadStream();
             var dt = ReadStreamToDataTable(stream, sheetName, firstRowIsColumnName);
@@ -147,7 +147,7 @@ namespace CommonExtention.Core.Common
         /// <param name="sheetName">指定读取 Excel 工作薄 sheet 的名称</param>
         /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
         /// <returns><see cref="DataTable"/>数据表</returns>
-        public static DataTable ReadStreamToDataTable(Stream stream, string sheetName = null, bool firstRowIsColumnName = true)
+        public DataTable ReadStreamToDataTable(Stream stream, string sheetName = null, bool firstRowIsColumnName = true)
         {
             if (stream == null || stream.Length <= 0) return null;
 

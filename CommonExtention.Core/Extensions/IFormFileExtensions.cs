@@ -19,7 +19,7 @@ namespace CommonExtention.Core.Extensions
         /// <returns></returns>
         public static DataTable ReadToDataTable(this IFormFile formFile, string sheetName = null, bool firstRowIsColumnName = true)
         {
-            return ReadExcel.ReadFormFileToDataTable(formFile, sheetName, firstRowIsColumnName);
+            return new ReadExcel().ReadFormFileToDataTable(formFile, sheetName, firstRowIsColumnName);
         }
         #endregion
     }

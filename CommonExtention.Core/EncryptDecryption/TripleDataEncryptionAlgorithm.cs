@@ -12,6 +12,14 @@ namespace CommonExtention.Core.EncryptDecryption
     /// </summary>
     public sealed class TripleDataEncryptionAlgorithm
     {
+        /// <summary>
+        /// 初始化 三重数据加密算法 的新实例
+        /// </summary>
+        public TripleDataEncryptionAlgorithm()
+        {
+
+        }
+
         #region 将要加密的字符串进行3DES加密
         /// <summary>
         /// 将要加密的字符串进行3DES加密
@@ -28,7 +36,7 @@ namespace CommonExtention.Core.EncryptDecryption
         /// <exception cref="ArgumentNullException"> key 参数为 null 或者 空字符串("")。</exception>
         /// <exception cref="ArgumentOutOfRangeException"> key 参数长度少于24位。</exception>
         /// <exception cref="ArgumentOutOfRangeException"> iv 参数不为空且长度小于8位。 </exception>
-        public static string Encrypt(string value, string key, string iv = "")
+        public string Encrypt(string value, string key, string iv = "")
         {
             if (value.IsNullOrEmpty()) return string.Empty;
             if (key == null) throw new ArgumentNullException("未将对象引用设置到对象的实例。");
@@ -75,7 +83,7 @@ namespace CommonExtention.Core.EncryptDecryption
         /// <exception cref="ArgumentNullException"> key 参数为 null 或者 空字符串("")。</exception>
         /// <exception cref="ArgumentOutOfRangeException"> key 参数长度少于24位。</exception>
         /// <exception cref="ArgumentOutOfRangeException"> iv 参数不为空且长度小于8位。 </exception>
-        public static string Decrypt(string value, string key, string iv = "")
+        public string Decrypt(string value, string key, string iv = "")
         {
             if (value.IsNullOrEmpty()) return string.Empty;
             if (key == null) throw new ArgumentNullException("未将对象引用设置到对象的实例。");

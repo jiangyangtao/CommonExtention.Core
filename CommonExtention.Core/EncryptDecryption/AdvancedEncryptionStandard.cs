@@ -10,6 +10,14 @@ namespace CommonExtention.Core.EncryptDecryption
     /// </summary>
     public sealed class AdvancedEncryptionStandard
     {
+        /// <summary>
+        /// 初始化 高级加密标准 的新实例
+        /// </summary>
+        public AdvancedEncryptionStandard()
+        {
+
+        }
+
         #region 将要加密的字符串进行AES加密(CBC模式)
         /// <summary>
         /// 将要加密的字符串进行AES加密(CBC模式)
@@ -31,7 +39,7 @@ namespace CommonExtention.Core.EncryptDecryption
         /// <exception cref="ArgumentOutOfRangeException"> key 参数长度大于32位。</exception>
         /// <exception cref="ArgumentOutOfRangeException"> key 参数长度不是16位或者24位或者32位。</exception>
         /// <exception cref="ArgumentOutOfRangeException"> iv 参数不为空且长度小于16位。</exception>
-        public static string Encrypt(string value, string key, string iv = "")
+        public string Encrypt(string value, string key, string iv = "")
         {
             if (value.IsNullOrEmpty()) return string.Empty;
             if (key == null) throw new ArgumentNullException("未将对象引用设置到对象的实例。");
@@ -79,7 +87,7 @@ namespace CommonExtention.Core.EncryptDecryption
         /// <exception cref="ArgumentOutOfRangeException"> key 参数长度大于32位。</exception>
         /// <exception cref="ArgumentOutOfRangeException"> key 参数长度不是16位或者24位或者32位。</exception>
         /// <exception cref="ArgumentOutOfRangeException"> iv 参数不为空且长度小于16位。</exception>
-        public static string Decrypt(string value, string key, string iv = "")
+        public string Decrypt(string value, string key, string iv = "")
         {
             if (value.IsNullOrEmpty()) return string.Empty;
             if (key == null) throw new ArgumentNullException("未将对象引用设置到对象的实例。");

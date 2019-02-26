@@ -8,7 +8,7 @@ namespace CommonExtention.Core.Common
     /// <summary>
     /// 提供身份证号码的验证和其它信息。此类不可被继承
     /// </summary>
-    public class IdentityCardNumber
+    public sealed class IdentityCardNumber
     {
         #region Constructor
         /// <summary>
