@@ -11,8 +11,9 @@ namespace CommonExtention.Core.Common
     /// </summary>
     public sealed class ImageVerificationCode
     {
+        #region 构造函数
         /// <summary>
-        /// 初始化 图片验证码 的新实例
+        /// 初始化 <see cref="ImageVerificationCode"/> 类的新实例
         /// </summary>
         /// <param name="number">验证码数量</param>
         public ImageVerificationCode(int number = 4)
@@ -20,6 +21,9 @@ namespace CommonExtention.Core.Common
             _Number = number;
             Code = BuildRandomCode();
         }
+        #endregion
+
+        #region Private property
 
         /// <summary>
         /// 验证码数量
@@ -27,15 +31,20 @@ namespace CommonExtention.Core.Common
         private int _Number { set; get; }
 
         /// <summary>
-        /// 验证码
-        /// </summary>
-        public string Code { private set; get; }
-
-        /// <summary>
         /// 验证码字符
         /// </summary>
         private readonly string _VerificationChar = "0123456789abcdefghijklmnpqrstuvwxyzABCDEFGHIJKLMNPPQRSTUVWXYZ";
 
+        #endregion
+
+        #region Public property
+        /// <summary>
+        /// 验证码
+        /// </summary>
+        public string Code { private set; get; }
+        #endregion
+
+        #region 构建随机验证码
         /// <summary>
         /// 构建随机验证码
         /// </summary>
@@ -50,6 +59,7 @@ namespace CommonExtention.Core.Common
             }
             return code;
         }
+        #endregion
 
         #region 生成图片验证码
         /// <summary>

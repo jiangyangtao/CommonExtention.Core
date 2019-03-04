@@ -10,26 +10,20 @@ namespace CommonExtention.Core.Common
     /// </summary>
     public class UppercaseContractResolver : DefaultContractResolver
     {
-        #region constructor
+        #region 构造函数
         /// <summary>
-        /// 初始化 Json 全大写约定的实例
+        /// 初始化 <see cref="UppercaseContractResolver"/> 类的新实例
         /// </summary>
-        public UppercaseContractResolver()
-        {
-
-        }
+        public UppercaseContractResolver() { }
         #endregion
 
-        #region Resolves the name of the property
+        #region 解析属性名称
         /// <summary>
-        /// Resolves the name of the property
+        /// 解析属性名称
         /// </summary>
-        /// <param name="propertyName">Name of the property</param>
-        /// <returns>Resolved name of the property</returns>
-        protected override string ResolvePropertyName(string propertyName)
-        {
-            return propertyName.ToUpper();
-        }
+        /// <param name="propertyName">属性名称</param>
+        /// <returns>属性的解析名称</returns>
+        protected override string ResolvePropertyName(string propertyName) => propertyName.ToUpper();
         #endregion
     }
 }

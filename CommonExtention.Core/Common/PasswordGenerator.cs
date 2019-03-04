@@ -7,8 +7,15 @@ namespace CommonExtention.Core.Common
     /// <summary>
     /// 提供密码生成。此类不可被继承
     /// </summary>
-    public sealed class Password
+    public sealed class PasswordGenerator
     {
+        #region 构造函数
+        /// <summary>
+        /// 初始化 <see cref="PasswordGenerator"/> 类的新实例
+        /// </summary>
+        public PasswordGenerator() { }
+        #endregion
+
         #region Private property
         /// <summary>
         /// 数字、大小写字母

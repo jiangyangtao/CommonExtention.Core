@@ -12,13 +12,12 @@ namespace CommonExtention.Core.EncryptDecryption
     /// </summary>
     public sealed class DataEncryptionStandard
     {
+        #region 构造函数
         /// <summary>
-        /// 初始化 数据加密算法 的新实例
+        /// 初始化 <see cref="DataEncryptionStandard"/> 类的新实例
         /// </summary>
-        public DataEncryptionStandard()
-        {
-
-        }
+        public DataEncryptionStandard() { }
+        #endregion
 
         #region 将要加密的字符串进行DES加密
         /// <summary>

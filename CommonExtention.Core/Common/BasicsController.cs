@@ -6,15 +6,15 @@ using System.Data;
 namespace CommonExtention.Core.Common
 {
     /// <summary>
-    /// 基础控制器，提供通用返回格式。此类不可被实例化
+    /// 基础控制器，提供 Json 通用返回格式。此类不可被实例化
     /// </summary>
     public abstract class BasicsController : Controller
     {
-        #region init
+        #region 构造函数
         /// <summary>
-        /// Basics Controller Constructor
+        /// 初始化 <see cref="BasicsController"/> 控制器的新实例
         /// </summary>
-        public BasicsController() { }
+        protected BasicsController() { }
         #endregion
 
         #region Json通用返回格式
@@ -24,7 +24,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:0,data:"",count:0,message:Success}
         /// </returns>
-        protected virtual JsonResult ResponseSuccess() => ResponseFormat.ResponseSuccess();
+        protected virtual JsonResult ResponseSuccess() => JsonResultFormat.ResponseSuccess();
 
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:0,data:data,count:1,message:Success}
         /// </returns>
-        protected virtual JsonResult ResponseSuccess<T>(T data, int count = 1) => ResponseFormat.ResponseSuccess(data, count);
+        protected virtual JsonResult ResponseSuccess<T>(T data, int count = 1) => JsonResultFormat.ResponseSuccess(data, count);
 
         /// <summary>
         /// Json通用返回格式：返回成功
@@ -45,7 +45,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:0,data:List,count:List.Count(),message:Success}
         /// </returns>
-        protected virtual JsonResult ResponseSuccess<T>(List<T> list, int count = 0) => ResponseFormat.ResponseSuccess(list, count);
+        protected virtual JsonResult ResponseSuccess<T>(List<T> list, int count = 0) => JsonResultFormat.ResponseSuccess(list, count);
 
         /// <summary>
         /// Json通用返回格式：返回成功
@@ -55,7 +55,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:0,data:DataTable,count:DataTable.Rows.Count,message:Success}
         /// </returns>
-        protected virtual JsonResult ResponseSuccess(DataTable dataTable, int count = 0) => ResponseFormat.ResponseSuccess(dataTable, count);
+        protected virtual JsonResult ResponseSuccess(DataTable dataTable, int count = 0) => JsonResultFormat.ResponseSuccess(dataTable, count);
 
         /// <summary>
         /// Json通用返回格式：返回失败
@@ -65,7 +65,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:-1,data:"",count:-1,message:Unknown error}
         /// </returns>
-        protected virtual JsonResult ResponseFail(int code = -1, string message = "Unknown error") => ResponseFormat.ResponseFail(code, message);
+        protected virtual JsonResult ResponseFail(int code = -1, string message = "Unknown error") => JsonResultFormat.ResponseFail(code, message);
         #endregion
 
         #region Json通用网格返回格式
@@ -77,7 +77,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:0,rows:data,total:1,message:Success}
         /// </returns>
-        protected virtual JsonResult ResponseGridResult<T>(T data, int count = 1) => ResponseFormat.ResponseGridResult(data, count);
+        protected virtual JsonResult ResponseGridResult<T>(T data, int count = 1) => JsonResultFormat.ResponseGridResult(data, count);
 
         /// <summary>
         /// Json通用网格返回格式：返回成功
@@ -87,7 +87,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:0,rows:List,total:List.Count(),message:Success}
         /// </returns>
-        protected virtual JsonResult ResponseGridResult<T>(List<T> list, int count = 0) => ResponseFormat.ResponseGridResult(list, count);
+        protected virtual JsonResult ResponseGridResult<T>(List<T> list, int count = 0) => JsonResultFormat.ResponseGridResult(list, count);
 
         /// <summary>
         /// Json通用网格返回格式：返回成功
@@ -97,7 +97,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:0,rows:DataTable,total:DataTable.Rows.Count,message:Success}
         /// </returns>
-        protected virtual JsonResult ResponseGridResult(DataTable dataTable, int count = 0) => ResponseFormat.ResponseGridResult(dataTable, count);
+        protected virtual JsonResult ResponseGridResult(DataTable dataTable, int count = 0) => JsonResultFormat.ResponseGridResult(dataTable, count);
 
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// Json格式 : {code:-1,rows:[],total:0,message:Unknown error}
         /// </returns>
-        protected virtual JsonResult ResponseGridResult(int code = -1, string message = "Unknown error") => ResponseFormat.ResponseGridResult(code, message);
+        protected virtual JsonResult ResponseGridResult(int code = -1, string message = "Unknown error") => JsonResultFormat.ResponseGridResult(code, message);
         #endregion
     }
 }

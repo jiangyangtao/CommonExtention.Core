@@ -10,13 +10,12 @@ namespace CommonExtention.Core.EncryptDecryption
     /// </summary>
     public sealed class AdvancedEncryptionStandard
     {
+        #region 构造函数
         /// <summary>
-        /// 初始化 高级加密标准 的新实例
+        /// 初始化 <see cref="AdvancedEncryptionStandard"/> 类的新实例
         /// </summary>
-        public AdvancedEncryptionStandard()
-        {
-
-        }
+        public AdvancedEncryptionStandard() { }
+        #endregion
 
         #region 将要加密的字符串进行AES加密(CBC模式)
         /// <summary>

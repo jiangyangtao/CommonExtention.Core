@@ -16,17 +16,14 @@ namespace CommonExtention.Core.Common
     {
         #region 构造函数
         /// <summary>
-        /// 初始化 ReadExcel 的新实例
+        /// 初始化 <see cref="ReadExcel"/> 类的新实例
         /// </summary>
-        public ReadExcel()
-        {
-
-        }
+        public ReadExcel() { }
         #endregion
 
-        #region 将 Excel 文件读取到 DataTable
+        #region 将指定路径的 Excel 文件读取到 DataTable
         /// <summary>
-        /// 将 Excel 文件读取到 <see cref="DataTable"/>
+        /// 将指定路径的 Excel 文件读取到 <see cref="DataTable"/>
         /// </summary>
         /// <param name="filePath">文件完整路径名</param>
         /// <param name="sheetName">指定读取 Excel 工作薄 sheet 的名称</param>
@@ -41,85 +38,8 @@ namespace CommonExtention.Core.Common
             var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
             if (fileStream == null || fileStream.Length <= 0) return null;
 
-            //定义要返回的datatable对象
-            DataTable data = new DataTable();
-
-            //excel工作表
-            ISheet sheet = null;
-
-            //数据开始行(排除标题行)
-            int startRow = 0;
-            try
-            {
-                //根据文件流创建excel数据结构
-                IWorkbook workbook = WorkbookFactory.Create(fileStream);
-
-                if (sheetName.IsNullOrEmpty()) sheet = workbook.GetSheetAt(0);
-                else
-                {
-                    sheet = workbook.GetSheet(sheetName);
-
-                    //如果没有找到指定的sheetName对应的sheet，则获取第一个sheet
-                    if (sheet == null) sheet = workbook.GetSheetAt(0);
-                }
-
-                if (sheet != null)
-                {
-                    IRow firstRow = sheet.GetRow(0);
-
-                    //一行最后一个cell的编号 即总的列数
-                    int cellCount = firstRow.LastCellNum;
-
-                    //如果第一行是标题列名
-                    if (firstRowIsColumnName)
-                    {
-                        for (int i = firstRow.FirstCellNum; i < cellCount; ++i)
-                        {
-                            ICell cell = firstRow.GetCell(i);
-                            if (cell != null)
-                            {
-                                string cellValue = cell.StringCellValue;
-                                if (cellValue != null)
-                                {
-                                    DataColumn column = new DataColumn(cellValue);
-                                    data.Columns.Add(column);
-                                }
-                            }
-                        }
-                        startRow = sheet.FirstRowNum + 1;
-                    }
-                    else
-                    {
-                        startRow = sheet.FirstRowNum;
-                    }
-
-                    //最后一列的标号
-                    int rowCount = sheet.LastRowNum;
-                    for (int i = startRow; i <= rowCount; ++i)
-                    {
-                        IRow row = sheet.GetRow(i);
-                        if (row == null) continue; // 没有数据的行默认是 null，如果为 null 则不添加
-
-                        DataRow dataRow = data.NewRow();
-                        for (int j = row.FirstCellNum; j < cellCount; ++j)
-                        {
-                            // 没有数据的单元格默认是 null
-                            if (row.GetCell(j) != null) dataRow[j] = row.GetCell(j).ToString();
-                        }
-                        data.Rows.Add(dataRow);
-                    }
-                }
-                return data;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-            finally
-            {
-                fileStream.Flush();
-                fileStream.Close();
-            }
+            var dt = ReadStreamToDataTable(fileStream, sheetName, firstRowIsColumnName);
+            return dt;
         }
         #endregion
 

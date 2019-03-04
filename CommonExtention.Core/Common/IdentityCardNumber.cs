@@ -10,9 +10,10 @@ namespace CommonExtention.Core.Common
     /// </summary>
     public sealed class IdentityCardNumber
     {
-        #region Constructor
+        #region 构造函数
+
         /// <summary>
-        /// 初始化 身份证号码 的实例
+        /// 初始化 <see cref="IdentityCardNumber"/> 类的新实例
         /// </summary>
         /// <param name="value">身份证号码的字符串</param>
         public IdentityCardNumber(string value)

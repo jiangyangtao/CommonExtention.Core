@@ -225,24 +225,24 @@ namespace CommonExtention.Core.Extensions
             if (dataRow.Table.Columns.Contains(columnName))
             {
                 if (typeof(string) == columnType) return dataRow[columnName].ToString();
-                if (typeof(short) == columnType) return dataRow[columnName].ToString().ToInt16();
-                if (typeof(short?) == columnType) return dataRow[columnName].ToString().ToNullableInt16();
-                if (typeof(int) == columnType) return dataRow[columnName].ToString().ToInt();
-                if (typeof(int?) == columnType) return dataRow[columnName].ToString().ToNullableInt();
-                if (typeof(long) == columnType) return dataRow[columnName].ToString().ToInt64();
-                if (typeof(long?) == columnType) return dataRow[columnName].ToString().ToNullableInt64();
-                if (typeof(float) == columnType) return dataRow[columnName].ToString().ToSingle();
-                if (typeof(float?) == columnType) return dataRow[columnName].ToString().ToNullableSingle();
-                if (typeof(double) == columnType) return dataRow[columnName].ToString().ToDouble();
-                if (typeof(double?) == columnType) return dataRow[columnName].ToString().ToNullableDouble();
-                if (typeof(decimal) == columnType) return dataRow[columnName].ToString().ToDecimal();
+                if (typeof(short) == columnType) return Convert.ToInt16(dataRow[columnName]);
+                if (typeof(short?) == columnType) return dataRow[columnName].ToNullableInt16();
+                if (typeof(int) == columnType) return Convert.ToInt32(dataRow[columnName]);
+                if (typeof(int?) == columnType) return dataRow[columnName].ToNullableInt();
+                if (typeof(long) == columnType) return Convert.ToInt64(dataRow[columnName]);
+                if (typeof(long?) == columnType) return dataRow[columnName].ToNullableInt64();
+                if (typeof(float) == columnType) return Convert.ToSingle(dataRow[columnName]);
+                if (typeof(float?) == columnType) return dataRow[columnName].ToNullableSingle();
+                if (typeof(double) == columnType) return Convert.ToInt16(dataRow[columnName]);
+                if (typeof(double?) == columnType) return dataRow[columnName].ToNullableDouble();
+                if (typeof(decimal) == columnType) return Convert.ToDecimal(dataRow[columnName]);
                 if (typeof(decimal?) == columnType) return dataRow[columnName].ToString().ToNullableDecimal();
-                if (typeof(DateTime) == columnType) return dataRow[columnName].IsNullOrEmpty() ? DateTime.MinValue : DateTime.Parse(dataRow[columnName].ToString());
-                if (typeof(DateTime?) == columnType) return dataRow[columnName].ToString().ToNullableDateTime();
-                if (typeof(bool) == columnType) return dataRow[columnName].ToString().ToBoolean();
-                if (typeof(bool?) == columnType) return dataRow[columnName].ToString().ToNullableBoolean();
-                if (typeof(Guid) == columnType) return dataRow[columnName].ToString().ToGuid();
-                if (typeof(Guid?) == columnType) return dataRow[columnName].ToString().ToNullableGuid();
+                if (typeof(DateTime) == columnType) return Convert.ToDateTime(dataRow[columnName]);
+                if (typeof(DateTime?) == columnType) return dataRow[columnName].ToNullableDateTime();
+                if (typeof(bool) == columnType) return Convert.ToBoolean(dataRow[columnName]);
+                if (typeof(bool?) == columnType) return dataRow[columnName].ToNullableBoolean();
+                if (typeof(Guid) == columnType) return dataRow[columnName].ToGuid();
+                if (typeof(Guid?) == columnType) return dataRow[columnName].ToNullableGuid();
                 if (dataRow[columnName] != null) return dataRow[columnName].ToString();
             }
             return string.Empty;

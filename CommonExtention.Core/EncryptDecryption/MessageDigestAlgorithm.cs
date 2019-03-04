@@ -10,13 +10,12 @@ namespace CommonExtention.Core.EncryptDecryption
     /// </summary>
     public sealed class MessageDigestAlgorithm
     {
+        #region 构造函数
         /// <summary>
-        /// 初始化 消息摘要算法加密 的新实例
+        /// 初始化 <see cref="MessageDigestAlgorithm"/> 类的新实例
         /// </summary>
-        public MessageDigestAlgorithm()
-        {
-
-        }
+        public MessageDigestAlgorithm() { }
+        #endregion
 
         #region 将要加密的字符串进行加密(默认为16位小写)
         /// <summary>

@@ -7,7 +7,7 @@ namespace CommonExtention.Core.HttpResponseFormat
     internal class ResponseEntity
     {
         /// <summary>
-        /// 初始化 Json 通用返回实体 的新实例
+        /// 初始化 <see cref="ResponseEntity"/> 类的新实例
         /// </summary>
         public ResponseEntity() { }
 

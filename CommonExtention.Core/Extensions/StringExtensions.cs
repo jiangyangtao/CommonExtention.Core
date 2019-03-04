@@ -38,7 +38,7 @@ namespace CommonExtention.Core.Extensions
         /// <summary>
         /// 指示指定的字符串是否为 null
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">要检测的字符串</param>
         /// <returns>如果字符串为 null，则返回true；否则为 false。</returns>
         public static bool IsNull(this string value) => value == null;
         #endregion
@@ -47,7 +47,7 @@ namespace CommonExtention.Core.Extensions
         /// <summary>
         /// 指示指定的字符串是否为 <see cref="string.Empty"/> 字符串
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">要检测的字符串</param>
         /// <returns>如果字符串为空字符串 ("")，则为 true；否则为 false。</returns>
         public static bool IsEmpty(this string value) => value == string.Empty;
         #endregion
@@ -95,7 +95,8 @@ namespace CommonExtention.Core.Extensions
         /// <param name="value">要验证的字符串</param>
         /// <returns>
         /// 如果字符串为 null 或者空字符串("")，则返回 false;
-        /// 否则返回验证的结果。
+        /// 如果 value 参数为正确的电子邮箱格式，则返回 true;
+        /// 否则返回 false 。
         /// </returns>
         public static bool IsEmail(this string value)
         {
@@ -674,15 +675,15 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region 将数字的字符串表示形式转换为其等效的 Nullable{Int16} 的值
+        #region 将数字的字符串表示形式转换为其等效的 short? 的值
         /// <summary>
-        /// 将数字的字符串表示形式转换为其等效的 <see cref="Nullable{Int16}"/> 的值
+        /// 将数字的字符串表示形式转换为其等效的 <see cref="short"/>? 的值
         /// </summary>
         /// <param name="value">指定的字符串</param>
         /// <returns>
         /// 如果字符串为 null 或空字符串 ("")，则返回 null；
-        /// 如果字符串转换失败，则返回 null；
-        /// 如果字符串转换成功，则返回其等效的 <see cref="short"/> 值。
+        /// 如果转换失败，则返回 null；
+        /// 如果转换成功，则返回其等效的 <see cref="short"/> 值。
         /// </returns>
         public static short? ToNullableInt16(this string value)
         {
@@ -694,15 +695,15 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region 将数字的字符串表示形式转换为其等效的 Nullable{Int32} 的值
+        #region 将数字的字符串表示形式转换为其等效的 int? 的值
         /// <summary>
-        /// 将数字的字符串表示形式转换为其等效的 <see cref="Nullable{Int32}"/> 的值
+        /// 将数字的字符串表示形式转换为其等效的 <see cref="int"/>? 的值
         /// </summary>
         /// <param name="value">指定的字符串</param>
         /// <returns> 
         /// 如果字符串为 null 或空字符串 ("")，则返回 null；
-        /// 如果字符串转换失败，则返回 null；
-        /// 如果字符串转换成功，则返回等效的 <see cref="int"/> 的值。
+        /// 如果转换失败，则返回 null；
+        /// 如果转换成功，则返回等效的 <see cref="int"/> 的值。
         /// </returns>
         public static int? ToNullableInt(this string value)
         {
@@ -714,15 +715,15 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region 将数字的字符串表示形式转换为其等效的 Nullable{Int64} 的值
+        #region 将数字的字符串表示形式转换为其等效的 long? 的值
         /// <summary>
-        /// 将数字的字符串表示形式转换为其等效的 <see cref="Nullable{Int64}"/> 的值
+        /// 将数字的字符串表示形式转换为其等效的 <see cref="long"/>? 的值
         /// </summary>
         /// <param name="value">指定的字符串</param>
         /// <returns>
         /// 如果字符串为 null 或空字符串 ("")，则返回 null；
-        /// 如果字符串转换失败，则返回 null；
-        /// 如果字符串转换成功，则返回等效的 <see cref="long"/> 的值。
+        /// 如果转换失败，则返回 null；
+        /// 如果转换成功，则返回等效的 <see cref="long"/> 的值。
         /// </returns>
         public static long? ToNullableInt64(this string value)
         {
@@ -734,15 +735,15 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region 将数字的字符串表示形式转换为其等效的 Nullable{Single} 的值
+        #region 将数字的字符串表示形式转换为其等效的 float? 的值
         /// <summary>
-        /// 将数字的字符串表示形式转换为其等效的 <see cref="Nullable{Single}"/> 的值
+        /// 将数字的字符串表示形式转换为其等效的 <see cref="float"/>? 的值
         /// </summary>
         /// <param name="value">指定的字符串</param>
         /// <returns>
         /// 如果字符串为 null 或空字符串 ("")，则返回 null；
-        /// 如果字符串转换失败，则返回 null；
-        /// 如果字符串转换成功，则返回等效的 <see cref="float"/> 的值。
+        /// 如果转换失败，则返回 null；
+        /// 如果转换成功，则返回等效的 <see cref="float"/> 的值。
         /// </returns>
         public static float? ToNullableSingle(this string value)
         {
@@ -754,15 +755,15 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region 将数字的字符串表示形式转换为其等效的 Nullable{Double} 的值
+        #region 将数字的字符串表示形式转换为其等效的 double? 的值
         /// <summary>
-        /// 将数字的字符串表示形式转换为其等效的 <see cref="Nullable{Double}"/> 的值
+        /// 将数字的字符串表示形式转换为其等效的 <see cref="double"/>? 的值
         /// </summary>
         /// <param name="value">指定的字符串</param>
         /// <returns>
         /// 如果字符串为 null 或空字符串 ("")，则返回 null；
-        /// 如果字符串转换失败，则返回 null；
-        /// 如果字符串转换成功，则返回等效的 <see cref="double"/> 的值。
+        /// 如果转换失败，则返回 null；
+        /// 如果转换成功，则返回等效的 <see cref="double"/> 的值。
         /// </returns>
         public static double? ToNullableDouble(this string value)
         {
@@ -774,15 +775,15 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region 将数字的字符串表示形式转换为其等效的 Nullable{Decimal} 的值
+        #region 将数字的字符串表示形式转换为其等效的 decimal? 的值
         /// <summary>
-        /// 将数字的字符串表示形式转换为其等效的 <see cref="Nullable{Decimal}"/> 的值
+        /// 将数字的字符串表示形式转换为其等效的 <see cref="decimal"/>? 的值
         /// </summary>
         /// <param name="value">指定的字符串</param>
         /// <returns>
         /// 如果字符串为 null 或空字符串 ("")，则返回 null；
-        /// 如果字符串转换失败，则返回 null；
-        /// 如果字符串转换成功，则返回等效的 <see cref="decimal"/> 的值。
+        /// 如果转换失败，则返回 null；
+        /// 如果转换成功，则返回等效的 <see cref="decimal"/> 的值。
         /// </returns>
         public static decimal? ToNullableDecimal(this string value)
         {
@@ -794,20 +795,19 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region 将时间的字符串表示形式转换为其等效的 Nullable{DateTime} 对象
+        #region 将时间的字符串表示形式转换为其等效的 DateTime? 对象
         /// <summary>
-        /// 将时间的字符串表示形式转换为其等效的 <see cref="Nullable{DateTime}"/> 对象
+        /// 将时间的字符串表示形式转换为其等效的 <see cref="DateTime"/>? 对象
         /// </summary>
         /// <param name="value">指定的字符串</param>
         /// <returns>
         /// 如果字符串为 null 或空字符串 ("")，，则返回 null；
-        /// 如果字符串转换失败，则返回 null；
-        /// 如果字符串转换成功，则返回等效的 <see cref="DateTime"/> 的对象。
+        /// 如果转换失败，则返回 null；
+        /// 如果转换成功，则返回等效的 <see cref="DateTime"/> 的对象。
         /// </returns>
         public static DateTime? ToNullableDateTime(this string value)
         {
             if (value.IsNullOrEmpty()) return null;
-            if (IsInt64(value)) return UnixToDateTime(value);
 
             var isParsed = DateTime.TryParse(value, out DateTime _d);
             if (!isParsed) return null;
@@ -815,15 +815,15 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region 将布尔的字符串表示形式转换为其等效的 Nullable{Boolean} 的值
+        #region 将布尔的字符串表示形式转换为其等效的 bool? 的值
         /// <summary>
-        /// 将布尔的字符串表示形式转换为其等效的 <see cref="Nullable{Boolean}"/> 的值
+        /// 将布尔的字符串表示形式转换为其等效的 <see cref="bool"/>? 的值
         /// </summary>
         /// <param name="value">指定的字符串</param>
         /// <returns>
         /// 如果字符串为 null 或空字符串 ("")，则返回 null；
-        /// 如果字符串转换失败，则返回 null；
-        /// 如果字符串转换成功，则返回等效的 <see cref="bool"/> 的值。
+        /// 如果转换失败，则返回 null；
+        /// 如果转换成功，则返回等效的 <see cref="bool"/> 的值。
         /// </returns>
         public static bool? ToNullableBoolean(this string value)
         {
@@ -835,9 +835,9 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region 将 Guid 的字符串表示形式转换为其等效的 Nullable{Guid} 的值
+        #region 将 Guid 的字符串表示形式转换为其等效的 Guid? 的值
         /// <summary>
-        /// 将 <see cref="Guid"/> 的字符串表示形式转换为其等效的 <see cref="Nullable{Guid}"/> 的值
+        /// 将 <see cref="Guid"/> 的字符串表示形式转换为其等效的 <see cref="Guid"/>? 的值
         /// </summary>
         /// <param name="value">指定的字符串</param>
         /// <returns>
@@ -854,9 +854,9 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region 将 Guid 的字符串表示形式转换为其等效的 Nullable{Guid} 的值
+        #region 将 Guid 的字符串表示形式转换为其等效的 Guid? 的值
         /// <summary>
-        /// 将 <see cref="Guid"/> 的字符串表示形式转换为其等效的 <see cref="Nullable{Guid}"/> 的值
+        /// 将 <see cref="Guid"/> 的字符串表示形式转换为其等效的 <see cref="Guid"/>? 的值
         /// </summary>
         /// <param name="value">指定的字符串</param>
         /// <param name="format">指示当解释 input 时要使用的确切格式：“N”、“D”、“B”、“P”或“X”</param>
