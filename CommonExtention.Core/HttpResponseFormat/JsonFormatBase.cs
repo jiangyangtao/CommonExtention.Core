@@ -7,15 +7,15 @@ using System.Text;
 namespace CommonExtention.Core.HttpResponseFormat
 {
     /// <summary>
-    /// Json 格式化。此类不可被实例化
+    /// Json 格式化基类。此类不可被实例化
     /// </summary>
-    public abstract class JsonFormat
+    public abstract class JsonFormatBase
     {
         #region 构造函数
         /// <summary>
-        /// 初始化 <see cref="JsonFormat"/> 类的新实例
+        /// 初始化 <see cref="JsonFormatBase"/> 类的新实例
         /// </summary>
-        public JsonFormat() { }
+        public JsonFormatBase() { }
         #endregion
 
         #region 设置返回结果

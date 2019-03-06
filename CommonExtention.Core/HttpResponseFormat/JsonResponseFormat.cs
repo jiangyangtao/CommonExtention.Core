@@ -11,7 +11,7 @@ namespace CommonExtention.Core.HttpResponseFormat
     /// <summary>
     /// Json 返回格式。此类不可被继承
     /// </summary>
-    public sealed class JsonResponseFormat : JsonFormat
+    public sealed class JsonResponseFormat : JsonFormatBase
     {
         #region 构造函数
         /// <summary>
