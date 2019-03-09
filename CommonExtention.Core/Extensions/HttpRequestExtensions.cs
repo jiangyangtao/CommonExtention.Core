@@ -14,8 +14,8 @@ namespace CommonExtention.Core.Extensions
         /// <summary>
         /// 获取有关当前请求的 Url 的信息
         /// </summary>
-        /// <param name="request">HttpRequest</param>
-        /// <returns>当前请求的 Url</returns>
+        /// <param name="request">当前请求</param>
+        /// <returns>当前请求的 Url，不包含参数</returns>
         public static string Url(this HttpRequest request)
         {
             if (request == null) return string.Empty;
@@ -46,8 +46,8 @@ namespace CommonExtention.Core.Extensions
         /// <summary>
         /// 获取当前绝对 Url
         /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
+        /// <param name="request">当前请求</param>
+        /// <returns>当前请求的 Url，包含参数</returns>
         public static string AbsoluteUrl(this HttpRequest request)
         {
             if (request == null) return string.Empty;

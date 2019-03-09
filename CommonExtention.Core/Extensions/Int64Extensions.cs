@@ -33,7 +33,7 @@ namespace CommonExtention.Core.Extensions
         public static string FileSize(this long length)
         {
             var size = Convert.ToDouble(length);
-            var units = new String[] { "B", "KB", "MB", "GB", "TB", "PB" };
+            var units = new string[] { "B", "KB", "MB", "GB", "TB", "PB" };
             var mod = 1024.0;
             var i = 0;
             while (size >= mod)
@@ -41,7 +41,7 @@ namespace CommonExtention.Core.Extensions
                 size /= mod;
                 i++;
             }
-            return Math.Round(size) + units[i];
+            return $"{Math.Round(size)}{units[i]}";
         }
         #endregion
 

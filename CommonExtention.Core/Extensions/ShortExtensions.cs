@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CommonExtention.Core.Extensions
+﻿namespace CommonExtention.Core.Extensions
 {
     /// <summary>
     /// <see cref="short"/> 扩展

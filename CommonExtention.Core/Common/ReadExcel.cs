@@ -2,10 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using NPOI.SS.UserModel;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Text;
 
 namespace CommonExtention.Core.Common
 {

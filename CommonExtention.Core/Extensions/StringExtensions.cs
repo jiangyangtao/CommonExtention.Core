@@ -1,6 +1,5 @@
 ﻿using CommonExtention.Core.Common;
 using CommonExtention.Core.EncryptDecryption;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Text;
