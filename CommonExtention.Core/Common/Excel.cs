@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Http;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
+using System.Reflection;
 
 namespace CommonExtention.Core.Common
 {
@@ -21,6 +23,13 @@ namespace CommonExtention.Core.Common
         /// 初始化 <see cref="Excel"/> 类的新实例
         /// </summary>
         public Excel() { }
+        #endregion
+
+        #region 静态属性
+        /// <summary>
+        /// Excel 的 Content-Type
+        /// </summary>
+        public static string ContentType { get => "application/vnd.ms-excel"; }
         #endregion
 
         #region 将指定路径的 Excel 文件读取到 DataTable
@@ -313,23 +322,24 @@ namespace CommonExtention.Core.Common
         /// 将 <see cref="DataTable"/> 对象写入到 <see cref="MemoryStream"/> 对象
         /// </summary>
         /// <param name="dataTable">要写入的 <see cref="DataTable"/> 对象</param>
-        /// <param name="predicate">用于执行写入Excel单元格的函数</param>
-        /// <param name="sheetsName">Excel的工作簿名称</param>
+        /// <param name="predicate">用于执行写入 Excel 单元格的委托</param>
+        /// <param name="sheetsName">Excel 的工作簿名称</param>
         /// <returns>Excel形式的 <see cref="MemoryStream"/> 对象</returns>
-        public MemoryStream WriteDataTableToMemoryStream(DataTable dataTable, Func<ExcelWorksheet, DataColumnCollection, DataRowCollection, ExcelWorksheet> predicate, string sheetsName = "sheet1")
+        public MemoryStream WriteToMemoryStream(DataTable dataTable, Func<ExcelWorksheet, DataColumnCollection, DataRowCollection, ExcelWorksheet> predicate,
+            string sheetsName = "sheet1")
         {
-            var file = new FileInfo(Path.Combine(""));
-            file.Delete();
+            if (dataTable == null || dataTable.Rows.Count <= 0) return null;
 
-            using (ExcelPackage package = new ExcelPackage(file))
+            var memoryStream = new MemoryStream();
+            using (var package = new ExcelPackage())
             {
                 var worksheet = package.Workbook.Worksheets.Add(sheetsName);
-                // worksheet.Cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 worksheet = predicate(worksheet, dataTable.Columns, dataTable.Rows);
                 worksheet.Cells.AutoFitColumns();
-                package.Save();
+                package.SaveAs(memoryStream);
             }
-            return file.ToMemoryStream(deleteFile: true);
+            return memoryStream;
         }
         #endregion
 
@@ -338,29 +348,24 @@ namespace CommonExtention.Core.Common
         /// 将 <see cref="List{T}"/> 集合写入到 <see cref="MemoryStream"/> 对象
         /// </summary>
         /// <param name="list">要写入的 <see cref="DataTable"/> 对象</param>
-        /// <param name="predicate">用于执行写入Excel单元格的函数</param>
-        /// <param name="sheetsName">Excel的工作簿名称</param>
-        /// <returns>Excel形式的 <see cref="MemoryStream"/> 对象</returns>
-        public MemoryStream WriteListToMemoryStream<T>(List<T> list, Func<ExcelWorksheet, string[], ExcelWorksheet> predicate, string sheetsName = "sheet1")
+        /// <param name="predicate">用于执行写入 Excel 单元格的委托</param>
+        /// <param name="sheetsName">Excel 的工作簿名称</param>
+        /// <returns>Excel 形式的 <see cref="MemoryStream"/> 对象</returns>
+        public MemoryStream WriteToMemoryStream<T>(List<T> list, Func<ExcelWorksheet, PropertyInfo[], ExcelWorksheet> predicate, string sheetsName = "sheet1")
         {
-            var file = new FileInfo(Path.Combine(""));
-            file.Delete();
+            if (list == null || list.Count <= 0) return null;
 
+            var memoryStream = new MemoryStream();
             var propertys = typeof(T).GetProperties();
-            var keys = new string[propertys.Length];
-            propertys.ForEach((item, index) =>
-            {
-                keys[index] = item.Name;
-            });
-            using (ExcelPackage package = new ExcelPackage(file))
+            using (var package = new ExcelPackage())
             {
                 var worksheet = package.Workbook.Worksheets.Add(sheetsName);
-                // worksheet.Cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                worksheet = predicate(worksheet, keys);
+                worksheet.Cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet = predicate(worksheet, propertys);
                 worksheet.Cells.AutoFitColumns();
-                package.Save();
+                package.SaveAs(memoryStream);
             }
-            return file.ToMemoryStream(deleteFile: true);
+            return memoryStream;
         }
         #endregion
     }

@@ -1,10 +1,12 @@
 ﻿using CommonExtention.Core.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OfficeOpenXml;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Reflection;
 using System.Text;
 
@@ -282,6 +284,17 @@ namespace CommonExtention.Core.Extensions
             }
             return ts;
         }
+        #endregion
+
+        #region 将当前 DataTable 对象写入 MemoryStream
+        /// <summary>
+        /// 将当前 <see cref="DataTable"/> 写入 <see cref="MemoryStream"/>
+        /// </summary>
+        /// <param name="dataTable">要写入的 <see cref="DataTable"/> 对象</param>
+        /// <param name="predicate">用于执行写入 Excel 单元格的委托</param>
+        /// <param name="sheetsName">Excel 的工作簿名称</param>
+        /// <returns>Excel形式的 <see cref="MemoryStream"/> 对象</returns>
+        public static MemoryStream WriteToMemoryStream(this DataTable dataTable, Func<ExcelWorksheet, DataColumnCollection, DataRowCollection, ExcelWorksheet> predicate, string sheetsName = "sheet1") => new Excel().WriteToMemoryStream(dataTable, predicate, sheetsName);
         #endregion
 
         #region 清除当前 DataTable 对象的空行

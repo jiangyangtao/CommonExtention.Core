@@ -1,9 +1,12 @@
 ﻿using CommonExtention.Core.Common;
 using Newtonsoft.Json;
+using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace CommonExtention.Core.Extensions
 {
@@ -148,6 +151,18 @@ namespace CommonExtention.Core.Extensions
                 action(list[i], i);
             }
         }
+        #endregion
+
+        #region 将当前 List 集合写入 MemoryStream
+        /// <summary>
+        /// 将当前 <see cref="List{T}"/> 写入 <see cref="MemoryStream"/>
+        /// </summary>
+        /// <param name="list">要写入的 <see cref="List{T}"/> 集合</param>
+        /// <param name="predicate">用于执行写入 Excel 单元格的函数</param>
+        /// <param name="sheetsName">Excel 的工作簿名称</param>
+        /// <returns>Excel 形式的 <see cref="MemoryStream"/> 对象</returns>
+        public static MemoryStream WriteToMemoryStream<T>(this List<T> list, Func<ExcelWorksheet, PropertyInfo[], ExcelWorksheet> predicate,
+            string sheetsName = "sheet1") => new Excel().WriteToMemoryStream(list, predicate, sheetsName);
         #endregion
 
         #region 清除当前 List<T> 中的空元素
