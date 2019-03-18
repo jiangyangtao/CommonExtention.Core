@@ -23,29 +23,6 @@ namespace CommonExtention.Core.Common
         public Excel() { }
         #endregion
 
-        #region 将指定路径的 Excel 文件读取到 DataSet
-        /// <summary>
-        /// 将指定路径的 Excel 文件读取到 <see cref="DataSet"/>
-        /// </summary>
-        /// <param name="filePath">指定文件完整路径名</param>
-        /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
-        /// <param name="addEmptyRow">是否添加空行，默认为 false，不添加</param>
-        /// <returns>
-        /// 如果 filePath 参数为 null 或者空字符串("")，则返回 null；
-        /// 如果 filePath 参数值的磁盘中不存在 Excel 文件，则返回 null；
-        /// 否则返回从指定 Excel 文件读取后的 <see cref="DataSet"/> 对象，
-        /// 其中一个 <see cref="DataTable"/> 对应一个 Sheet 工作簿。
-        /// </returns>
-        public DataSet ReadFileToDataSet(string filePath, bool firstRowIsColumnName = true, bool addEmptyRow = false)
-        {
-            if (filePath.IsNullOrEmpty() || !File.Exists(filePath)) return null;
-
-            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
-            var dataSet = ReadStreamToDataSet(fileStream, firstRowIsColumnName, addEmptyRow);
-            return dataSet;
-        }
-        #endregion
-
         #region 将指定路径的 Excel 文件读取到 DataTable
         /// <summary>
         /// 将指定路径的 Excel 文件读取到 <see cref="DataTable"/>
@@ -69,28 +46,26 @@ namespace CommonExtention.Core.Common
         }
         #endregion
 
-        #region 将 IFormFile 读取到 DataSet
+        #region 将指定路径的 Excel 文件读取到 ICollection<DataTable>
         /// <summary>
-        /// 将 <see cref="IFormFile"/> 读取到 <see cref="DataSet"/>
+        /// 将指定路径的 Excel 文件读取到 <see cref="ICollection{DataTable}"/>
         /// </summary>
-        /// <param name="formFile">要读取的 <see cref="IFormFile"/> 对象</param>
+        /// <param name="filePath">指定文件完整路径名</param>
         /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
         /// <param name="addEmptyRow">是否添加空行，默认为 false，不添加</param>
         /// <returns>
-        /// 如果 formFile 参数为 null，则返回 null；
-        /// 如果 formFile 参数的 <see cref="IFormFile.Length"/> 属性小于或者等于 0，则返回 null；
-        /// 否则返回从 <see cref="IFormFile"/>读取后的 <see cref="DataSet"/> 对象，
+        /// 如果 filePath 参数为 null 或者空字符串("")，则返回 null；
+        /// 如果 filePath 参数值的磁盘中不存在 Excel 文件，则返回 null；
+        /// 否则返回从指定 Excel 文件读取后的 <see cref="ICollection{DataTable}"/> 对象，
         /// 其中一个 <see cref="DataTable"/> 对应一个 Sheet 工作簿。
         /// </returns>
-        public DataSet ReadFormFileToDataSet(IFormFile formFile,
-            bool firstRowIsColumnName = true,
-            bool addEmptyRow = false)
+        public ICollection<DataTable> ReadFileToTables(string filePath, bool firstRowIsColumnName = true, bool addEmptyRow = false)
         {
-            if (formFile == null || formFile.Length <= 0) return null;
+            if (filePath.IsNullOrEmpty() || !File.Exists(filePath)) return null;
 
-            var stream = formFile.OpenReadStream();
-            var dataSet = ReadStreamToDataSet(stream, firstRowIsColumnName, addEmptyRow);
-            return dataSet;
+            var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            var tables = ReadStreamToTables(fileStream, firstRowIsColumnName, addEmptyRow);
+            return tables;
         }
         #endregion
 
@@ -117,35 +92,28 @@ namespace CommonExtention.Core.Common
         }
         #endregion
 
-        #region 将 Stream 对象读取到 DataSet
+        #region 将 IFormFile 读取到 ICollection<DataTable>
         /// <summary>
-        /// 将 <see cref="Stream"/> 对象读取到 <see cref="DataSet"/>
+        /// 将 <see cref="IFormFile"/> 读取到 <see cref="ICollection{DataTable}"/>
         /// </summary>
-        /// <param name="stream">要读取的 <see cref="Stream"/> 对象</param>
+        /// <param name="formFile">要读取的 <see cref="IFormFile"/> 对象</param>
         /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
         /// <param name="addEmptyRow">是否添加空行，默认为 false，不添加</param>
         /// <returns>
-        /// 如果 stream 参数为 null，则返回 null；
-        /// 如果 stream 参数的 <see cref="Stream.CanRead"/> 属性为 false，则返回 null；
-        /// 如果 stream 参数的 <see cref="Stream.Length"/> 属性小于或者等于 0，则返回 null；
-        /// 否则返回从 <see cref="Stream"/> 读取后的 <see cref="DataSet"/> 对象，
+        /// 如果 formFile 参数为 null，则返回 null；
+        /// 如果 formFile 参数的 <see cref="IFormFile.Length"/> 属性小于或者等于 0，则返回 null；
+        /// 否则返回从 <see cref="IFormFile"/>读取后的 <see cref="ICollection{DataTable}"/> 对象，
         /// 其中一个 <see cref="DataTable"/> 对应一个 Sheet 工作簿。
         /// </returns>
-        public DataSet ReadStreamToDataSet(Stream stream, bool firstRowIsColumnName = true, bool addEmptyRow = false)
+        public ICollection<DataTable> ReadFormFileToTables(IFormFile formFile,
+            bool firstRowIsColumnName = true,
+            bool addEmptyRow = false)
         {
-            if (stream == null || !stream.CanRead || stream.Length <= 0) return null;
+            if (formFile == null || formFile.Length <= 0) return null;
 
-            var workbook = WorkbookFactory.Create(stream);
-            var dataSet = new DataSet();
-            for (int i = 0; i < workbook.NumberOfSheets; i++)
-            {
-                var sheet = workbook.GetSheetAt(i);
-                if (sheet == null) continue;
-
-                var dataTable = ReadSheetToDataTable(sheet, firstRowIsColumnName, addEmptyRow);
-                dataSet.Tables.Add(dataTable);
-            }
-            return dataSet;
+            var stream = formFile.OpenReadStream();
+            var tables = ReadStreamToTables(stream, firstRowIsColumnName, addEmptyRow);
+            return tables;
         }
         #endregion
 
@@ -177,9 +145,41 @@ namespace CommonExtention.Core.Common
         }
         #endregion
 
-        #region 将 IFormFileCollection 对象读取到 DataSet 集合
+        #region 将 Stream 对象读取到 ICollection<DataTable>
         /// <summary>
-        /// 将 <see cref="IFormFileCollection"/> 对象读取到 <see cref="Collection{DataSet}"/> 集合
+        /// 将 <see cref="Stream"/> 对象读取到 <see cref="ICollection{DataTable}"/>
+        /// </summary>
+        /// <param name="stream">要读取的 <see cref="Stream"/> 对象</param>
+        /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
+        /// <param name="addEmptyRow">是否添加空行，默认为 false，不添加</param>
+        /// <returns>
+        /// 如果 stream 参数为 null，则返回 null；
+        /// 如果 stream 参数的 <see cref="Stream.CanRead"/> 属性为 false，则返回 null；
+        /// 如果 stream 参数的 <see cref="Stream.Length"/> 属性小于或者等于 0，则返回 null；
+        /// 否则返回从 <see cref="Stream"/> 读取后的 <see cref="ICollection{DataTable}"/> 对象，
+        /// 其中一个 <see cref="DataTable"/> 对应一个 Sheet 工作簿。
+        /// </returns>
+        public ICollection<DataTable> ReadStreamToTables(Stream stream, bool firstRowIsColumnName = true, bool addEmptyRow = false)
+        {
+            if (stream == null || !stream.CanRead || stream.Length <= 0) return null;
+
+            var workbook = WorkbookFactory.Create(stream);
+            var tables = new HashSet<DataTable>();
+            for (int i = 0; i < workbook.NumberOfSheets; i++)
+            {
+                var sheet = workbook.GetSheetAt(i);
+                if (sheet == null) continue;
+
+                var dataTable = ReadSheetToDataTable(sheet, firstRowIsColumnName, addEmptyRow);
+                tables.Add(dataTable);
+            }
+            return tables;
+        }
+        #endregion
+
+        #region 将 IFormFileCollection 对象读取到 ICollection<Collection<DataTable>> 集合
+        /// <summary>
+        /// 将 <see cref="IFormFileCollection"/> 对象读取到 <see cref="ICollection{Collection}"/> 集合
         /// </summary>
         /// <param name="formFiles">要读取的 <see cref="IFormFileCollection"/></param>
         /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
@@ -187,18 +187,18 @@ namespace CommonExtention.Core.Common
         /// <returns>
         /// 如果 formFiles 参数为 null，则返回 null；
         /// 如果 formFiles 参数的 <see cref="IFormFileCollection"/> 的 Count 属性小于或者等于 0，则返回 null；
-        /// 否则返回从 <see cref="IFormFileCollection"/> 读取后的 <see cref="Collection{DataSet}"/> 集合。
+        /// 否则返回从 <see cref="IFormFileCollection"/> 读取后的 <see cref="ICollection{Collection}"/> 集合。
         /// 结构说明：
-        /// <see cref="IFormFile"/> 对应 <see cref="DataSet"/>;
+        /// <see cref="IFormFile"/> 对应 <see cref="Collection{DataTable}"/>;
         /// <see cref="DataTable"/> 对应 Sheet 工作簿。
         /// </returns>
-        public Collection<DataSet> ReadHttpFileCollectionToDataSets(IFormFileCollection formFiles,
+        public ICollection<Collection<DataTable>> ReadHttpFileCollectionToTableCollection(IFormFileCollection formFiles,
             bool firstRowIsColumnName = true,
             bool addEmptyRow = false)
         {
             if (formFiles == null || formFiles.Count <= 0) return null;
 
-            var collection = new Collection<DataSet>();
+            var collection = new HashSet<Collection<DataTable>>();
             for (int i = 0; i < formFiles.Count; i++)
             {
                 var file = formFiles[i];
@@ -206,16 +206,16 @@ namespace CommonExtention.Core.Common
                 if (stream == null || !stream.CanRead || stream.Length <= 0) continue;
 
                 var workbook = WorkbookFactory.Create(stream);
-                var dataSet = new DataSet();
+                var tables = new Collection<DataTable>();
                 for (int j = 0; j < workbook.NumberOfSheets; j++)
                 {
                     var sheet = workbook.GetSheetAt(j);
                     if (sheet == null) continue;
 
                     var dataTable = ReadSheetToDataTable(sheet, firstRowIsColumnName, addEmptyRow);
-                    dataSet.Tables.Add(dataTable);
+                    tables.Add(dataTable);
                 }
-                collection.Add(dataSet);
+                collection.Add(tables);
             }
 
             return collection;

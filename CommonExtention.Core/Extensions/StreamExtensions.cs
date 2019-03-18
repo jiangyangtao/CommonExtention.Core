@@ -1,4 +1,5 @@
 ﻿using CommonExtention.Core.Common;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 
@@ -11,7 +12,7 @@ namespace CommonExtention.Core.Extensions
     {
         #region 将当前 Stream 对象读取到 DataSet
         /// <summary>
-        /// 将当前 <see cref="Stream"/> 对象读取到 <see cref="DataSet"/>
+        /// 将当前 <see cref="Stream"/> 对象读取到 <see cref="ICollection{DataTable}"/>
         /// </summary>
         /// <param name="stream">要读取的 <see cref="Stream"/> 对象</param>
         /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
@@ -20,11 +21,11 @@ namespace CommonExtention.Core.Extensions
         /// 如果 stream 参数为 null，则返回 null；
         /// 如果 stream 参数的 <see cref="Stream.CanRead"/> 属性为 false，则返回 null；
         /// 如果 stream 参数的 <see cref="Stream.Length"/> 属性小于或者等于 0，则返回 null；
-        /// 否则返回从 <see cref="Stream"/> 读取后的 <see cref="DataSet"/> 对象，
+        /// 否则返回从 <see cref="Stream"/> 读取后的 <see cref="ICollection{DataTable}"/> 对象，
         /// 其中一个 <see cref="DataTable"/> 对应一个 Sheet 工作簿。
         /// </returns>
-        public static DataSet ReadToDataTable(this Stream stream, bool firstRowIsColumnName = true, bool addEmptyRow = false)
-            => new Excel().ReadStreamToDataSet(stream,  firstRowIsColumnName);
+        public static ICollection<DataTable> ReadToTables(this Stream stream, bool firstRowIsColumnName = true, bool addEmptyRow = false)
+            => new Excel().ReadStreamToTables(stream, firstRowIsColumnName);
         #endregion
 
         #region 将当前 Stream 对象读取到 DataTable
