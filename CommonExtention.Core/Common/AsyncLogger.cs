@@ -27,48 +27,7 @@ namespace CommonExtention.Core.Common
         /// <param name="exception"><see cref="Exception"/> 对象</param>
         /// <param name="request"><see cref="HttpRequest"/> 对象</param>
         public static void LogException(Exception exception, HttpRequest request)
-        {
-            if (exception == null) return;
-            if (request == null) return;
-
-            // 异步执行
-            Task.Factory.StartNew(() =>
-            {
-                var _path = GetLogPath("error.txt");
-
-                //允许多个线程同时写入
-                using (var fileStream = new FileStream(_path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
-                {
-                    var streamWrite = new StreamWriter(fileStream, Encoding.Default);
-
-                    try
-                    {
-                        streamWrite.BaseStream.Seek(0, SeekOrigin.End);
-                        streamWrite.WriteLine(DateTime.Now.ToFormatDateTime());
-                        streamWrite.WriteLine("\r\n");
-                        streamWrite.WriteLine("\r\n  异常信息：");
-                        streamWrite.WriteLine($"\r\n\t请求地址：{request.Url()}");
-                        streamWrite.WriteLine($"\r\n\t错误代码：{exception.HResult}");
-                        streamWrite.WriteLine($"\r\n\t错误信息：{exception.ExceptionMessage()}");
-                        streamWrite.WriteLine($"\r\n\t错 误 源：{exception.Source}");
-                        streamWrite.WriteLine($"\r\n\t异常方法：{exception.TargetSite}");
-                        streamWrite.WriteLine($"\r\n\t堆栈信息：{exception.StackTrace}");
-                        streamWrite.WriteLine($"\r\n\t浏览器标识：{request.UserAgent()}");
-                        streamWrite.WriteLine("\r\n");
-
-                        //日志的分隔线
-                        streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
-                        streamWrite.WriteLine("\r\n");
-                        streamWrite.WriteLine("\r\n");
-                    }
-                    finally
-                    {
-                        streamWrite.Flush();
-                        streamWrite.Close();
-                    }
-                }
-            });
-        }
+            => new AsyncLogException(BeginLogException).BeginInvoke(exception, request, null, null);
         #endregion
 
         #region 记录关键信息
@@ -77,45 +36,8 @@ namespace CommonExtention.Core.Common
         /// </summary>
         /// <param name="information">关键信息</param>
         /// <param name="request"><see cref="HttpRequest"/> 对象</param>
-        public static void LogInformation(string information, HttpRequest request)
-        {
-            if (information.IsNullOrEmpty()) return;
-            if (request == null) return;
-
-            // 异步执行
-            Task.Factory.StartNew(() =>
-            {
-                var _path = GetLogPath("key.txt");
-
-                //允许多个线程同时写入
-                using (var fileStream = new FileStream(_path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
-                {
-                    var streamWrite = new StreamWriter(fileStream, Encoding.Default);
-                    try
-                    {
-                        streamWrite.BaseStream.Seek(0, SeekOrigin.End);
-                        streamWrite.WriteLine(DateTime.Now.ToFormatDateTime());
-                        streamWrite.WriteLine("\r\n");
-                        streamWrite.WriteLine("\r\n");
-                        streamWrite.WriteLine($"\r\n\t请求地址：{request.Url()}");
-                        streamWrite.WriteLine($"\r\n\t记录信息：{information}");
-                        streamWrite.WriteLine("\r\n");
-                        streamWrite.WriteLine($"\r\n\t浏览器标识：{request.UserAgent()}");
-
-                        //日志的分隔线
-                        streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
-                        streamWrite.WriteLine("\r\n");
-                        streamWrite.WriteLine("\r\n");
-                        streamWrite.WriteLine("\r\n");
-                    }
-                    finally
-                    {
-                        streamWrite.Flush();
-                        streamWrite.Close();
-                    }
-                }
-            });
-        }
+        public static void LogInformation(string information, HttpRequest request) =>
+             new AsyncLogInformation(BeginLogInformation).BeginInvoke(information, request, null, null);
         #endregion
 
         #region 记录Mvc请求信息
@@ -125,51 +47,163 @@ namespace CommonExtention.Core.Common
         /// <param name="model"><see cref="MvcRequestModel"/> 对象</param>
         /// <param name="request"><see cref="HttpRequest"/> 对象</param>
         public static void LogMvcRequest(MvcRequestModel model, HttpRequest request)
+            => new AsyncLogMvcRequest(BeginLogMvcRequest).BeginInvoke(model, request, null, null);
+        #endregion
+
+        #region 异步方法
+        /// <summary>
+        /// 委托方式的异步写入异常
+        /// </summary>
+        /// <param name="exception"><see cref="Exception"/> 对象</param>
+        /// <param name="request"><see cref="HttpRequest"/> 对象</param>
+        private delegate void AsyncLogException(Exception exception, HttpRequest request);
+
+        /// <summary>
+        /// 委托方式的异步写入关键信息
+        /// </summary>
+        /// <param name="information">关键信息</param>
+        /// <param name="request"><see cref="HttpRequest"/> 对象</param>
+        private delegate void AsyncLogInformation(string information, HttpRequest request);
+
+        /// <summary>
+        /// 委托方式的异步写入Mvc请求信息
+        /// </summary>
+        /// <param name="model"><see cref="MvcRequestModel"/> 对象</param>
+        /// <param name="request"><see cref="HttpRequest"/> 对象</param>
+        private delegate void AsyncLogMvcRequest(MvcRequestModel model, HttpRequest request);
+        #endregion
+
+        #region 异步记录    
+        /// <summary>
+        /// 异步写入异常
+        /// </summary>
+        /// <param name="exception"><see cref="Exception"/> 对象</param>
+        /// <param name="request"><see cref="HttpRequest"/> 对象</param>
+        private static void BeginLogException(Exception exception, HttpRequest request)
         {
-            if (model == null) return;
-            if (request == null) return;
+            if (exception == null || request == null) return;
 
-            // 异步执行
-            Task.Factory.StartNew(() =>
+            var _path = GetLogPath("error.txt");
+
+            //允许多个线程同时写入
+            using (var fileStream = new FileStream(_path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
             {
-                var _path = GetLogPath("request.txt");
+                var streamWrite = new StreamWriter(fileStream, Encoding.Default);
 
-                //允许多个线程同时写入
-                using (var fileStream = new FileStream(_path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
+                try
                 {
-                    var streamWrite = new StreamWriter(fileStream, Encoding.Default);
-                    try
-                    {
-                        streamWrite.BaseStream.Seek(0, SeekOrigin.End);
-                        streamWrite.WriteLine(DateTime.Now.ToFormatDateTime());
-                        streamWrite.WriteLine("\r\n");
-                        streamWrite.WriteLine("\r\n  请求信息：");
-                        streamWrite.WriteLine($"\r\n\t浏览器标识：{(model.UserAgent.IsNullOrEmpty() ? request.UserAgent() : model.UserAgent)}");
-                        streamWrite.WriteLine($"\r\n\t请求地址：{(model.Url.IsNullOrEmpty() ? request.Url() : model.Url)}");
-                        streamWrite.WriteLine($"\r\n\t请求类型：{model.RequestType}");
-                        streamWrite.WriteLine($"\r\n\t控制器名：{model.ControllerName}");
-                        streamWrite.WriteLine($"\r\n\tAction名：{model.ActionName}");
-                        if (model.IpAddress.NotNullAndEmpty()) streamWrite.WriteLine($"\r\n\tIp  地址：{model.IpAddress}");
-                        if (model.RunTime.NotNullAndEmpty()) streamWrite.WriteLine($"\r\n\t消耗时间：{model.RunTime} s");
-                        streamWrite.WriteLine("\r\n\t参数信息：");
-                        foreach (var item in model.Params)
-                        {
-                            streamWrite.WriteLine($"\r\n\t {item.Key}：{item.Value}");
-                        }
+                    streamWrite.BaseStream.Seek(0, SeekOrigin.End);
+                    streamWrite.WriteLine(DateTime.Now.ToFormatDateTime());
+                    streamWrite.WriteLine("\r\n");
+                    streamWrite.WriteLine("\r\n  异常信息：");
+                    streamWrite.WriteLine($"\r\n\t请求地址：{request.Url()}");
+                    streamWrite.WriteLine($"\r\n\t错误代码：{exception.HResult}");
+                    streamWrite.WriteLine($"\r\n\t错误信息：{exception.ExceptionMessage()}");
+                    streamWrite.WriteLine($"\r\n\t错 误 源：{exception.Source}");
+                    streamWrite.WriteLine($"\r\n\t异常方法：{exception.TargetSite}");
+                    streamWrite.WriteLine($"\r\n\t堆栈信息：{exception.StackTrace}");
+                    streamWrite.WriteLine($"\r\n\t浏览器标识：{request.UserAgent()}");
+                    streamWrite.WriteLine("\r\n");
 
-                        //日志的分隔线
-                        streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
-                        streamWrite.WriteLine("\r\n");
-                        streamWrite.WriteLine("\r\n");
-                        streamWrite.WriteLine("\r\n");
-                    }
-                    finally
-                    {
-                        streamWrite.Flush();
-                        streamWrite.Close();
-                    }
+                    //日志的分隔线
+                    streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
+                    streamWrite.WriteLine("\r\n");
+                    streamWrite.WriteLine("\r\n");
                 }
-            });
+                finally
+                {
+                    streamWrite.Flush();
+                    streamWrite.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 异步写入关键信息
+        /// </summary>
+        /// <param name="information">关键信息</param>
+        /// <param name="request"><see cref="HttpRequest"/> 对象</param>
+        private static void BeginLogInformation(string information, HttpRequest request)
+        {
+            if (information.IsNullOrEmpty() || request == null) return;
+
+            var _path = GetLogPath("key.txt");
+
+            //允许多个线程同时写入
+            using (var fileStream = new FileStream(_path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
+            {
+                var streamWrite = new StreamWriter(fileStream, Encoding.Default);
+                try
+                {
+                    streamWrite.BaseStream.Seek(0, SeekOrigin.End);
+                    streamWrite.WriteLine(DateTime.Now.ToFormatDateTime());
+                    streamWrite.WriteLine("\r\n");
+                    streamWrite.WriteLine("\r\n");
+                    streamWrite.WriteLine($"\r\n\t请求地址：{request.Url()}");
+                    streamWrite.WriteLine($"\r\n\t记录信息：{information}");
+                    streamWrite.WriteLine("\r\n");
+                    streamWrite.WriteLine($"\r\n\t浏览器标识：{request.UserAgent()}");
+
+                    //日志的分隔线
+                    streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
+                    streamWrite.WriteLine("\r\n");
+                    streamWrite.WriteLine("\r\n");
+                    streamWrite.WriteLine("\r\n");
+                }
+                finally
+                {
+                    streamWrite.Flush();
+                    streamWrite.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 异步写入请求信息
+        /// </summary>
+        /// <param name="model"><see cref="MvcRequestModel"/> 对象</param>
+        /// <param name="request"><see cref="HttpRequest"/> 对象</param>
+        private static void BeginLogMvcRequest(MvcRequestModel model, HttpRequest request)
+        {
+            if (model == null || request == null) return;
+
+            var _path = GetLogPath("request.txt");
+
+            //允许多个线程同时写入
+            using (var fileStream = new FileStream(_path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.Write))
+            {
+                var streamWrite = new StreamWriter(fileStream, Encoding.Default);
+                try
+                {
+                    streamWrite.BaseStream.Seek(0, SeekOrigin.End);
+                    streamWrite.WriteLine(DateTime.Now.ToFormatDateTime());
+                    streamWrite.WriteLine("\r\n");
+                    streamWrite.WriteLine("\r\n  请求信息：");
+                    streamWrite.WriteLine($"\r\n\t浏览器标识：{(model.UserAgent.IsNullOrEmpty() ? request.UserAgent() : model.UserAgent)}");
+                    streamWrite.WriteLine($"\r\n\t请求地址：{(model.Url.IsNullOrEmpty() ? request.Url() : model.Url)}");
+                    streamWrite.WriteLine($"\r\n\t请求类型：{model.RequestType}");
+                    streamWrite.WriteLine($"\r\n\t控制器名：{model.ControllerName}");
+                    streamWrite.WriteLine($"\r\n\tAction名：{model.ActionName}");
+                    if (model.IpAddress.NotNullAndEmpty()) streamWrite.WriteLine($"\r\n\tIp  地址：{model.IpAddress}");
+                    if (model.RunTime.NotNullAndEmpty()) streamWrite.WriteLine($"\r\n\t消耗时间：{model.RunTime} s");
+                    streamWrite.WriteLine("\r\n\t参数信息：");
+                    foreach (var item in model.Params)
+                    {
+                        streamWrite.WriteLine($"\r\n\t {item.Key}：{item.Value}");
+                    }
+
+                    //日志的分隔线
+                    streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
+                    streamWrite.WriteLine("\r\n");
+                    streamWrite.WriteLine("\r\n");
+                    streamWrite.WriteLine("\r\n");
+                }
+                finally
+                {
+                    streamWrite.Flush();
+                    streamWrite.Close();
+                }
+            }
         }
         #endregion
 

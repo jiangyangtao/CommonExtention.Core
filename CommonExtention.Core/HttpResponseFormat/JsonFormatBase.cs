@@ -16,13 +16,13 @@ namespace CommonExtention.Core.HttpResponseFormat
         public JsonFormatBase() { }
         #endregion
 
-        #region 设置返回结果
+        #region 初始化 JsonResult 返回类型
         /// <summary>
-        /// 设置返回结果
+        /// 初始化 <see cref="JsonResult"/> 返回类型
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="response"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">要实例化的类型</typeparam>
+        /// <param name="response">要实例化的实体</param>
+        /// <returns>实例化后的 <see cref="JsonResult"/></returns>
         protected JsonResult Json<T>(T response) where T : class
         {
             return new JsonResult(response)
