@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace CommonExtention.Core.Common
 {
     /// <summary>
-    /// 异步日志记录，不占用当前主线程。此类无法被继承
+    /// 异步日志记录，不占用当前主线程。此类不可被继承
     /// </summary>
     public sealed class AsyncLogger
     {
@@ -44,9 +44,9 @@ namespace CommonExtention.Core.Common
         /// <summary>
         /// 记录Mvc请求信息
         /// </summary>
-        /// <param name="model"><see cref="MvcRequestModel"/> 对象</param>
+        /// <param name="model"><see cref="MvcRequest"/> 对象</param>
         /// <param name="request"><see cref="HttpRequest"/> 对象</param>
-        public static void LogMvcRequest(MvcRequestModel model, HttpRequest request)
+        public static void LogMvcRequest(MvcRequest model, HttpRequest request)
             => new AsyncLogMvcRequest(BeginLogMvcRequest).BeginInvoke(model, request, null, null);
         #endregion
 
@@ -68,9 +68,9 @@ namespace CommonExtention.Core.Common
         /// <summary>
         /// 委托方式的异步写入Mvc请求信息
         /// </summary>
-        /// <param name="model"><see cref="MvcRequestModel"/> 对象</param>
+        /// <param name="model"><see cref="MvcRequest"/> 对象</param>
         /// <param name="request"><see cref="HttpRequest"/> 对象</param>
-        private delegate void AsyncLogMvcRequest(MvcRequestModel model, HttpRequest request);
+        private delegate void AsyncLogMvcRequest(MvcRequest model, HttpRequest request);
         #endregion
 
         #region 异步记录    
@@ -97,16 +97,19 @@ namespace CommonExtention.Core.Common
                     streamWrite.WriteLine("\r\n");
                     streamWrite.WriteLine("\r\n  异常信息：");
                     streamWrite.WriteLine($"\r\n\t请求地址：{request.Url()}");
+                    streamWrite.WriteLine($"\r\n\t请求参数：{request.GetParamsString()}");
                     streamWrite.WriteLine($"\r\n\t错误代码：{exception.HResult}");
                     streamWrite.WriteLine($"\r\n\t错误信息：{exception.ExceptionMessage()}");
                     streamWrite.WriteLine($"\r\n\t错 误 源：{exception.Source}");
                     streamWrite.WriteLine($"\r\n\t异常方法：{exception.TargetSite}");
                     streamWrite.WriteLine($"\r\n\t堆栈信息：{exception.StackTrace}");
+                    streamWrite.WriteLine($"\r\n\t线程  ID：{Thread.CurrentThread.ManagedThreadId}");
                     streamWrite.WriteLine($"\r\n\t浏览器标识：{request.UserAgent()}");
                     streamWrite.WriteLine("\r\n");
 
-                    //日志的分隔线
+                    //日志分隔线
                     streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
+                    streamWrite.WriteLine("\r\n");
                     streamWrite.WriteLine("\r\n");
                     streamWrite.WriteLine("\r\n");
                 }
@@ -144,7 +147,7 @@ namespace CommonExtention.Core.Common
                     streamWrite.WriteLine("\r\n");
                     streamWrite.WriteLine($"\r\n\t浏览器标识：{request.UserAgent()}");
 
-                    //日志的分隔线
+                    //日志分隔线
                     streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
                     streamWrite.WriteLine("\r\n");
                     streamWrite.WriteLine("\r\n");
@@ -161,9 +164,9 @@ namespace CommonExtention.Core.Common
         /// <summary>
         /// 异步写入请求信息
         /// </summary>
-        /// <param name="model"><see cref="MvcRequestModel"/> 对象</param>
+        /// <param name="model"><see cref="MvcRequest"/> 对象</param>
         /// <param name="request"><see cref="HttpRequest"/> 对象</param>
-        private static void BeginLogMvcRequest(MvcRequestModel model, HttpRequest request)
+        private static void BeginLogMvcRequest(MvcRequest model, HttpRequest request)
         {
             if (model == null || request == null) return;
 
@@ -179,20 +182,17 @@ namespace CommonExtention.Core.Common
                     streamWrite.WriteLine(DateTime.Now.ToFormatDateTime());
                     streamWrite.WriteLine("\r\n");
                     streamWrite.WriteLine("\r\n  请求信息：");
-                    streamWrite.WriteLine($"\r\n\t浏览器标识：{(model.UserAgent.IsNullOrEmpty() ? request.UserAgent() : model.UserAgent)}");
-                    streamWrite.WriteLine($"\r\n\t请求地址：{(model.Url.IsNullOrEmpty() ? request.Url() : model.Url)}");
+                    streamWrite.WriteLine($"\r\n\t浏览器标识：{model.UserAgent}");
+                    streamWrite.WriteLine($"\r\n\t请求地址：{model.Url}");
+                    streamWrite.WriteLine($"\r\n\t请求参数：{model.Params}");
                     streamWrite.WriteLine($"\r\n\t请求类型：{model.RequestType}");
                     streamWrite.WriteLine($"\r\n\t控制器名：{model.ControllerName}");
                     streamWrite.WriteLine($"\r\n\tAction名：{model.ActionName}");
-                    if (model.IpAddress.NotNullAndEmpty()) streamWrite.WriteLine($"\r\n\tIp  地址：{model.IpAddress}");
-                    if (model.RunTime.NotNullAndEmpty()) streamWrite.WriteLine($"\r\n\t消耗时间：{model.RunTime} s");
-                    streamWrite.WriteLine("\r\n\t参数信息：");
-                    foreach (var item in model.Params)
-                    {
-                        streamWrite.WriteLine($"\r\n\t {item.Key}：{item.Value}");
-                    }
+                    streamWrite.WriteLine($"\r\n\tIp  地址：{model.IpAddress}");
+                    streamWrite.WriteLine($"\r\n\t线程  ID：{model.ThreadId}");
+                    streamWrite.WriteLine($"\r\n\t消耗时间：{model.ConsumingTime} s");
 
-                    //日志的分隔线
+                    //日志分隔线
                     streamWrite.WriteLine("--------------------------------------------------------------------------------------------------------------\n");
                     streamWrite.WriteLine("\r\n");
                     streamWrite.WriteLine("\r\n");

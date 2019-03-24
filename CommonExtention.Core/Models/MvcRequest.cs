@@ -5,7 +5,7 @@ namespace CommonExtention.Core.Models
     /// <summary>
     /// Mvc请求信息。此类不可被继承
     /// </summary>
-    public sealed class MvcRequestModel
+    public sealed class MvcRequest
     {
         /// <summary>
         /// 请求的控制器名
@@ -25,7 +25,7 @@ namespace CommonExtention.Core.Models
         /// <summary>
         /// 请求的参数
         /// </summary>
-        public IDictionary<string, object> Params { set; get; }
+        public string Params { set; get; }
 
         /// <summary>
         /// 请求链接
@@ -38,13 +38,18 @@ namespace CommonExtention.Core.Models
         public string UserAgent { set; get; }
 
         /// <summary>
+        /// 线程ID
+        /// </summary>
+        public int ThreadId { set; get; }
+
+        /// <summary>
         /// IP地址
         /// </summary>
         public string IpAddress { set; get; }
 
         /// <summary>
-        /// 运行时间
+        /// 消耗的时间(单位：秒)
         /// </summary>
-        public string RunTime { set; get; }
+        public string ConsumingTime { set; get; }
     }
 }

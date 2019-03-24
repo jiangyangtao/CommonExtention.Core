@@ -1,11 +1,9 @@
 ﻿using CommonExtention.Core.Extensions;
 using CommonExtention.Core.Models;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net;
 using System.Net.Mail;
-using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,89 +14,110 @@ namespace CommonExtention.Core.Common
     /// </summary>
     public sealed class Email
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public EmailContent Content { set; get; }
+        #region 公有属性
 
         /// <summary>
-        /// 
+        /// 邮件内容
+        /// </summary>
+        public EmailContent EmailContent { set; get; }
+
+        /// <summary>
+        /// 邮箱服务配置
         /// </summary>
         public EmailServiceConfig ServiceConfig { set; get; }
 
         /// <summary>
-        /// 中文编码
+        /// 邮件接收
         /// </summary>
-        public static Encoding ChineseEncoding { get => Encoding.GetEncoding(936); }
-
-
-        private MailMessage _MailMessage { set; get; }
-
-        private SmtpClient _Client { set; get; }
-
-
-        private bool _HasSetServiceConfig { set; get; } = false;
-
-        private bool _HasSetEmailContent { set; get; } = false;
-
-        /// <summary>
-        /// 邮件接收者
-        /// </summary>
-        private Collection<MailAddress> Receivers { set; get; }
+        public Collection<MailAddress> Receivers { set; get; }
 
         /// <summary>
         /// 抄送
         /// </summary>
-        private Collection<MailAddress> CarbonCopy { set; get; }
+        public Collection<MailAddress> CarbonCopy { set; get; }
 
         /// <summary>
         /// 密送
         /// </summary>
-        private Collection<MailAddress> BlindCarbonCopy { set; get; }
+        public Collection<MailAddress> BlindCarbonCopy { set; get; }
+
+        /// <summary>
+        /// 中文编码
+        /// </summary>
+        public static Encoding ChineseEncoding = Encoding.GetEncoding(936);
+        #endregion
+
+        #region 私有属性
+
+        /// <summary>
+        /// 邮件消息
+        /// </summary>
+        private MailMessage _MailMessage { set; get; }
+
+        /// <summary>
+        /// Smtp 传输协议
+        /// </summary>
+        private SmtpClient _Client { set; get; }
+
+        #endregion
+
+        #region 构造函数
+
+        /// <summary>
+        /// 初始化 <see cref="Email"/> 类的新实例
+        /// </summary>
+        public Email() => _InitializeMailAddressCollection();
 
 
         /// <summary>
-        /// 
+        /// 初始化 <see cref="Email"/> 类的新实例
         /// </summary>
-        public Email() { }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="content"></param>
-        public Email(EmailContent content)
+        /// <param name="emailContent"></param>
+        public Email(EmailContent emailContent)
         {
-
+            _InitializeMailAddressCollection();
+            _InitializeMailMessage(emailContent);
         }
 
+
         /// <summary>
-        /// 
+        /// 初始化 <see cref="Email"/> 类的新实例
         /// </summary>
         /// <param name="serviceConfig"></param>
         public Email(EmailServiceConfig serviceConfig)
         {
-            SetServiceConfig(serviceConfig);
-            _HasSetServiceConfig = true;
+            _InitializeMailAddressCollection();
+            _InitializeServiceConfig(serviceConfig);
         }
 
+
         /// <summary>
-        /// 
+        /// 初始化 <see cref="Email"/> 类的新实例
         /// </summary>
         /// <param name="serviceConfig"></param>
         /// <param name="emailContent"></param>
         public Email(EmailServiceConfig serviceConfig, EmailContent emailContent)
         {
-
+            _InitializeMailAddressCollection();
+            _InitializeServiceConfig(serviceConfig);
+            _InitializeMailMessage(emailContent);
         }
+        #endregion
 
-        private void SetServiceConfig(EmailServiceConfig serviceConfig)
+        #region 私有方法
+
+        /// <summary>
+        /// 初始化邮箱服务
+        /// </summary>
+        /// <param name="serviceConfig"></param>
+        private void _InitializeServiceConfig(EmailServiceConfig serviceConfig)
         {
             if (serviceConfig == null) throw new ArgumentNullException("未将对象引用设置到对象的实例。");
-            if (serviceConfig.Host.IsNullOrEmpty()) throw new ArgumentNullException("未指定邮件服务的端口。");
-            if (serviceConfig.EmailAddress.IsNullOrEmpty()) throw new ArgumentNullException("未指定邮件服务的账号。");
-            if (serviceConfig.Password.IsNullOrEmpty()) throw new ArgumentNullException("未指定邮件服务的密码。");
-            if (serviceConfig.Port < 0 || ServiceConfig.Port >= int.MaxValue) throw new ArgumentOutOfRangeException("指定邮件服务的端口超出限定范围。");
+            if (serviceConfig.Host.IsNullOrEmpty()) throw new ArgumentNullException("未指定邮箱服务的端口。");
+            if (serviceConfig.EmailAddress.IsNullOrEmpty()) throw new ArgumentNullException("未指定邮箱服务的账号。");
+            if (!serviceConfig.EmailAddress.IsEmail()) throw new FormatException("指定的邮箱服务账号不是正确的邮箱格式。");
+            if (serviceConfig.Password.IsNullOrEmpty()) throw new ArgumentNullException("未指定邮箱服务的密码。");
+            if (serviceConfig.Port < 0 || ServiceConfig.Port >= int.MaxValue) throw new ArgumentOutOfRangeException("指定邮箱服务的端口超出限定范围。");
 
             ServiceConfig = serviceConfig;
             _Client = new SmtpClient
@@ -113,11 +132,11 @@ namespace CommonExtention.Core.Common
         }
 
         /// <summary>
-        /// 创建邮件
+        /// 初始化邮件内容
         /// </summary>
         /// <param name="emailContent"></param>
         /// <returns></returns>
-        private void SetMailMessage(EmailContent emailContent)
+        private void _InitializeMailMessage(EmailContent emailContent)
         {
             if (emailContent == null) throw new ArgumentNullException("未将对象引用设置到对象的实例。");
             if (emailContent.Title.IsNullOrEmpty()) throw new ArgumentNullException("未指定邮件内容的标题。");
@@ -136,95 +155,172 @@ namespace CommonExtention.Core.Common
                 _MailMessage.From = emailContent.ReplyAddress;
             }
 
-            //if (receiver.Receivers == null || receiver.Receivers.Count < 0)
-            //    throw new SmtpFailedRecipientException("至少需要一个接收邮件的地址。");
-
-            //receiver.Receivers.ForEach(item =>
-            //{
-            //    mailMessage.To.Add(item);
-            //});
-
             // 附件
             if (emailContent.Attachment != null && emailContent.Attachment.Count > 0)
             {
                 emailContent.Attachment.ForEach(item => { _MailMessage.Attachments.Add(item); });
             }
-
-            //// 抄送
-            //if (receiver.CarbonCopy != null && receiver.CarbonCopy.Count > 0)
-            //{
-            //    receiver.CarbonCopy.ForEach(item => { mailMessage.CC.Add(item); });
-            //}
-
-            //// 密送
-            //if (receiver.BlindCarbonCopy != null && receiver.BlindCarbonCopy.Count > 0)
-            //{
-            //    receiver.BlindCarbonCopy.ForEach(item => { mailMessage.Bcc.Add(item); });
-            //}
+            EmailContent = emailContent;
         }
 
-        public bool Send()
+        /// <summary>
+        /// 初始化邮件地址的集合
+        /// </summary>
+        private void _InitializeMailAddressCollection()
         {
-            return false;
+            Receivers = new Collection<MailAddress>();
+            CarbonCopy = new Collection<MailAddress>();
+            BlindCarbonCopy = new Collection<MailAddress>();
         }
 
-        public bool SendAsync()
+        /// <summary>
+        /// 配置邮箱服务和邮件内容
+        /// </summary>
+        private void _SetClientAndMail()
         {
-            return false;
+            if (_Client == null && ServiceConfig == null) throw new Exception("未设置邮件服务的配置。");
+            if (_Client == null && ServiceConfig != null) _InitializeServiceConfig(ServiceConfig);
+            if (_MailMessage == null && EmailContent == null) throw new Exception("未设置邮件的内容。");
+            if (_MailMessage == null && EmailContent != null) _InitializeMailMessage(EmailContent);
+            if (Receivers.Count <= 0) throw new Exception("至少指定一个邮件接收地址。");
+
+            if (_Client != null && _MailMessage != null && _MailMessage.From == null)
+            {
+                _MailMessage.From = new MailAddress(ServiceConfig.EmailAddress, ServiceConfig.EmailAddress.EmailPrefix(), ChineseEncoding);
+            }
+
+            Receivers.ForEach(item =>
+            {
+                if (!item.Address.IsEmail()) throw new FormatException($"{item.Address}的邮件接收地址不是正确的邮箱格式。");
+                _MailMessage.To.Add(item);
+            });
+
+            CarbonCopy.ForEach(item =>
+            {
+                if (!item.Address.IsEmail()) throw new FormatException($"{item.Address}的邮件抄送接收地址不是正确的邮箱格式。");
+                _MailMessage.CC.Add(item);
+            });
+
+            BlindCarbonCopy.ForEach(item =>
+            {
+                if (!item.Address.IsEmail()) throw new FormatException($"{item.Address}的邮件密送接收地址不是正确的邮箱格式。");
+                _MailMessage.CC.Add(item);
+            });
+
         }
 
         /// <summary>
         /// 发送邮件
         /// </summary>
-        /// <param name="receiver"></param>
         /// <returns></returns>
-        public bool SendEmail(EmailContent receiver)
+        private bool _Send()
         {
-            //var mail = CreateMailMessage(receiver);
-            //_Client.Send(mail);
-            return true;
-        }
-
-        /// <summary>
-        /// 发送邮件给多人
-        /// </summary>
-        /// <param name="list"></param>
-        /// <returns></returns>
-        public bool SendEmail(List<EmailContent> list)
-        {
-            list.ForEach(item =>
-            {
-                //var mail = CreateMailMessage(item);
-                //_Client.Send(mail);
-            });
+            _SetClientAndMail();
+            _Client.Send(_MailMessage);
             return true;
         }
 
         /// <summary>
         /// 异步发送邮件
         /// </summary>
-        /// <param name="receiver"></param>
         /// <returns></returns>
-        public async Task<bool> SendEmailAsync(EmailContent receiver)
+        private async Task<bool> _SendAsync()
         {
-            //var mail = CreateMailMessage(receiver);
-            //await _Client.SendMailAsync(mail);
+            _SetClientAndMail();
+            await _Client.SendMailAsync(_MailMessage);
             return true;
         }
 
+        #endregion
+
+        #region 发送邮件
         /// <summary>
-        /// 异步发送邮件给多人
+        /// 发送邮件
         /// </summary>
-        /// <param name="list"></param>
         /// <returns></returns>
-        public async Task<bool> SendEmailAsync(List<EmailContent> list)
+        public bool Send() => _Send();
+        #endregion
+
+        #region 发送邮件
+        /// <summary>
+        /// 发送邮件
+        /// </summary>
+        /// <param name="mailAddress"></param>
+        /// <returns></returns>
+        public bool SendEmail(MailAddress mailAddress)
         {
-            //foreach (var item in list)
-            //{
-            //    var mail = CreateMailMessage(item);
-            //    await _Client.SendMailAsync(mail);
-            //}
-            return true;
+            if (mailAddress == null) throw new ArgumentNullException("未将对象引用设置到对象的实例。");
+            if (!mailAddress.Address.IsEmail()) throw new FormatException($"{mailAddress.Address}的邮件接收地址不是正确的邮箱格式。");
+
+            Receivers.Add(mailAddress);
+            return _Send();
         }
+        #endregion
+
+        #region 发送邮件
+        /// <summary>
+        /// 发送邮件
+        /// </summary>
+        /// <param name="mails"></param>
+        /// <returns></returns>
+        public bool SendEmail(Collection<MailAddress> mails)
+        {
+            if (mails == null) throw new ArgumentNullException("未将对象引用设置到对象的实例。");
+            if (mails.Count <= 0) throw new Exception("至少指定一个邮件接收地址。");
+
+            mails.ForEach(item => { Receivers.Add(item); });
+            return _Send();
+        }
+        #endregion
+
+        #region 异步发送邮件
+        /// <summary>
+        /// 异步发送邮件
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> SendAsync() => await _SendAsync();
+        #endregion
+
+        #region 异步发送邮件
+        /// <summary>
+        /// 异步发送邮件
+        /// </summary>
+        /// <param name="mailAddress"></param>
+        /// <returns></returns>
+        public async Task<bool> SendEmailAsync(MailAddress mailAddress)
+        {
+            if (mailAddress == null) throw new ArgumentNullException("未将对象引用设置到对象的实例。");
+            if (!mailAddress.Address.IsEmail()) throw new FormatException($"{mailAddress.Address}的邮件接收地址不是正确的邮箱格式。");
+
+            Receivers.Add(mailAddress);
+            return await _SendAsync();
+        }
+        #endregion
+
+        #region 异步发送邮件
+        /// <summary>
+        /// 异步发送邮件
+        /// </summary>
+        /// <param name="mails"></param>
+        /// <returns></returns>
+        public async Task<bool> SendEmailAsync(Collection<MailAddress> mails)
+        {
+            if (mails == null) throw new ArgumentNullException("未将对象引用设置到对象的实例。");
+            if (mails.Count <= 0) throw new Exception("至少指定一个邮件接收地址。");
+
+            mails.ForEach(item => { Receivers.Add(item); });
+            return await _SendAsync();
+        }
+        #endregion
+
+        #region 释放资源
+        /// <summary>
+        /// 向 SMTP 服务器发送一条 QUIT 消息，适当地结束 TCP 连接，并释放由 System.Net.Mail.SmtpClient 类的当前实例使用的所有资源。
+        /// </summary>
+        public void Dispose()
+        {
+            _Client.Dispose();
+        }
+        #endregion
     }
 }

@@ -6,7 +6,7 @@ using System.Text;
 namespace CommonExtention.Core.Models
 {
     /// <summary>
-    /// 邮件服务配置。此类不可被继承
+    /// 邮箱服务配置。此类不可被继承
     /// </summary>
     public sealed class EmailServiceConfig
     {

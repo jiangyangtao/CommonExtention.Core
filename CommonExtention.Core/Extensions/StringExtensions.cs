@@ -995,6 +995,24 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
+        #region 获取当前电子邮箱的字符串表示形式的前缀
+        /// <summary>
+        /// 获取当前电子邮箱的字符串表示形式的前缀
+        /// </summary>
+        /// <param name="value">要获取电子邮箱前缀的字符串</param>
+        /// <returns>
+        /// 如果当前字符串为 null 或者空字符串("")，则返回 <see cref="string.Empty"/>；
+        /// 如果当前字符串不是正确的电子邮箱，则返回 <see cref="string.Empty"/>；
+        /// 否则返回字符串中 @ 符号前的字符。
+        /// </returns>
+        public static string EmailPrefix(this string value)
+        {
+            if (value.IsNullOrEmpty()) return string.Empty;
+            if (!value.IsEmail()) return string.Empty;
+            return value.Substring(0, value.IndexOf("@"));
+        }
+        #endregion
+
         #region 获取 Json 的字符串表示形式中的值
         /// <summary>
         /// 获取 Json 的字符串表示形式中的值

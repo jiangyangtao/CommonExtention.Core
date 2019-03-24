@@ -29,7 +29,7 @@ namespace CommonExtention.Core.Common
         /// <summary>
         /// Excel 的 Content-Type
         /// </summary>
-        public static string ContentType { get => "application/vnd.ms-excel"; }
+        public const string ContentType = "application/vnd.ms-excel";
         #endregion
 
         #region 将指定路径的 Excel 文件读取到 DataTable
