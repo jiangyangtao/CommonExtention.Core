@@ -44,7 +44,7 @@ namespace CommonExtention.Core.Common
         /// <summary>
         /// 中文编码
         /// </summary>
-        public static Encoding ChineseEncoding = Encoding.GetEncoding(936);
+        public static Encoding ChineseEncoding { get => Encoding.GetEncoding(936); }
         #endregion
 
         #region 私有属性
