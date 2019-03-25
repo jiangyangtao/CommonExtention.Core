@@ -291,10 +291,11 @@ namespace CommonExtention.Core.Extensions
         /// 将当前 <see cref="DataTable"/> 写入 <see cref="MemoryStream"/>
         /// </summary>
         /// <param name="dataTable">要写入的 <see cref="DataTable"/> 对象</param>
-        /// <param name="predicate">用于执行写入 Excel 单元格的委托</param>
+        /// <param name="action">用于执行写入 Excel 单元格的委托</param>
         /// <param name="sheetsName">Excel 的工作簿名称</param>
         /// <returns>Excel形式的 <see cref="MemoryStream"/> 对象</returns>
-        public static MemoryStream WriteToMemoryStream(this DataTable dataTable, Func<ExcelWorksheet, DataColumnCollection, DataRowCollection, ExcelWorksheet> predicate, string sheetsName = "sheet1") => new Excel().WriteToMemoryStream(dataTable, predicate, sheetsName);
+        public static MemoryStream WriteToMemoryStream(this DataTable dataTable, Action<ExcelWorksheet, DataColumnCollection, DataRowCollection> action,
+            string sheetsName = "sheet1") => new Excel().WriteToMemoryStream(dataTable, action, sheetsName);
         #endregion
 
         #region 清除当前 DataTable 对象的空行
