@@ -12,7 +12,7 @@ namespace CommonExtention.Core.Common
     /// <summary>
     /// 提供发送邮件功能。此类不可被继承
     /// </summary>
-    public sealed class Email
+    public sealed class Email : IDisposable
     {
         #region 公有属性
 
@@ -112,6 +112,7 @@ namespace CommonExtention.Core.Common
         /// <param name="serviceConfig"></param>
         private void _InitializeServiceConfig(EmailServiceConfig serviceConfig)
         {
+
             if (serviceConfig == null) throw new ArgumentNullException("未将对象引用设置到对象的实例。");
             if (serviceConfig.Host.IsNullOrEmpty()) throw new ArgumentNullException("未指定邮箱服务的端口。");
             if (serviceConfig.EmailAddress.IsNullOrEmpty()) throw new ArgumentNullException("未指定邮箱服务的账号。");
@@ -315,11 +316,12 @@ namespace CommonExtention.Core.Common
 
         #region 释放资源
         /// <summary>
-        /// 向 SMTP 服务器发送一条 QUIT 消息，适当地结束 TCP 连接，并释放由 System.Net.Mail.SmtpClient 类的当前实例使用的所有资源。
+        /// 释放由 <see cref="Email"/> 使用的所有资源
         /// </summary>
         public void Dispose()
         {
             _Client.Dispose();
+            _MailMessage.Dispose();
         }
         #endregion
     }

@@ -97,7 +97,7 @@ namespace CommonExtention.Core.Common
             if (formFile == null || formFile.Length <= 0) return null;
 
             var stream = formFile.OpenReadStream();
-            var dt = ReadStreamToDataTable(stream, sheetName, firstRowIsColumnName, addEmptyRow);
+            var dt = ReadStreamToDataTable(stream, sheetName, firstRowIsColumnName, addEmptyRow, dispose: false);
             return dt;
         }
         #endregion
@@ -122,7 +122,7 @@ namespace CommonExtention.Core.Common
             if (formFile == null || formFile.Length <= 0) return null;
 
             var stream = formFile.OpenReadStream();
-            var tables = ReadStreamToTables(stream, firstRowIsColumnName, addEmptyRow);
+            var tables = ReadStreamToTables(stream, firstRowIsColumnName, addEmptyRow, dispose: false);
             return tables;
         }
         #endregion
@@ -135,13 +135,15 @@ namespace CommonExtention.Core.Common
         /// <param name="sheetName">指定读取 Excel 工作薄 sheet 的名称</param>
         /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
         /// <param name="addEmptyRow">是否添加空行，默认为 false，不添加</param>
+        /// <param name="dispose">是否释放 <see cref="Stream"/> 资源</param>
         /// <returns>
         /// 如果 stream 参数为 null，则返回 null；
         /// 如果 stream 参数的 <see cref="Stream.CanRead"/> 属性为 false，则返回 null；
         /// 如果 stream 参数的 <see cref="Stream.Length"/> 属性为 小于或者等于 0，则返回 null；
         /// 否则返回从 <see cref="Stream"/> 读取后的 <see cref="DataTable"/> 对象。
         /// </returns>
-        public DataTable ReadStreamToDataTable(Stream stream, string sheetName = null, bool firstRowIsColumnName = true, bool addEmptyRow = false)
+        public DataTable ReadStreamToDataTable(Stream stream, string sheetName = null, bool firstRowIsColumnName = true, bool addEmptyRow = false,
+            bool dispose = true)
         {
             if (stream == null || !stream.CanRead || stream.Length <= 0) return null;
 
@@ -151,6 +153,12 @@ namespace CommonExtention.Core.Common
             if (sheet == null) return null;
 
             var table = ReadSheetToDataTable(sheet, firstRowIsColumnName, addEmptyRow);
+
+            if (dispose)
+            {
+                stream.Flush();
+                stream.Close();
+            }
             return table;
         }
         #endregion
@@ -162,6 +170,7 @@ namespace CommonExtention.Core.Common
         /// <param name="stream">要读取的 <see cref="Stream"/> 对象</param>
         /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
         /// <param name="addEmptyRow">是否添加空行，默认为 false，不添加</param>
+        /// <param name="dispose">是否释放 <see cref="Stream"/> 资源</param>
         /// <returns>
         /// 如果 stream 参数为 null，则返回 null；
         /// 如果 stream 参数的 <see cref="Stream.CanRead"/> 属性为 false，则返回 null；
@@ -169,7 +178,8 @@ namespace CommonExtention.Core.Common
         /// 否则返回从 <see cref="Stream"/> 读取后的 <see cref="ICollection{DataTable}"/> 对象，
         /// 其中一个 <see cref="DataTable"/> 对应一个 Sheet 工作簿。
         /// </returns>
-        public ICollection<DataTable> ReadStreamToTables(Stream stream, bool firstRowIsColumnName = true, bool addEmptyRow = false)
+        public ICollection<DataTable> ReadStreamToTables(Stream stream, bool firstRowIsColumnName = true, bool addEmptyRow = false,
+            bool dispose = true)
         {
             if (stream == null || !stream.CanRead || stream.Length <= 0) return null;
 
@@ -180,8 +190,14 @@ namespace CommonExtention.Core.Common
                 var sheet = workbook.GetSheetAt(i);
                 if (sheet == null) continue;
 
-                var dataTable = ReadSheetToDataTable(sheet, firstRowIsColumnName, addEmptyRow);
+                var dataTable = ReadSheetToDataTable(sheet, firstRowIsColumnName, addEmptyRow);                
                 tables.Add(dataTable);
+            }
+
+            if (dispose)
+            {
+                stream.Flush();
+                stream.Close();
             }
             return tables;
         }

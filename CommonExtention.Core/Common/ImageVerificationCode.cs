@@ -23,7 +23,7 @@ namespace CommonExtention.Core.Common
         }
         #endregion
 
-        #region Private property
+        #region 私有属性
 
         /// <summary>
         /// 验证码数量
@@ -37,7 +37,7 @@ namespace CommonExtention.Core.Common
 
         #endregion
 
-        #region Public property
+        #region 公有属性
         /// <summary>
         /// 验证码
         /// </summary>
