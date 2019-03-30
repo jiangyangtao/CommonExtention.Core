@@ -214,48 +214,52 @@ namespace CommonExtention.Core.Extensions
         public static bool IsGuid(this string value, string format) => Guid.TryParseExact(value, format, out Guid result);
         #endregion
 
-        #region 指示指定要加密的字符串进行 MD5 加密(16位小写)
+        #region 指示指定要加密的字符串进行 MD5 算法的16位小写加密
         /// <summary>
-        /// 指示指定要加密的字符串进行MD5加密(16位小写)
+        /// 指示指定要加密的字符串进行 MD5 算法的16位小写加密
         /// </summary>
         /// <param name="value">要加密的字符串</param>
         /// <returns>
-        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；否则返回16位小写的MD5密文
+        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
+        /// 否则返回16位小写的 MD5 算法加密的密文。
         /// </returns>
-        public static string ToMD5(this string value) => new MessageDigestAlgorithm().MD5String(value);
+        public static string ToMD5(this string value) => new MessageDigestAlgorithm().MD5(value);
         #endregion
 
-        #region 指示指定要加密的字符串进行 MD5 的16位大写加密
+        #region 指示指定要加密的字符串进行 MD5 算法的16位大写加密
         /// <summary>
-        /// 指示指定要加密的字符串进行MD5的16位大写加密
+        /// 指示指定要加密的字符串进行 MD5 算法的16位大写加密
         /// </summary>
         /// <param name="value">要加密的字符串</param>
         /// <returns>
-        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；否则返回16位大写的MD5密文
+        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
+        /// 否则返回16位大写的 MD5 算法加密的密文。
         /// </returns>
-        public static string ToMD5Upper16(this string value) => new MessageDigestAlgorithm().MD5Upper16(value);
+        public static string ToMD5Upper(this string value) => new MessageDigestAlgorithm().MD5Upper(value);
         #endregion
 
-        #region 指示指定要加密的字符串进行 MD5 的32位小写加密
+        #region 指示指定要加密的字符串进行 MD5 算法的32位小写加密
         /// <summary>
-        /// 指示指定要加密的字符串进行MD5的32位小写加密
+        /// 指示指定要加密的字符串进行 MD5 算法的32位小写加密
         /// </summary>
         /// <param name="value">要加密的字符串</param>
         /// <returns>
-        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；否则返回32位小写的MD5密文
+        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
+        /// 否则返回32位小写的 MD5 算法加密的密文。
         /// </returns>
-        public static string ToMD5Lower32(this string value) => new MessageDigestAlgorithm().MD5Lower32(value);
+        public static string ToMD5Lower32(this string value) => new MessageDigestAlgorithm().MD532(value);
         #endregion
 
-        #region 指示指定要加密的字符串进行 MD5 的32位大写加密
+        #region 指示指定要加密的字符串进行 MD5 算法的32位大写加密
         /// <summary>
-        /// 指示指定要加密的字符串进行MD5的32位大写加密
+        /// 指示指定要加密的字符串进行 MD5 算法的32位大写加密
         /// </summary>
         /// <param name="value">要加密的字符串</param>
         /// <returns>
-        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；否则返回32位大写的MD5密文
+        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
+        /// 否则返回32位大写的 MD5 算法加密的密文。
         /// </returns>
-        public static string ToMD5Upper32(this string value) => new MessageDigestAlgorithm().MD5Upper32(value);
+        public static string ToMD5Upper32(this string value) => new MessageDigestAlgorithm().MD532Upper(value);
         #endregion
 
         #region 指示指定要加密的字符串进行 MD5 混淆加密
@@ -265,33 +269,9 @@ namespace CommonExtention.Core.Extensions
         /// <param name="value">要加密的字符串</param>
         /// <returns>
         /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
-        /// 否则返回MD5的混淆加密密文。
+        /// 否则返回 MD5 算法加密的混淆密文。
         /// </returns>
         public static string ToMD5Confusion(this string value) => new MessageDigestAlgorithm().MD5Confusion(value);
-        #endregion
-
-        #region 指示指定要加密的字符串进行 SHA1 算法加密(小写)
-        /// <summary>
-        /// 指示指定要加密的字符串进行 SHA1 算法加密(小写)
-        /// </summary>
-        /// <param name="value">要加密的字符串</param>
-        /// <returns>
-        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
-        /// 否则返回SHA1算法小写的密文。
-        /// </returns>
-        public static string ToSHA1(this string value) => new MessageDigestAlgorithm().SHA1Lower(value);
-        #endregion
-
-        #region 指示指定要加密的字符串进行 SHA1 算法大写加密
-        /// <summary>
-        /// 指示指定要加密的字符串进行 SHA1 算法大写加密
-        /// </summary>
-        /// <param name="value">要加密的字符串</param>
-        /// <returns>
-        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
-        /// 否则返回SHA1算法大写的密文。
-        /// </returns>
-        public static string ToSHA1Upper(this string value) => new MessageDigestAlgorithm().SHA1Upper(value);
         #endregion
 
         #region 指示指定要加密的字符串进行 SHA1 算法小写加密
@@ -301,9 +281,21 @@ namespace CommonExtention.Core.Extensions
         /// <param name="value">要加密的字符串</param>
         /// <returns>
         /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
-        /// 否则返回SHA1算法小写的密文。
+        /// 否则返回 SHA1 算法加密的小写的密文。
         /// </returns>
-        public static string ToSHA1Lower(this string value) => new MessageDigestAlgorithm().SHA1Lower(value);
+        public static string ToSHA1(this string value) => new MessageDigestAlgorithm().SHA1(value);
+        #endregion
+
+        #region 指示指定要加密的字符串进行 SHA1 算法大写加密
+        /// <summary>
+        /// 指示指定要加密的字符串进行 SHA1 算法大写加密
+        /// </summary>
+        /// <param name="value">要加密的字符串</param>
+        /// <returns>
+        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
+        /// 否则返回 SHA1 算法加密的大写的密文。
+        /// </returns>
+        public static string ToSHA1Upper(this string value) => new MessageDigestAlgorithm().SHA1Upper(value);
         #endregion
 
         #region 指示指定要加密的字符串进行 SHA1 算法混淆加密
@@ -316,6 +308,78 @@ namespace CommonExtention.Core.Extensions
         /// 否则返回SHA1的混淆加密密文。
         /// </returns>
         public static string ToSHA1Confusion(this string value) => new MessageDigestAlgorithm().SHA1Confusion(value);
+        #endregion
+
+        #region 指示指定要加密的字符串进行 SHA256 算法小写加密
+        /// <summary>
+        /// 指示指定要加密的字符串进行 SHA256 算法小写加密
+        /// </summary>
+        /// <param name="value">要加密的字符串</param>
+        /// <returns>
+        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
+        /// 否则返回 SHA256 算法加密的小写的密文。
+        /// </returns>
+        public static string ToSHA256(this string value) => new MessageDigestAlgorithm().SHA256(value);
+        #endregion
+
+        #region 指示指定要加密的字符串进行 SHA256 算法大写加密
+        /// <summary>
+        /// 指示指定要加密的字符串进行 SHA256 算法大写加密
+        /// </summary>
+        /// <param name="value">要加密的字符串</param>
+        /// <returns>
+        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
+        /// 否则返回 SHA256 算法加密的大写的密文。
+        /// </returns>
+        public static string ToSHA256Upper(this string value) => new MessageDigestAlgorithm().SHA256Upper(value);
+        #endregion
+
+        #region 指示指定要加密的字符串进行 SHA384 算法小写加密
+        /// <summary>
+        /// 指示指定要加密的字符串进行 SHA384 算法小写加密
+        /// </summary>
+        /// <param name="value">要加密的字符串</param>
+        /// <returns>
+        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
+        /// 否则返回 SHA384 算法加密的小写的密文。
+        /// </returns>
+        public static string ToSHA384(this string value) => new MessageDigestAlgorithm().SHA384(value);
+        #endregion
+
+        #region 指示指定要加密的字符串进行 SHA384 算法大写加密
+        /// <summary>
+        /// 指示指定要加密的字符串进行 SHA384 算法大写加密
+        /// </summary>
+        /// <param name="value">要加密的字符串</param>
+        /// <returns>
+        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
+        /// 否则返回 SHA384 算法加密的大写的密文。
+        /// </returns>
+        public static string ToSHA384Upper(this string value) => new MessageDigestAlgorithm().SHA384Upper(value);
+        #endregion
+
+        #region 指示指定要加密的字符串进行 SHA512 算法小写加密
+        /// <summary>
+        /// 指示指定要加密的字符串进行 SHA512 算法小写加密
+        /// </summary>
+        /// <param name="value">要加密的字符串</param>
+        /// <returns>
+        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
+        /// 否则返回 SHA512 算法加密的小写的密文。
+        /// </returns>
+        public static string ToSHA512(this string value) => new MessageDigestAlgorithm().SHA512(value);
+        #endregion
+
+        #region 指示指定要加密的字符串进行 SHA512 算法大写加密
+        /// <summary>
+        /// 指示指定要加密的字符串进行 SHA512 算法大写加密
+        /// </summary>
+        /// <param name="value">要加密的字符串</param>
+        /// <returns>
+        /// 如果字符串为 null 或者为空字符串("")，则返回 <see cref="string.Empty"/>；
+        /// 否则返回 SHA512 算法加密的大写的密文。
+        /// </returns>
+        public static string ToSHA512Upper(this string value) => new MessageDigestAlgorithm().SHA512Upper(value);
         #endregion
 
         #region 指示指定要加密的字符串进行 DES 算法加密
@@ -1082,7 +1146,7 @@ namespace CommonExtention.Core.Extensions
         /// 如果字符串检验结果不为中华人民共和国第二代身份证号码，则返回 null；
         /// 否则返回从出生日期到今天的年龄；
         /// </returns>
-        public static int? GetAgeOfChinaIDNumber(string value)
+        public static int? GetAgeOfChinaIDNumber(this string value)
         {
             if (value.IsNullOrEmpty()) return null;
             var _date = value.GetDateOfBirthOfChinaIDNumber();

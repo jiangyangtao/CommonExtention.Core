@@ -5,10 +5,15 @@ using System.Text;
 namespace CommonExtention.Core.Models
 {
     /// <summary>
-    /// 邮件内容
+    /// 邮件内容。此类不可被继承
     /// </summary>
     public class EmailContent
     {
+        /// <summary>
+        /// 初始化 <see cref="EmailContent"/> 类的新实例
+        /// </summary>
+        public EmailContent() { }
+
         /// <summary>
         /// 标题、主题
         /// </summary>
@@ -28,11 +33,6 @@ namespace CommonExtention.Core.Models
         /// 邮件回复地址
         /// </summary>
         public MailAddress ReplyAddress { set; get; }
-
-        /// <summary>
-        /// 编码，默认为中文编码
-        /// </summary>
-        public Encoding Encoding { set; get; } = Encoding.GetEncoding(936);
 
         /// <summary>
         /// 邮件的优先级，默认为 Normal
