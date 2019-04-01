@@ -314,14 +314,14 @@ namespace CommonExtention.Core.Common
         }
         #endregion
 
-        #region 释放资源
+        #region 释放 Email 所使用的资源
         /// <summary>
-        /// 释放由 <see cref="Email"/> 使用的所有资源
+        /// 释放 <see cref="Email"/> 所使用的资源
         /// </summary>
         public void Dispose()
         {
-            _Client.Dispose();
             _MailMessage.Dispose();
+            _Client.Dispose();
         }
         #endregion
     }
