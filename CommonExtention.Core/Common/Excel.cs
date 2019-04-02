@@ -13,6 +13,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace CommonExtention.Core.Common
 {
