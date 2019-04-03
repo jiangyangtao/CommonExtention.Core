@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CommonExtention.Core.Models;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Data;
 

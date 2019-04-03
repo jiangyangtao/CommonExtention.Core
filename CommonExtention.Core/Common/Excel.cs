@@ -1,4 +1,5 @@
-﻿using CommonExtention.Core.Extensions;
+﻿using CommonExtention.Core.Attributes;
+using CommonExtention.Core.Extensions;
 using Microsoft.AspNetCore.Http;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
@@ -414,52 +415,21 @@ namespace CommonExtention.Core.Common
         /// <returns><see cref="Dictionary{Key,Value}"/>类型的列名</returns>
         private Dictionary<string, string> GetColumns(PropertyInfo[] propertys)
         {
-            var displayAttributeType = typeof(NotMappedAttribute);
-            var displayNameAttributeType = typeof(DisplayNameAttribute);
+            var excelColumnNameAttributeType = typeof(ExcelColumnNameAttribute);
             var columns = new Dictionary<string, string>();
             for (int i = 0; i < propertys.Length; i++)
             {
                 var item = propertys[i];
                 var attrs = item.CustomAttributes;
-                if (attrs.HasAttribute(typeof(NotMappedAttribute))) continue;
+                if (attrs.HasAttribute(typeof(ExcelExcludeColumnAttribute))) continue;
 
-                if (attrs.HasAttribute(displayAttributeType))
+                if (attrs.HasAttribute(excelColumnNameAttributeType))
                 {
-                    var value = GetDisplayAttributeValue(attrs, displayAttributeType);
-                    columns.Add(item.Name, value);
-                }
-
-                if (attrs.HasAttribute(displayNameAttributeType))
-                {
-                    var value = GetDisplayNameAttributeValue(attrs, displayNameAttributeType);
+                    var value = GetDisplayNameAttributeValue(attrs, excelColumnNameAttributeType);
                     columns.Add(item.Name, value);
                 }
             }
             return columns;
-        }
-
-        /// <summary>
-        /// 获取 <see cref="DisplayAttribute"/> 特性的值
-        /// </summary>
-        /// <param name="customs">要获取值的 <see cref="IEnumerable{T}"/></param>
-        /// <param name="type">要匹配的类型</param>
-        /// <returns>
-        /// 如果匹配成功，返回字符串表示形式的值；
-        /// 如果匹配失败，则返回 <see cref="string.Empty"/>。
-        /// </returns>
-        private string GetDisplayAttributeValue(IEnumerable<CustomAttributeData> customs, Type type)
-        {
-            foreach (var attr in customs)
-            {
-                if (attr.AttributeType == type)
-                {
-                    foreach (var item in attr.NamedArguments)
-                    {
-                        if (item.MemberName == "Name") return item.TypedValue.Value.ToString();
-                    }
-                }
-            }
-            return string.Empty;
         }
 
         /// <summary>

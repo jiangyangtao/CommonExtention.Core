@@ -1,10 +1,10 @@
 ﻿
-namespace CommonExtention.Core.HttpResponseFormat
+namespace CommonExtention.Core.Models
 {
     /// <summary>
     /// Json 通用返回实体
     /// </summary>
-    internal class ResponseEntity
+    public class ResponseEntity
     {
         /// <summary>
         /// 初始化 <see cref="ResponseEntity"/> 类的新实例
@@ -35,7 +35,7 @@ namespace CommonExtention.Core.HttpResponseFormat
     /// <summary>
     /// Json 通用网格返回实体
     /// </summary>
-    internal class ResponseGridEntity
+    public class ResponseGridEntity
     {
         /// <summary>
         /// 初始化 <see cref="ResponseGridEntity"/> 类的新实例
