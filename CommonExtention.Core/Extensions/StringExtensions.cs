@@ -973,8 +973,11 @@ namespace CommonExtention.Core.Extensions
         /// <summary>
         /// 将 Base64 字符串表示形式转换为等效的字符串
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">要转换的字符串</param>
+        /// <returns>
+        /// 如果当前 Base64 字符为 null 或者空字符串("")，则返回<see cref="string.Empty"/>;
+        /// 否则返回转换过后的等效字符串。
+        /// </returns>
         public static string FromBase64ToString(this string value)
         {
             if (value.IsNullOrEmpty()) return string.Empty;
@@ -988,8 +991,11 @@ namespace CommonExtention.Core.Extensions
         /// <summary>
         /// 将当前字符串转换为 Base64 字符串表示形式
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">要转换的字符串</param>
+        /// <returns>
+        /// 如果当前字符串为 null 或者空字符串("")，则返回<see cref="string.Empty"/>;
+        /// 否则返回转换过后的 Base64 字符串。
+        /// </returns>
         public static string ToBase64String(this string value)
         {
             if (value.IsNullOrEmpty()) return string.Empty;
@@ -997,6 +1003,15 @@ namespace CommonExtention.Core.Extensions
             var result = Encoding.Default.GetBytes(value);
             return Convert.ToBase64String(result);
         }
+        #endregion
+
+        #region 将当前字符串转换为一个字节序列
+        /// <summary>
+        /// 将当前字符串转换为一个字节序列
+        /// </summary>
+        /// <param name="value">要转换的字符串</param>
+        /// <returns>一个字节数组，包含对指定的字符集进行编码的结果。</returns>
+        public static byte[] ToByte(this string value) => Encoding.UTF8.GetBytes(value);
         #endregion
 
         #region 计算指定字符串的16位 MD5 的哈希/散列值

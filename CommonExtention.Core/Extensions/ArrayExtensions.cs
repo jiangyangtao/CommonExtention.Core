@@ -1227,10 +1227,7 @@ namespace CommonExtention.Core.Extensions
         /// </summary>
         /// <param name="value">要转换的Byte[]</param>
         /// <returns>转换后的字符串表示形式，以 Base64 表示</returns>
-        public static string ToBase64String(this byte[] value)
-        {
-            return Convert.ToBase64String(value, 0, value.Length);
-        }
+        public static string ToBase64String(this byte[] value) => Convert.ToBase64String(value, 0, value.Length);
         #endregion
 
         #region 将当前的 Byte[] 序列转换为图片的 Base64 编码的字符串
@@ -1240,7 +1237,6 @@ namespace CommonExtention.Core.Extensions
         /// <param name="value">要转换的Byte[]</param>
         /// <returns>转换图片后的字符串表示形式，以 Base64 表示</returns>
         public static string ToImageBase64String(this byte[] value) => $"data:image/jpeg;base64,{Convert.ToBase64String(value, 0, value.Length)}";
-
         #endregion
     }
 }

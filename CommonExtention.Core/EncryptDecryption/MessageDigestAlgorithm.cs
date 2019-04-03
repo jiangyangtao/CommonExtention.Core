@@ -72,13 +72,10 @@ namespace CommonExtention.Core.EncryptDecryption
         public string MD532Upper(string value)
         {
             if (value.IsNullOrEmpty()) return string.Empty;
-            var _data = System.Security.Cryptography.MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(value));
-            var _strBuilder = new StringBuilder();
-            for (int i = 0; i < _data.Length; i++)
-            {
-                _strBuilder.Append(_data[i].ToString("X2"));
-            }
-            return _strBuilder.ToString();
+            var data = System.Security.Cryptography.MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(value));
+            var strBuilder = new StringBuilder();
+            data.ForEach(item => { strBuilder.Append(item.ToString("X2")); });
+            return strBuilder.ToString();
         }
         #endregion
 
@@ -244,13 +241,14 @@ namespace CommonExtention.Core.EncryptDecryption
         {
             if (value.IsNullOrEmpty()) return string.Empty;
 
-            HashAlgorithm sha = new SHA256Managed();
-            if (bit == 384) sha = new SHA384Managed();
-            if (bit == 512) sha = new SHA512Managed();
+            var bytes = Encoding.UTF8.GetBytes(value);
+            var hash = System.Security.Cryptography.SHA256.Create().ComputeHash(bytes);
+            if (bit == 384) hash = System.Security.Cryptography.SHA384.Create().ComputeHash(bytes);
+            if (bit == 512) hash = System.Security.Cryptography.SHA512.Create().ComputeHash(bytes);
 
-            var result = sha.ComputeHash(Encoding.Default.GetBytes(value));
-            sha.Clear();
-            return Convert.ToBase64String(result);
+            var builder = new StringBuilder();
+            hash.ForEach(item => { builder.Append(item.ToString("X2")); });
+            return builder.ToString();
         }
         #endregion
 
