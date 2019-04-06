@@ -29,50 +29,7 @@ namespace CommonExtention.Core.Common
         }
         #endregion
 
-        #region Public Property
-        /// <summary>
-        /// 是否为中华人民共和国第二代身份证号码。如果身份证验证通过，则为 true; 否则为 false。
-        /// </summary>
-        public bool IsIdentityNumber { get; private set; } = false;
-
-        /// <summary>
-        /// 出生日期。如果身份证验证通过，则为 身份证号码上的出生日期; 否则为 null。
-        /// </summary>
-        public DateTime? BirthDate { get; private set; } = null;
-
-        /// <summary>
-        /// 年龄。如果身份证验证通过，则为 身份证号码公民的当前周岁; 否则为 -1。
-        /// </summary>
-        public int Age { get; private set; } = -1;
-
-        /// <summary>
-        /// 性别。如果身份证验证通过，则为 男 / 女; 否则为 <see cref="string.Empty"/>。
-        /// </summary>
-        public string GenderText { get; private set; } = string.Empty;
-
-        /// <summary>
-        /// 性别代码。如果身份证验证通过，则为 0：女 / 1：男; 否则为 -1。
-        /// </summary>
-        public int GenderCode { get; private set; } = -1;
-        #endregion
-
-        #region 指示指定的字符串是否为中华人民共和国第二代身份证号码
-        /// <summary>
-        /// 指示指定的字符串是否为中华人民共和国第二代身份证号码
-        /// </summary>
-        /// <param name="value">要检测的字符串</param>
-        /// <returns>
-        /// 如果字符串为 null 或空字符串 ("")，则返回 false；
-        /// 如果字符串不是是中华人民共和国第二代身份证号码，则返回 false；
-        /// 否则返回 true。
-        /// </returns>
-        public static bool IsChinaIdentityNumber(string value)
-        {
-            return Verification(value);
-        }
-        #endregion
-
-        #region Private Methods
+        #region 私有属性
 
         /// <summary>
         /// 验证指定的字符串是否为中华人民共和国第二代身份证号码
@@ -160,6 +117,46 @@ namespace CommonExtention.Core.Common
             var diff = DateTime.Now.Subtract(BirthDate.Value);
             return diff.Days / 365;
         }
+        #endregion
+
+        #region 公开属性
+        /// <summary>
+        /// 是否为中华人民共和国第二代身份证号码。如果身份证验证通过，则为 true; 否则为 false。
+        /// </summary>
+        public bool IsIdentityNumber { get; private set; } = false;
+
+        /// <summary>
+        /// 出生日期。如果身份证验证通过，则为 身份证号码上的出生日期; 否则为 null。
+        /// </summary>
+        public DateTime? BirthDate { get; private set; } = null;
+
+        /// <summary>
+        /// 年龄。如果身份证验证通过，则为 身份证号码公民的当前周岁; 否则为 -1。
+        /// </summary>
+        public int Age { get; private set; } = -1;
+
+        /// <summary>
+        /// 性别。如果身份证验证通过，则为 男 / 女; 否则为 <see cref="string.Empty"/>。
+        /// </summary>
+        public string GenderText { get; private set; } = string.Empty;
+
+        /// <summary>
+        /// 性别代码。如果身份证验证通过，则为 0：女 / 1：男; 否则为 -1。
+        /// </summary>
+        public int GenderCode { get; private set; } = -1;
+        #endregion
+
+        #region 指示指定的字符串是否为中华人民共和国第二代身份证号码
+        /// <summary>
+        /// 指示指定的字符串是否为中华人民共和国第二代身份证号码
+        /// </summary>
+        /// <param name="value">要检测的字符串</param>
+        /// <returns>
+        /// 如果字符串为 null 或空字符串 ("")，则返回 false；
+        /// 如果字符串不是是中华人民共和国第二代身份证号码，则返回 false；
+        /// 否则返回 true。
+        /// </returns>
+        public static bool IsChinaIdentityNumber(string value) => Verification(value);
         #endregion
     }
 }

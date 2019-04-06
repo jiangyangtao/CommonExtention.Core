@@ -15,7 +15,7 @@ namespace CommonExtention.Core.Common
         public PasswordGenerator() { }
         #endregion
 
-        #region Private property
+        #region 私有属性
         /// <summary>
         /// 数字、大小写字母
         /// </summary>

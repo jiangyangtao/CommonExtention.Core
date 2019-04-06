@@ -6,6 +6,7 @@ using NPOI.SS.UserModel;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -73,7 +74,7 @@ namespace CommonExtention.Core.Common
         /// 否则返回从指定 Excel 文件读取后的 <see cref="ICollection{DataTable}"/> 对象，
         /// 其中一个 <see cref="DataTable"/> 对应一个 Sheet 工作簿。
         /// </returns>
-        public ICollection<DataTable> ReadFileToTables(string filePath, bool firstRowIsColumnName = true, bool addEmptyRow = false)
+        public ICollection<DataTable> ReadExcelToTables(string filePath, bool firstRowIsColumnName = true, bool addEmptyRow = false)
         {
             if (filePath.IsNullOrEmpty() || !File.Exists(filePath)) return null;
 
@@ -81,6 +82,40 @@ namespace CommonExtention.Core.Common
             var tables = ReadStreamToTables(fileStream, firstRowIsColumnName, addEmptyRow);
             return tables;
         }
+        #endregion
+
+        #region 将指定路径的 Excel 文件用异步方式读取到 DataTable
+        /// <summary>
+        /// 将指定路径的 Excel 文件用异步方式读取到 <see cref="DataTable"/>
+        /// </summary>
+        /// <param name="filePath">指定文件完整路径名</param>
+        /// <param name="sheetName">指定读取 Excel 工作薄 sheet 的名称</param>
+        /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
+        /// <param name="addEmptyRow">是否添加空行，默认为 false，不添加</param>
+        /// <returns>
+        /// 如果 filePath 参数为 null 或者空字符串("")，则返回 null；
+        /// 如果 filePath 参数值的磁盘中不存在 Excel 文件，则返回 null；
+        /// 否则返回从指定 Excel 文件读取后的 <see cref="DataTable"/> 对象。
+        /// </returns>
+        public async Task<DataTable> ReadExcelToDataTableAsync(string filePath, string sheetName = null, bool firstRowIsColumnName = true, bool addEmptyRow = false) =>
+            await Task.Run(() => ReadExcelToDataTable(filePath, sheetName, firstRowIsColumnName, addEmptyRow));
+        #endregion
+
+        #region 将指定路径的 Excel 文件用异步方式读取到 ICollection<DataTable>
+        /// <summary>
+        /// 将指定路径的 Excel 文件用异步方式读取到 <see cref="ICollection{DataTable}"/>
+        /// </summary>
+        /// <param name="filePath">指定文件完整路径名</param>
+        /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
+        /// <param name="addEmptyRow">是否添加空行，默认为 false，不添加</param>
+        /// <returns>
+        /// 如果 filePath 参数为 null 或者空字符串("")，则返回 null；
+        /// 如果 filePath 参数值的磁盘中不存在 Excel 文件，则返回 null；
+        /// 否则返回从指定 Excel 文件读取后的 <see cref="ICollection{DataTable}"/> 对象，
+        /// 其中一个 <see cref="DataTable"/> 对应一个 Sheet 工作簿。
+        /// </returns>
+        public async Task<ICollection<DataTable>> ReadExcelToTablesAsync(string filePath, bool firstRowIsColumnName = true, bool addEmptyRow = false) =>
+            await Task.Run(() => ReadExcelToTables(filePath, firstRowIsColumnName, addEmptyRow));
         #endregion
 
         #region 将 IFormFile 对象读取到 DataTable
@@ -129,6 +164,44 @@ namespace CommonExtention.Core.Common
             var tables = ReadStreamToTables(stream, firstRowIsColumnName, addEmptyRow, dispose: false);
             return tables;
         }
+        #endregion
+
+        #region 将 IFormFile 用异步方式读取到 DataTable
+        /// <summary>
+        /// 将 <see cref="IFormFile"/> 用异步方式读取到 <see cref="DataTable"/>
+        /// </summary>
+        /// <param name="formFile">要读取的 <see cref="IFormFile"/> 对象</param>
+        /// <param name="sheetName">指定读取 Excel 工作薄 sheet 的名称</param>
+        /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
+        /// <param name="addEmptyRow">是否添加空行，默认为 false，不添加</param>
+        /// <returns>
+        /// 如果 httpPostedFile 参数为 null，则返回 null；
+        /// 如果 httpPostedFile 参数的 <see cref="IFormFile.Length"/> 属性为 小于或者等于 0，则返回 null；
+        /// 否则返回从 <see cref="IFormFile"/>读取后的 <see cref="DataTable"/> 对象。
+        /// </returns>
+        public async Task<DataTable> ReadFormFileToDataTableAsync(
+            IFormFile formFile,
+            string sheetName = null,
+            bool firstRowIsColumnName = true,
+            bool addEmptyRow = false) => await Task.Run(() => ReadFormFileToDataTable(formFile, sheetName, firstRowIsColumnName, addEmptyRow));
+        #endregion
+
+        #region 将 IFormFile 用异步方式读取到 ICollection<DataTable>
+        /// <summary>
+        /// 将 <see cref="IFormFile"/> 用异步方式读取到 <see cref="ICollection{DataTable}"/>
+        /// </summary>
+        /// <param name="formFile">要读取的 <see cref="IFormFile"/> 对象</param>
+        /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
+        /// <param name="addEmptyRow">是否添加空行，默认为 false，不添加</param>
+        /// <returns>
+        /// 如果 httpPostedFile 参数为 null，则返回 null；
+        /// 如果 httpPostedFile 参数的 <see cref="IFormFile.Length"/> 属性小于或者等于 0，则返回 null；
+        /// 否则返回从 <see cref="IFormFile"/>读取后的 <see cref="ICollection{DataTable}"/> 对象，
+        /// 其中一个 <see cref="DataTable"/> 对应一个 Sheet 工作簿。
+        /// </returns>
+        public async Task<ICollection<DataTable>> ReadFormFileToTablesAsync(IFormFile formFile,
+            bool firstRowIsColumnName = true,
+            bool addEmptyRow = false) => await Task.Run(() => ReadFormFileToTables(formFile, firstRowIsColumnName, addEmptyRow));
         #endregion
 
         #region 将 Stream 对象读取到 DataTable
@@ -205,6 +278,49 @@ namespace CommonExtention.Core.Common
             }
             return tables;
         }
+        #endregion
+
+        #region 将 Stream 对象用异步方式读取到 DataTable
+        /// <summary>
+        /// 将 <see cref="Stream"/> 对象用异步方式读取到 <see cref="DataTable"/>
+        /// </summary>
+        /// <param name="stream">要读取的 <see cref="Stream"/> 对象</param>
+        /// <param name="sheetName">指定读取 Excel 工作薄 sheet 的名称</param>
+        /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
+        /// <param name="addEmptyRow">是否添加空行，默认为 false，不添加</param>
+        /// <param name="dispose">是否释放 <see cref="Stream"/> 资源</param>
+        /// <returns>
+        /// 如果 stream 参数为 null，则返回 null；
+        /// 如果 stream 参数的 <see cref="Stream.CanRead"/> 属性为 false，则返回 null；
+        /// 如果 stream 参数的 <see cref="Stream.Length"/> 属性为 小于或者等于 0，则返回 null；
+        /// 否则返回从 <see cref="Stream"/> 读取后的 <see cref="DataTable"/> 对象。
+        /// </returns>
+        public async Task<DataTable> ReadStreamToDataTableAsync(Stream stream,
+            string sheetName = null,
+            bool firstRowIsColumnName = true,
+            bool addEmptyRow = false,
+            bool dispose = true) => await Task.Run(() => ReadStreamToDataTable(stream, sheetName, firstRowIsColumnName, addEmptyRow, dispose));
+        #endregion
+
+        #region 将 Stream 对象用异步方式读取到 ICollection<DataTable>
+        /// <summary>
+        /// 将 <see cref="Stream"/> 对象用异步方式读取到 <see cref="ICollection{DataTable}"/>
+        /// </summary>
+        /// <param name="stream">要读取的 <see cref="Stream"/> 对象</param>
+        /// <param name="firstRowIsColumnName">首行是否为 <see cref="DataColumn.ColumnName"/></param>
+        /// <param name="addEmptyRow">是否添加空行，默认为 false，不添加</param>
+        /// <param name="dispose">是否释放 <see cref="Stream"/> 资源</param>
+        /// <returns>
+        /// 如果 stream 参数为 null，则返回 null；
+        /// 如果 stream 参数的 <see cref="Stream.CanRead"/> 属性为 false，则返回 null；
+        /// 如果 stream 参数的 <see cref="Stream.Length"/> 属性小于或者等于 0，则返回 null；
+        /// 否则返回从 <see cref="Stream"/> 读取后的 <see cref="ICollection{DataTable}"/> 对象，
+        /// 其中一个 <see cref="DataTable"/> 对应一个 Sheet 工作簿。
+        /// </returns>
+        public async Task<ICollection<DataTable>> ReadStreamToTablesAsync(Stream stream,
+            bool firstRowIsColumnName = true,
+            bool addEmptyRow = false,
+            bool dispose = true) => await Task.Run(() => ReadStreamToTables(stream, firstRowIsColumnName, addEmptyRow, dispose));
         #endregion
 
         #region 将 IFormFileCollection 对象读取到 ICollection<Collection<DataTable>> 集合
@@ -364,6 +480,18 @@ namespace CommonExtention.Core.Common
         }
         #endregion
 
+        #region 将 DataTable 对象用异步方式写入到 MemoryStream 对象
+        /// <summary>
+        /// 将 <see cref="DataTable"/> 对象用异步方式写入到 <see cref="MemoryStream"/> 对象
+        /// </summary>
+        /// <param name="dataTable">要写入的 <see cref="DataTable"/> 对象</param>
+        /// <param name="action">用于执行写入 Excel 单元格的委托</param>
+        /// <param name="sheetsName">Excel 的工作簿名称</param>
+        /// <returns>Excel 形式的 <see cref="MemoryStream"/> 对象</returns>
+        public async Task<MemoryStream> WriteToMemoryStreamAsync(DataTable dataTable, Action<ExcelWorksheet, DataColumnCollection, DataRowCollection> action,
+            string sheetsName = "sheet1") => await Task.Factory.StartNew(() => WriteToMemoryStream(dataTable, action, sheetsName));
+        #endregion
+
         #region 将 List 集合写入到 MemoryStream 对象
         /// <summary>
         /// 将 <see cref="List{T}"/> 集合写入到 <see cref="MemoryStream"/> 对象
@@ -425,7 +553,7 @@ namespace CommonExtention.Core.Common
 
                 if (attrs.HasAttribute(excelColumnNameAttributeType))
                 {
-                    var value = GetDisplayNameAttributeValue(attrs, excelColumnNameAttributeType);
+                    var value = GetAttributeValue(attrs, excelColumnNameAttributeType);
                     columns.Add(item.Name, value);
                 }
             }
@@ -433,15 +561,15 @@ namespace CommonExtention.Core.Common
         }
 
         /// <summary>
-        /// 获取 <see cref="DisplayNameAttribute"/> 特性的值
+        /// 获取 <see cref="ExcelColumnNameAttribute.ColumnName"/> 的值
         /// </summary>
-        /// <param name="customs">要获取值的 <see cref="IEnumerable{T}"/></param>
+        /// <param name="customs">要获取值的 <see cref="IEnumerable"/></param>
         /// <param name="type">要匹配的类型</param>
         /// <returns>
         /// 如果匹配成功，返回字符串表示形式的值；
         /// 如果匹配失败，则返回 <see cref="string.Empty"/>。
         /// </returns>
-        private string GetDisplayNameAttributeValue(IEnumerable<CustomAttributeData> customs, Type type)
+        private string GetAttributeValue(IEnumerable<CustomAttributeData> customs, Type type)
         {
             foreach (var attr in customs)
             {
@@ -479,6 +607,30 @@ namespace CommonExtention.Core.Common
             }
             return memoryStream;
         }
+        #endregion
+
+        #region 将 List 集合用异步方式写入到 MemoryStream 对象
+        /// <summary>
+        /// 将 <see cref="List{T}"/> 集合用异步方式写入到 <see cref="MemoryStream"/> 对象
+        /// </summary>
+        /// <typeparam name="T">要写入 <see cref="MemoryStream"/> 的集合元素的类型</typeparam>
+        /// <param name="list">要写入的 <see cref="List{T}"/> 集合</param>
+        /// <param name="sheetsName">Excel 的工作簿名称</param>
+        /// <returns>Excel 形式的 <see cref="MemoryStream"/> 对象</returns>
+        public async Task<MemoryStream> WriteToMemoryStreamAsync<T>(List<T> list, string sheetsName = "sheet1") =>
+            await Task.Factory.StartNew(() => WriteToMemoryStream(list, sheetsName));
+        #endregion
+
+        #region 将 List 集合用异步方式写入到 MemoryStream 对象
+        /// <summary>
+        /// 将 <see cref="List{T}"/> 集合用异步方式写入到 <see cref="MemoryStream"/> 对象
+        /// </summary>
+        /// <param name="list">要写入的 <see cref="List{T}"/> 集合</param>
+        /// <param name="action">用于执行写入 Excel 单元格的委托</param>
+        /// <param name="sheetsName">Excel 的工作簿名称</param>
+        /// <returns>Excel 形式的 <see cref="MemoryStream"/> 对象</returns>
+        public async Task<MemoryStream> WriteToMemoryStreamAsync<T>(List<T> list, Action<ExcelWorksheet, PropertyInfo[]> action,
+            string sheetsName = "sheet1") => await Task.Factory.StartNew(() => WriteToMemoryStream(list, action, sheetsName));
         #endregion
 
         #region 绘制边框

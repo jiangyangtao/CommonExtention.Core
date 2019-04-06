@@ -118,6 +118,8 @@ namespace CommonExtention.Core.Common
             graphics.DrawRectangle(new Pen(Color.Silver), 0, 0, image.Width - 1, image.Height - 1);
             var memoryStream = new MemoryStream();
             image.Save(memoryStream, ImageFormat.Png);
+            graphics.Dispose();
+            image.Dispose();
             return memoryStream;
         }
         #endregion
