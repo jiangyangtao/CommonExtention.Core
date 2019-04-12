@@ -222,14 +222,14 @@ email.Send(Collection<MailAddress> mails);
 email.Receivers.Add(new MailAddress()); // 接收
 email.CarbonCopy.Add(new MailAddress()); // 抄送
 email.BlindCarbonCopy.Add(new MailAddress()); // 密送
-email.SendAsync();
+async email.SendAsync();
 
 
 // 发送给单个地址
-email.SendAsync(MailAddress mailAddress);
+async email.SendAsync(MailAddress mailAddress);
 
 // 发送给多个地址
-email.SendAsync(Collection<MailAddress> mails);
+async email.SendAsync(Collection<MailAddress> mails);
 
  ```
 
@@ -239,7 +239,7 @@ email.SendAsync(Collection<MailAddress> mails);
 ## Excel 操作
 
 > 封装对 Excel 导入、导出的操作。  
-> 命名空间：`using CommonExtention.Core.Common;` 、`using CommonExtention.Core.Extensions;`
+> 命名空间：`using CommonExtention.Common;` 、`using CommonExtention.Extensions;`
 
 ### 导入
 
@@ -249,10 +249,23 @@ email.SendAsync(Collection<MailAddress> mails);
 
 // 通过实例化 Excel 类使用
 var excel = new Excel();
-excel.ReadToDataTable(httpPostedFile, sheetName, firstRowIsColumnName, addEmptyRow);
+excel.ReadHttpPostedFileToDataTable(httpPostedFile, sheetName, firstRowIsColumnName, addEmptyRow);
 
 // 通过 Rqequest.Files 的扩展使用
 Request.Files[0].ReadToDataTable(sheetName, firstRowIsColumnName, addEmptyRow);
+
+```
+
+- 通过 FormData 上传，异步读取单个文件的指定的 Sheet
+
+``` csharp
+
+// 通过实例化 Excel 类使用
+var excel = new Excel();
+async excel.ReadHttpPostedFileToDataTableAsync(httpPostedFile, sheetName, firstRowIsColumnName, addEmptyRow);
+
+// 通过 Rqequest.Files 的扩展使用
+async Request.Files[0].ReadToDataTableAsync(sheetName, firstRowIsColumnName, addEmptyRow);
 
 ```
 
@@ -262,10 +275,23 @@ Request.Files[0].ReadToDataTable(sheetName, firstRowIsColumnName, addEmptyRow);
 
 // 通过实例化 Excel 类
 var excel = new Excel();
-excel.ReadToDataTable(httpPostedFile, sheetName, firstRowIsColumnName, addEmptyRow);
+excel.ReadHttpPostedFileToTables(httpPostedFile, sheetName, firstRowIsColumnName, addEmptyRow);
 
 // 通过 Rqequest.Files 的扩展使用
 Request.Files[0].ReadToTables(firstRowIsColumnName, addEmptyRow);
+
+```
+
+- 通过 FormData 上传，异步读取单个文件的所有的 Sheet
+
+``` csharp
+
+// 通过实例化 Excel 类
+var excel = new Excel();
+async excel.ReadHttpPostedFileToTablesAsync(httpPostedFile, sheetName, firstRowIsColumnName, addEmptyRow);
+
+// 通过 Rqequest.Files 的扩展使用
+async Request.Files[0].ReadToTablesAsync(firstRowIsColumnName, addEmptyRow);
 
 ```
 
@@ -275,7 +301,7 @@ Request.Files[0].ReadToTables(firstRowIsColumnName, addEmptyRow);
 
 // 通过实例化 Excel 类
 var excel = new Excel();
-excel.ReadToDataTable(httpPostedFile, sheetName, firstRowIsColumnName, addEmptyRow);
+excel.ReadHttpFileCollectionToTableCollection(httpPostedFile, sheetName, firstRowIsColumnName, addEmptyRow);
 
 // 通过 Rqequest.Files 的扩展使用
 Request.Files.ReadToTableCollection();
@@ -287,7 +313,16 @@ Request.Files.ReadToTableCollection();
 ``` csharp
 
 var excel = new Excel();
-excel.ReadFileToDataTable(filePath, sheetName, firstRowIsColumnName, addEmptyRow);
+excel.ReadExcelToDataTable(filePath, sheetName, firstRowIsColumnName, addEmptyRow);
+
+```
+
+- 通过指定文件的路径，异步读取单个文件的指定的 Sheet
+
+``` csharp
+
+var excel = new Excel();
+async excel.ReadExcelToDataTableAsync(filePath, sheetName, firstRowIsColumnName, addEmptyRow);
 
 ```
 
@@ -296,7 +331,16 @@ excel.ReadFileToDataTable(filePath, sheetName, firstRowIsColumnName, addEmptyRow
 ``` csharp
 
 var excel = new Excel();
-excel.ReadFileToTables(filePath, firstRowIsColumnName, addEmptyRow);
+excel.ReadExcelToTables(filePath, firstRowIsColumnName, addEmptyRow);
+
+```
+
+- 通过指定文件的路径，异步读取单个文件的所有的 Sheet
+
+``` csharp
+
+var excel = new Excel();
+async excel.ReadExcelToTablesAsync(filePath, firstRowIsColumnName, addEmptyRow);
 
 ```
 
@@ -322,7 +366,33 @@ var excel = new Excel();
 excel.ReadStreamToTables(stream, firstRowIsColumnName, addEmptyRow);
 
 // 通过 Stream 的扩展使用
-stream.ReadStreamToTables(firstRowIsColumnName, addEmptyRow);
+stream.ReadToDataTable(firstRowIsColumnName, addEmptyRow);
+
+```
+
+- 通过 Stream 流，异步读取单个文件的指定的 Sheet
+
+``` csharp
+
+// 通过实例化 Excel 类
+var excel = new Excel();
+async excel.ReadStreamToDataTableAsync(stream, sheetName, firstRowIsColumnName, addEmptyRow);
+
+// 通过 Stream 的扩展使用
+async stream.ReadToDataTableAsync(sheetName, firstRowIsColumnName, addEmptyRow);
+
+```
+
+- 通过 Stream 流，异步读取单个文件的所有的 Sheet
+
+``` csharp
+
+// 通过实例化 Excel 类
+var excel = new Excel();
+async excel.ReadStreamToTablesAsync(stream, firstRowIsColumnName, addEmptyRow);
+
+// 通过 Stream 的扩展使用
+async stream.ReadToTablesAsync(firstRowIsColumnName, addEmptyRow);
 
 ```
 
@@ -371,6 +441,49 @@ return File(memoryStream.GetBuffer(), Excel.ContentType, "Excel.xlsx");
 
 ```
 
+- DataTable 异步导出
+
+``` csharp
+
+var table = new DataTable();
+
+// 通过实例化 Excel 类使用
+var excel = new Excel();
+var memoryStream = async excel.WriteToMemoryStreamAsync(table,(worksheet, columns, rows) =>
+{
+   // TO DO
+}, "Sheet");
+
+
+// 通过 DataTable 的扩展使用
+var memoryStream = async table.WriteToMemoryStreamAsync((worksheet, columns, rows) =>
+{
+    // 表头
+    for (int columnIndex = 0; columnIndex < columns.Count; columnIndex++)
+    {
+        var column = columns[columnIndex];
+        worksheet.Cells[1, columnIndex + 1].Value = column.ColumnName;
+        Excel.DrawBorder(worksheet.Cells[1, columnIndex + 1].Style);
+    }
+
+    // 数据行
+    for (int rowIndex = 0; rowIndex < rows.Count; rowIndex++)
+    {
+        var row = rows[rowIndex];
+        for (int columnIndex = 0; columnIndex < columns.Count; columnIndex++)
+        {
+            var column = columns[columnIndex];
+            var cell = worksheet.Cells[rowIndex + 2, columnIndex + 1];
+            cell.Value = row[column.ColumnName];
+            Excel.DrawBorder(cell.Style);
+        }
+    }
+}, "Sheet");
+
+return File(memoryStream.GetBuffer(), Excel.ContentType, "Excel.xlsx");
+
+```
+
 - List 导出
 
 ``` csharp
@@ -387,6 +500,40 @@ var memoryStream = excel.WriteToMemoryStream(list,(worksheet, columns, rows) =>
 
 // 通过 List 的扩展使用
 var memoryStream = list.WriteToMemoryStream((worksheet, properties)=>{
+  propertes.ForEach((column, columnIndex) => {
+      worksheet.Cells[1, columnIndex + 1].Value = column.Name;
+      Excel.DrawBorder(worksheet.Cells[1, columnIndex + 1].Style);
+  });
+
+  list.ForEach((row, rowIndex) => {
+      propertes.ForEach((column, columnIndex) => {
+          var value = column.GetValue(row, null);
+          worksheet.Cells[rowIndex + 2, columnIndex + 1].Value = value;
+          Excel.DrawBorder(worksheet.Cells[rowIndex + 2, columnIndex + 1].Style);
+      });
+  });
+}, "Sheet");
+
+return File(memoryStream.GetBuffer(), Excel.ContentType, "Excel.xlsx");
+
+```
+
+- List 异步导出
+
+``` csharp
+
+var list = new List<T>();
+
+// 通过实例化 Excel 类使用
+var excel = new Excel();
+var memoryStream = async excel.WriteToMemoryStreamAsync(list, (worksheet, columns, rows) =>
+{
+   // TO DO
+}, "Sheet");
+
+
+// 通过 List 的扩展使用
+var memoryStream = async list.WriteToMemoryStreamAsync((worksheet, properties)=>{
   propertes.ForEach((column, columnIndex) => {
       worksheet.Cells[1, columnIndex + 1].Value = column.Name;
       Excel.DrawBorder(worksheet.Cells[1, columnIndex + 1].Style);
@@ -553,5 +700,24 @@ var passwordGenerator = new PasswordGenerator();
 
 // 生成密码
 passwordGenerator.NewPassword(length, containsAtSymbol, containsSymbol);
+
+```
+
+## 连续的 Guid
+
+> 命名空间：`using CommonExtention.Core.Common;`  
+> 代码出自: <a href="https://www.cnblogs.com/CameronWu/p/guids-as-fast-primary-keys-under-multiple-database.html" target="_blank">使用有序GUID：提升其在各数据库中作为主键时的性能</a>  
+> 此代码尚未测试，谨慎使用。
+
+``` csharp
+
+// Sequential As String
+SequentialGuidGenerator.NewSequentialGuid(SequentialGuidType.SequentialAsString);
+
+// Sequential As Binary
+SequentialGuidGenerator.NewSequentialGuid(SequentialGuidType.SequentialAsBinary);
+
+// Sequential At End
+SequentialGuidGenerator.NewSequentialGuid(SequentialGuidType.SequentialAtEnd);
 
 ```

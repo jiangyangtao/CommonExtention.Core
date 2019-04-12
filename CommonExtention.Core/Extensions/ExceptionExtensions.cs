@@ -43,10 +43,7 @@ namespace CommonExtention.Core.Extensions
         /// </summary>
         /// <param name="exception">当前 Exception 对象</param>
         /// <param name="request"><see cref="HttpRequest"/>对象</param>
-        public static void WriteLogAsync(this Exception exception, HttpRequest request)
-        {
-            AsyncLogger.LogException(exception, request);
-        }
+        public static void WriteLogAsync(this Exception exception, HttpRequest request) => AsyncLogger.LogException(exception, request);
         #endregion
     }
 }
