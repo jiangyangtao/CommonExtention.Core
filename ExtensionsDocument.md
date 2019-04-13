@@ -1,6 +1,6 @@
 # Extensions 扩展
 
-> 统一命名空间：`using CommonExtention.Extensions;`  
+> 统一命名空间：`using CommonExtention.Core.Extensions;`  
 
 ## Array 扩展
 

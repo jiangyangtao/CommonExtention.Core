@@ -214,7 +214,6 @@ email.Send(Collection<MailAddress> mails);
 - 异步发送
 
 > 发送方式与同步相同。此方法不会阻止调用线程，并允许调用方将对象传递给操作完成时调用的方法。  
-> .Net Framework 4.0 调用异步不需要 async/await。
 
  ``` csharp
 
