@@ -555,65 +555,40 @@ return File(memoryStream.GetBuffer(), Excel.ContentType, "Excel.xlsx");
 <br/>
 <br/>
 
-## Cookie 操作
+## Mvc 返回约定
 
 > 命名空间：`using CommonExtention.Core.Common;`
 
-- 指示 Cookie 是否存在
+- Json 全小写约定
 
 ``` csharp
 
-HttpCookieConfigure.IsExist(name, value);
+services.AddMvc(config =>
+{
+
+}).SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddJsonOptions(options =>
+{
+    // 全小写约定设置
+    options.SerializerSettings.ContractResolver = new LowercaseContractResolver();
+});
 
 ```
 
-- 清除所有 Cookie
+- Json 全大写约定
 
 ``` csharp
 
-HttpCookieConfigure.ClearAll();
+services.AddMvc(config =>
+{
+
+}).SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddJsonOptions(options =>
+{
+    // 全大写约定设置
+    options.SerializerSettings.ContractResolver = new UppercaseContractResolver();
+});
 
 ```
 
-- 清除单个的Cookie
-
-``` csharp
-
-HttpCookieConfigure.Clear(name);
-
-```
-
-- 设置单个Cookie值
-
-``` csharp
-
-HttpCookieConfigure.SetCookie(name, value, HttpOnly);
-
-```
-
-- 设置客户端允许访问的Cookie
-
-``` csharp
-
-HttpCookieConfigure.SetCookie(name, value);
-
-```
-
-- 设置客户端不允许访问的Cookie
-
-``` csharp
-
-HttpCookieConfigure.SetCookieHttpOnly(name, value);
-
-```
-
-- 设置客户端不允许访问的Cookie
-
-``` csharp
-
-HttpCookieConfigure.GetCookie(name);
-
-```
 
 <br/>
 <br/>

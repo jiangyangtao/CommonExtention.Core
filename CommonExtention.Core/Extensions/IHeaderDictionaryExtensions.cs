@@ -3,11 +3,11 @@
 namespace CommonExtention.Core.Extensions
 {
     /// <summary>
-    /// 
+    /// <see cref="IHeaderDictionary"/> 扩展
     /// </summary>
     public static class IHeaderDictionaryExtensions
     {
-        #region 获取当前请求的 UserAgent        
+        #region 获取当前请求的 UserAgent
         /// <summary>
         /// 获取当前请求的 UserAgent
         /// </summary>
@@ -24,7 +24,7 @@ namespace CommonExtention.Core.Extensions
         }
         #endregion
 
-        #region 获取当前请求的 Content-Type        
+        #region 获取当前请求的 Content-Type
         /// <summary>
         /// 获取当前请求的 Content-Type
         /// </summary>
