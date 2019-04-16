@@ -58,6 +58,15 @@ namespace CommonExtention.Core.HttpResponseFormat
         /// <summary>
         /// Json 通用返回格式：返回失败
         /// </summary>
+        /// <param name="message">错误信息(默认为"Unknown error")</param>
+        /// <returns>
+        /// Json格式 : {code:-1,data:"",count:-1,message:Unknown error}
+        /// </returns>
+        public new JsonResult ResponseFail(string message = "Unknown error") => base.ResponseFail(message);
+
+        /// <summary>
+        /// Json 通用返回格式：返回失败
+        /// </summary>
         /// <param name="code">错误代码</param>
         /// <param name="message">错误信息(默认为"Unknown error")</param>
         /// <returns>
@@ -104,6 +113,15 @@ namespace CommonExtention.Core.HttpResponseFormat
         /// Json格式 : {code:0,rows:DataTable,total:DataTable.Rows.Count,message:Success}
         /// </returns>
         public new JsonResult ResponseGridResult(DataTable dataTable, int count = 0) => base.ResponseGridResult(dataTable, count);
+
+        /// <summary>
+        /// Json 通用网格返回格式：返回失败
+        /// </summary>
+        /// <param name="message">失败信息</param>
+        /// <returns>
+        /// Json格式 : {code:-1,rows:[],total:0,message:Unknown error}
+        /// </returns>
+        public new JsonResult ResponseGridResult(string message = "Unknown error") => base.ResponseGridResult(message);
 
         /// <summary>
         /// Json 通用网格返回格式：返回失败
