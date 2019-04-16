@@ -65,8 +65,14 @@ ResponseSuccess<T>(List<T> list, int count = 0);
 
 
 
-// 返回成功，用于增、删、改等操作成功时的返回。
+// 返回成功，用于返回 DataTable 数据。
 ResponseSuccess(DataTable dataTable, int count = 0);
+
+
+
+// 返回失败，用于返回失败。
+ResponseFail(string message = "Unknown error");
+
 
 
 // 返回失败，用于返回失败。
@@ -116,6 +122,10 @@ ResponseGridResult<T>(List<T> list, int count = 0);
 
 // 返回成功，用于返回 DataTable 数据。
 ResponseGridResult(DataTable dataTable, int count = 0);
+
+
+// 返回失败，用于返回失败。
+ResponseGridResult(string message = "Unknown error");
 
 
 // 返回失败，用于返回失败。
