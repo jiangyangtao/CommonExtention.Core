@@ -161,8 +161,10 @@ namespace CommonExtention.Core.Extensions
         /// <typeparam name="T">要写入 <see cref="MemoryStream"/> 的集合元素的类型</typeparam>
         /// <param name="list">要写入的 <see cref="List{T}"/> 集合</param>
         /// <param name="sheetsName">Excel 的工作簿名称</param>
+        /// <param name="title">标题</param>
         /// <returns>Excel 形式的 <see cref="MemoryStream"/> 对象</returns>
-        public static MemoryStream WriteToMemoryStream<T>(this List<T> list, string sheetsName = "sheet1") => new Excel().WriteToMemoryStream(list, sheetsName);
+        public static MemoryStream WriteToMemoryStream<T>(this List<T> list, string sheetsName = "sheet1", string title = "")
+            => new Excel().WriteToMemoryStream(list, sheetsName);
         #endregion
 
         #region 将当前 List 集合写入 MemoryStream
@@ -185,9 +187,10 @@ namespace CommonExtention.Core.Extensions
         /// <typeparam name="T">要写入 <see cref="MemoryStream"/> 的集合元素的类型</typeparam>
         /// <param name="list">要写入的 <see cref="List{T}"/> 集合</param>
         /// <param name="sheetsName">Excel 的工作簿名称</param>
+        /// <param name="title">标题</param>
         /// <returns>Excel 形式的 <see cref="MemoryStream"/> 对象</returns>
-        public static async Task<MemoryStream> WriteToMemoryStreamAsync<T>(this List<T> list, string sheetsName = "sheet1") =>
-            await new Excel().WriteToMemoryStreamAsync(list, sheetsName);
+        public static async Task<MemoryStream> WriteToMemoryStreamAsync<T>(this List<T> list, string sheetsName = "sheet1", string title = "")
+            => await new Excel().WriteToMemoryStreamAsync(list, sheetsName, title);
         #endregion
 
         #region 将当前 List 集合用异步方式写入 MemoryStream

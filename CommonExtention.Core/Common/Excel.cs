@@ -14,6 +14,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -499,34 +500,60 @@ namespace CommonExtention.Core.Common
         /// <typeparam name="T">要写入 <see cref="MemoryStream"/> 的集合元素的类型</typeparam>
         /// <param name="list">要写入的 <see cref="List{T}"/> 集合</param>
         /// <param name="sheetsName">Excel 的工作簿名称</param>
+        /// <param name="title">标题</param>
         /// <returns>Excel 形式的 <see cref="MemoryStream"/> 对象</returns>
-        public MemoryStream WriteToMemoryStream<T>(List<T> list, string sheetsName = "sheet1")
+        public MemoryStream WriteToMemoryStream<T>(List<T> list, string sheetsName = "sheet1", string title = "")
         {
             if (list == null || list.Count <= 0) return null;
 
             var memoryStream = new MemoryStream();
             var propertys = typeof(T).GetProperties();
-            var columns = GetColumns(propertys);
+            var columns = GetExcelColumns(propertys).OrderBy(a => a.Item3);
+            var titleIndex = 0;
 
             using (var package = new ExcelPackage())
             {
                 var worksheet = package.Workbook.Worksheets.Add(sheetsName);
                 worksheet.Cells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-                columns.ForEach((item, columnIndex) =>
+                if (title.NotNullAndEmpty())
                 {
-                    worksheet.Cells[1, columnIndex + 1].Value = item.Value;
-                    DrawBorder(worksheet.Cells[1, columnIndex + 1].Style);
+                    titleIndex = 1;
+                    worksheet.Cells[1, 1, 1, columns.Count()].Merge = true;
+                    worksheet.Cells[1, 1].Value = title;
+                }
+
+                columns.ForEach((column, columnIndex) =>
+                {
+                    var cell = worksheet.Cells[titleIndex + 1, columnIndex + 1];
+                    cell.Value = column.Item2.IsNullOrEmpty() ? column.Item1 : column.Item2;
+                    DrawBorder(cell.Style);
                 });
 
                 list.ForEach((row, rowIndex) =>
                 {
-                    columns.ForEach((column, cellIndex) =>
+                    columns.ForEach((column, columnIndex) =>
                     {
-                        var property = propertys.Find(a => a.Name == column.Key);
+                        var cell = worksheet.Cells[titleIndex + rowIndex + 2, columnIndex + 1];
+                        var property = propertys.Find(a => a.Name == column.Item1);
                         var value = property.GetValue(row);
-                        worksheet.Cells[rowIndex + 2, cellIndex + 1].Value = value;
-                        DrawBorder(worksheet.Cells[rowIndex + 2, cellIndex + 1].Style);
+                        DateTime? date = null;
+
+                        if (value != null && property.PropertyType == typeof(DateTime))
+                        {
+                            var _date = value.ToDateTime();
+                            if (_date == DateTime.MinValue) value = string.Empty;
+                            else value = _date.ToFormatDateTime();
+                        }
+
+                        if (value != null && property.PropertyType == typeof(DateTime?))
+                        {
+                            date = (DateTime?)value;
+                            value = date.HasValue ? date.Value.ToFormatDateTime() : string.Empty;
+                        }
+
+                        cell.Value = value;
+                        DrawBorder(cell.Style);
                     });
                 });
 
@@ -537,48 +564,51 @@ namespace CommonExtention.Core.Common
         }
 
         /// <summary>
-        /// 获取列名
+        /// 获取 Excel 列名
         /// </summary>
         /// <param name="propertys">要获取列名的 <see cref="PropertyInfo"/> 数组</param>
         /// <returns><see cref="Dictionary{Key,Value}"/>类型的列名</returns>
-        private Dictionary<string, string> GetColumns(PropertyInfo[] propertys)
+        private List<Tuple<string, string, int>> GetExcelColumns(PropertyInfo[] propertys)
         {
-            var excelColumnNameAttributeType = typeof(ExcelColumnNameAttribute);
-            var columns = new Dictionary<string, string>();
+            var excelColumnAttributeType = typeof(ExcelColumnAttribute);
+            var columns = new List<Tuple<string, string, int>>();
             for (int i = 0; i < propertys.Length; i++)
             {
                 var item = propertys[i];
-                var attrs = item.CustomAttributes;
-                if (attrs.HasAttribute(typeof(ExcelExcludeColumnAttribute))) continue;
+                var attrs = item.GetCustomAttributesData();
 
-                if (attrs.HasAttribute(excelColumnNameAttributeType))
+                if (attrs.HasAttribute(excelColumnAttributeType))
                 {
-                    var value = GetAttributeValue(attrs, excelColumnNameAttributeType);
-                    columns.Add(item.Name, value);
+                    var tuple = GetExcelColumnAttributeValue(attrs, excelColumnAttributeType);
+                    columns.Add(new Tuple<string, string, int>(item.Name, tuple.Item1, tuple.Item2));
                 }
             }
             return columns;
         }
 
         /// <summary>
-        /// 获取 <see cref="ExcelColumnNameAttribute.ColumnName"/> 的值
+        /// 获取 <see cref="ExcelColumnAttribute"/> 的值
         /// </summary>
         /// <param name="customs">要获取值的 <see cref="IEnumerable"/></param>
         /// <param name="type">要匹配的类型</param>
         /// <returns>
-        /// 如果匹配成功，返回字符串表示形式的值；
-        /// 如果匹配失败，则返回 <see cref="string.Empty"/>。
+        /// 如果匹配成功，返回 <see cref="ExcelColumnAttribute"/> 的值；
+        /// 如果匹配失败，则返回 <see cref="string.Empty"/> 和 <see cref="int.MaxValue"/>。
         /// </returns>
-        private string GetAttributeValue(IEnumerable<CustomAttributeData> customs, Type type)
+        private static Tuple<string, int> GetExcelColumnAttributeValue(IEnumerable<CustomAttributeData> customs, Type type)
         {
             foreach (var attr in customs)
             {
                 if (attr.AttributeType == type || attr.ConstructorArguments.Count > 0)
                 {
-                    return attr.ConstructorArguments[0].Value.ToString();
+                    var nameMember = attr.NamedArguments.FirstOrDefault(a => a.MemberName == "Name");
+                    var indexMember = attr.NamedArguments.FirstOrDefault(a => a.MemberName == "Index");
+                    var name = nameMember.TypedValue.Value == null ? string.Empty : nameMember.TypedValue.Value.ToString();
+                    var index = indexMember.TypedValue.Value == null ? int.MaxValue : indexMember.TypedValue.Value.ToInt();
+                    return new Tuple<string, int>(name, index);
                 }
             }
-            return string.Empty;
+            return new Tuple<string, int>(string.Empty, int.MaxValue);
         }
         #endregion
 
@@ -616,9 +646,10 @@ namespace CommonExtention.Core.Common
         /// <typeparam name="T">要写入 <see cref="MemoryStream"/> 的集合元素的类型</typeparam>
         /// <param name="list">要写入的 <see cref="List{T}"/> 集合</param>
         /// <param name="sheetsName">Excel 的工作簿名称</param>
+        /// <param name="title">标题</param>
         /// <returns>Excel 形式的 <see cref="MemoryStream"/> 对象</returns>
-        public async Task<MemoryStream> WriteToMemoryStreamAsync<T>(List<T> list, string sheetsName = "sheet1") =>
-            await Task.Factory.StartNew(() => WriteToMemoryStream(list, sheetsName));
+        public async Task<MemoryStream> WriteToMemoryStreamAsync<T>(List<T> list, string sheetsName = "sheet1", string title = "") =>
+            await Task.Factory.StartNew(() => WriteToMemoryStream(list, sheetsName, title));
         #endregion
 
         #region 将 List 集合用异步方式写入到 MemoryStream 对象

@@ -8,14 +8,13 @@ namespace CommonExtention.Core.Attributes
     /// Excel 自动导出时，指定属性的列名
     /// </summary>
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
-    public class ExcelColumnNameAttribute : Attribute
+    public class ExcelColumnAttribute : Attribute
     {
         #region 构造函数
         /// <summary>
-        /// 初始化 <see cref="ExcelColumnNameAttribute"/> 类的新实例
+        /// 初始化 <see cref="ExcelColumnAttribute"/> 类的新实例
         /// </summary>
-        /// <param name="columnName">指定的列名</param>
-        public ExcelColumnNameAttribute(string columnName) => columnName = ColumnName;
+        public ExcelColumnAttribute() { }
         #endregion
 
         #region 公开属性
@@ -23,6 +22,11 @@ namespace CommonExtention.Core.Attributes
         /// 列名
         /// </summary>
         public string ColumnName { set; get; }
+
+        /// <summary>
+        /// 索引
+        /// </summary>
+        public int Index { set; get; }
         #endregion
     }
 }
